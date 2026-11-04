@@ -51,3 +51,12 @@ The branch was verified as 14 commits ahead of `main`, with no commits behind, a
 - Added `backend/auth-profile-implementation.md` with setup steps, API contract, staging tests, and remaining UI/provider work.
 - Updated API contracts, README, and syntax-check script.
 - This does not yet provide browser sign-in/sign-up or a connected database. No user can create a live LUXE account until Clerk and Neon are provisioned and the frontend flow is integrated and tested.
+
+
+## Seller onboarding work completed during cooldown
+- Added migration `003_seller_applications.sql` for seller applications, pending-per-user and active-slug uniqueness, reviewer metadata, and default-deny RLS.
+- Added `003_seller_applications.verify.sql` to verify RLS and the one-pending-application index.
+- Added `api/seller/applications.js`: authenticated users can read their own application history and submit an application using only store name, slug, and description. Identity comes from the verified Clerk session.
+- Added `api/admin/seller-applications.js`: owner-only queue and human approve/reject action. Approval, seller-role promotion, private storefront creation, and audit logging are grouped in one SQL statement; failures roll back together.
+- Extended the API syntax-check script and documented staging gates.
+- No database migration has been applied, no provider has been connected, and no seller can yet use this as a live feature. No UI has been wired to these routes.
