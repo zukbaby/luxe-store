@@ -36,5 +36,6 @@ Do not claim any unchecked item is live. Do not purchase services, domains, or p
 5. `backend/migrations/005_notifications.sql`
 6. `backend/migrations/006_product_review.sql`
 7. `backend/migrations/007_assistant_rate_limits.sql`
+8. `backend/migrations/008_review_moderation.sql`
 
 Run each matching `.verify.sql` file after its migration. Migration 002 has its existing verification script. RLS remains enabled with no client policies; the current APIs use server-side database access and verified session ownership.
