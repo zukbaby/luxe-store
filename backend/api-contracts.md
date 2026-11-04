@@ -56,3 +56,13 @@ All routes below are contracts for future implementation. Until database and aut
 - Payment state changes only after a verified provider webhook; never from a browser request.
 - Do not store raw delivery addresses or identity documents in the marketplace tables.
 - Keep all new tables default-deny under RLS until provider identity mapping and policies are reviewed and tested.
+
+
+## Seller applications (implemented in code; not live)
+- GET /api/seller/applications — authenticated user's own application history.
+- POST /api/seller/applications — submit an application with storeName, storeSlug, and description only. The user ID comes from the verified session; role/status/reviewer fields are not accepted.
+- GET /api/admin/seller-applications — owner-only pending review queue.
+- POST /api/admin/seller-applications — owner-only human decision with applicationId, decision (approved/rejected), and optional reviewerNote. Approval, seller-role promotion, private-by-default storefront creation, and audit insertion are one SQL statement.
+- Migration 003 adds a seller application table, unique pending-per-user and active-slug indexes, RLS, and a verification script. It intentionally adds no RLS policies.
+- Apply migration 003 only after base schema and migration 002 in staging. Configure owner identity and verify the owner profile exists before testing decisions.
+- These routes remain unavailable until Clerk and Neon are configured, migrations are applied, and staging tests pass.
