@@ -56,7 +56,7 @@ module.exports = async function handler(req, res) {
 
     if (req.method === "GET") {
       const rows = await query(
-        "select id, title, description, price_gmd, currency_code, category, image_url, status, created_at, updated_at from public.products where seller_id = $1 order by created_at desc limit 100",
+        "select id, title, description, price_amount, currency_code, category, image_url, status, created_at, updated_at from public.products where seller_id = $1 order by created_at desc limit 100",
         [session.userId]
       );
       return res.status(200).json({ ok: true, products: rows || [] });
@@ -68,7 +68,7 @@ module.exports = async function handler(req, res) {
     if (!product) return res.status(400).json({ ok: false, code: "INVALID_PRODUCT", message: "Check the title, description, category, price, currency and secure image URL." });
 
     const rows = await query(
-      "insert into public.products (seller_id, title, description, price_gmd, currency_code, category, image_url, status) values ($1, $2, $3, $4, $5, $6, $7, 'draft') returning id, title, description, price_gmd, currency_code, category, image_url, status, created_at",
+      "insert into public.products (seller_id, title, description, price_amount, currency_code, category, image_url, status) values ($1, $2, $3, $4, $5, $6, $7, 'draft') returning id, title, description, price_amount, currency_code, category, image_url, status, created_at",
       [session.userId, product.title, product.description, product.price, product.currencyCode, product.category, product.imageUrl]
     );
     return res.status(201).json({ ok: true, product: rows[0], message: "Draft saved. It is not visible in the public catalogue." });
