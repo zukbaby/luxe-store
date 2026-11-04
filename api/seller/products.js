@@ -21,7 +21,7 @@ function validateProduct(body) {
   const description = typeof body.description === "string" ? body.description.trim() : "";
   const category = typeof body.category === "string" ? body.category.trim() : "";
   const currencyCode = typeof body.currencyCode === "string" ? body.currencyCode.trim().toUpperCase() : "GMD";
-  const price = Number(body.price);
+  const price = body.price === undefined || body.price === null || body.price === "" ? NaN : Number(body.price);
   const imageUrl = typeof body.imageUrl === "string" && body.imageUrl.trim() ? body.imageUrl.trim() : null;
 
   if (title.length < 2 || title.length > 120 || description.length > 4000 ||
