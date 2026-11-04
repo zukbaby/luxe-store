@@ -7,7 +7,7 @@
     "node": ">=20.9.0"
   },
   "scripts": {
-    "check:api": "node --check api/health.js && node --check api/me.js && node --check api/products.js && node --check api/seller/applications.js && node --check api/admin/seller-applications.js && node --check 'api/admin/seller-applications/[id]/decision.js' && node --check api/_lib/auth.js && node --check api/_lib/database.js && node --check api/_lib/authorization.js"
+    "check:api": "node --check api/health.js && node --check api/me.js && node --check api/products.js && node --check api/seller/applications.js && node --check api/seller/products.js && node --check 'api/seller/products/[id].js' && node --check api/admin/seller-applications.js && node --check 'api/admin/seller-applications/[id]/decision.js' && node --check api/_lib/auth.js && node --check api/_lib/database.js && node --check api/_lib/authorization.js"
   },
   "dependencies": {
     "@clerk/backend": "^3.25.0",
