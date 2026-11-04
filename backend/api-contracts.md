@@ -35,3 +35,24 @@ All routes below are contracts for future implementation. Until database and aut
 - Never trust client-provided roles, user IDs, prices, ownership, or verification status.
 - Never expose database or model-provider credentials.
 - Audit admin mutations and test denied access paths.
+
+
+## Marketplace additions (planned; migration 002)
+- GET /api/sellers/:slug — public storefront profile and published listings only.
+- GET /api/cart — authenticated buyer's own cart.
+- PUT /api/cart/items/:productId — add/update an item; server checks listing status and stock.
+- DELETE /api/cart/items/:productId — remove an item from the authenticated buyer's cart.
+- POST /api/checkout — server recalculates prices, locks stock rows, validates stock, and creates order records in one transaction. Payment is not assumed complete.
+- GET /api/orders — buyer's own order history; sellers receive only order items assigned to their seller ID.
+- GET /api/orders/:id — owner-scoped order detail with sensitive delivery data handled by a separate secure workflow.
+- GET /api/notifications — authenticated user's own notifications.
+- PATCH /api/notifications/:id/read — mark only the authenticated user's notification as read.
+- POST /api/products/:id/reviews — accept a review only after server verification of a completed purchase.
+- GET /api/products/:id/reviews — published reviews only.
+
+## Marketplace invariants
+- Prices, totals, seller ownership, buyer identity, inventory, order state, and payment state are server-controlled.
+- Checkout is a single transaction with row locks and stock rechecks to prevent overselling.
+- Payment state changes only after a verified provider webhook; never from a browser request.
+- Do not store raw delivery addresses or identity documents in the marketplace tables.
+- Keep all new tables default-deny under RLS until provider identity mapping and policies are reviewed and tested.
