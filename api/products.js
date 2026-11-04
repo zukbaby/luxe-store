@@ -16,7 +16,7 @@ module.exports = async function handler(req, res) {
 
   try {
     const rows = await query(
-      "select id, title, description, price_gmd, currency_code, category, image_url, seller_id, created_at from public.products where status = 'published' order by created_at desc limit 60"
+      "select id, title, description, price_amount, currency_code, category, image_url, seller_id, created_at from public.products where status = 'published' order by created_at desc limit 60"
     );
     return res.status(200).json({ ok: true, products: rows || [] });
   } catch {
