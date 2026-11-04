@@ -59,3 +59,12 @@ Do not paste credentials into chat or commit them. Do not enable live account cr
 - For an authenticated profile it displays the server-returned role and verification status as read-only fields and permits only display-name updates through `PATCH /api/me`.
 - Removed the old localStorage profile mock so the page no longer implies that a browser-only form creates a LUXE account.
 - Sign-in/sign-up UI remains intentionally unavailable until Clerk's official browser flow and provider configuration are completed. Do not invite users to create accounts yet.
+
+## Browser sign-in and sign-up integration
+- `api/auth/config.js` exposes only `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` to the browser. It never returns `CLERK_SECRET_KEY`.
+- `accounts.html` loads the official ClerkJS and Clerk UI browser bundles from the Frontend API domain encoded in the publishable key, following Clerk's documented plain-JavaScript CDN quickstart.
+- The account page mounts Clerk's prebuilt sign-in, sign-up, and user-button components. After authentication it requests a session token and sends it as a Bearer token to `/api/me`.
+- The existing server verifier already accepts Bearer tokens and verifies them with the server-only secret plus the exact authorized-party allowlist.
+- The page never collects or stores passwords, OTPs, or recovery secrets. Profile roles and verification status remain server-owned.
+- Live use still requires a Clerk application, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, exact `CLERK_AUTHORIZED_PARTIES`, configured database, applied migrations, and end-to-end staging tests. Until then the config endpoint returns 503 and the UI remains unavailable.
+- Configure the provider's age and guardian requirements before allowing any users to register. Do not bypass provider eligibility rules.
