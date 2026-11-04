@@ -62,3 +62,5 @@ The branch was verified as 14 commits ahead of `main`, with no commits behind, a
 - No database migration has been applied, no provider has been connected, and no seller can yet use this as a live feature. No UI has been wired to these routes.
 
 - Updated `seller.html` with a seller application form and application-history view connected to the new API routes. The page explains that seller access requires human review and shows clear sign-in / not-yet-configured states. Product drafts remain browser-local and are still not published.
+
+- Updated `admin.html` with a Seller applications review tab. It calls the owner-protected queue endpoint, handles sign-in/forbidden/not-configured states, and provides explicit human approve/reject actions with optional reviewer notes and confirmation. Decisions are sent to the audited server endpoint; the page does not bypass owner authorization.
