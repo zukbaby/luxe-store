@@ -1,5 +1,6 @@
 const { authenticate } = require("../_lib/auth");
 const { query } = require("../_lib/database");
+const { sameOrigin, bodyWithinLimit } = require("../_lib/request-security");
 
 function headers(res) {
   res.setHeader("Cache-Control", "no-store");
@@ -62,9 +63,12 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ok: true, products: rows || [] });
     }
 
+    if (!sameOrigin(req)) return res.status(403).json({ ok: false, code: "ORIGIN_NOT_ALLOWED" });
     const contentType = String(req.headers && req.headers["content-type"] || "").toLowerCase();
     if (!contentType.includes("application/json")) return res.status(415).json({ ok: false, code: "JSON_REQUIRED" });
-    const product = validateProduct(bodyOf(req));
+    const parsedBody = bodyOf(req);
+    if (!bodyWithinLimit(req, parsedBody)) return res.status(413).json({ ok: false, code: "BODY_TOO_LARGE" });
+    const product = validateProduct(parsedBody);
     if (!product) return res.status(400).json({ ok: false, code: "INVALID_PRODUCT", message: "Check the title, description, category, price, currency and secure image URL." });
 
     const rows = await query(
