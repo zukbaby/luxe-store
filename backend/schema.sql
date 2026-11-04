@@ -9,7 +9,7 @@ create type public.verification_status as enum ('not_submitted', 'pending', 'app
 create type public.product_status as enum ('draft', 'published', 'archived');
 
 create table public.profiles (
-  id uuid primary key, -- must equal the authenticated provider's user id
+  id text primary key, -- must equal the authenticated Clerk user ID
   display_name text not null check (char_length(display_name) between 1 and 60),
   role public.account_role not null default 'customer',
   verification_status public.verification_status not null default 'not_submitted',
@@ -19,7 +19,7 @@ create table public.profiles (
 
 create table public.products (
   id uuid primary key default gen_random_uuid(),
-  seller_id uuid not null references public.profiles(id) on delete restrict,
+  seller_id text not null references public.profiles(id) on delete restrict,
   title text not null check (char_length(title) between 1 and 120),
   description text not null default '',
   price_gmd numeric(12,2) not null check (price_gmd >= 0),
@@ -31,12 +31,12 @@ create table public.products (
 
 create table public.verification_requests (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.profiles(id) on delete restrict,
+  user_id text not null references public.profiles(id) on delete restrict,
   legal_name text not null,
   status public.verification_status not null default 'pending',
   submitted_at timestamptz not null default now(),
   reviewed_at timestamptz,
-  reviewed_by uuid references public.profiles(id) on delete restrict,
+  reviewed_by text references public.profiles(id) on delete restrict,
   reviewer_note text,
   constraint verification_review_consistency check (
     (status in ('approved','rejected') and reviewed_at is not null and reviewed_by is not null)
@@ -46,7 +46,7 @@ create table public.verification_requests (
 
 create table public.admin_audit_log (
   id bigint generated always as identity primary key,
-  actor_id uuid not null references public.profiles(id) on delete restrict,
+  actor_id text not null references public.profiles(id) on delete restrict,
   action text not null,
   target_type text not null,
   target_id text not null,
