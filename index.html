@@ -17,7 +17,7 @@
 <meta name="twitter:description" content="Discover products, explore creators and experience a new way to shop.">
 <style>
 :root {
-  --gold: #b88932;
+  --gold: #245bdb;
   --black: #ffffff;
   --panel: #ffffff;
   --muted: #6b6b6b;
@@ -68,7 +68,7 @@ nav a:hover { color: var(--gold); }
 .hero {
   padding: 85px 7% 75px;
   background:
-    radial-gradient(ellipse at 82% 28%, #d8ad5530, transparent 46%),
+    radial-gradient(ellipse at 82% 28%, #245bdb30, transparent 46%),
     linear-gradient(120deg, #fffdf8, #f7f5ef 72%);
   border-bottom: 1px solid #e9e3d8;
 }
@@ -138,7 +138,7 @@ nav a:hover { color: var(--gold); }
   overflow: hidden;
   transition: .2s;
 }
-.product:hover { transform: translateY(-4px); border-color: #9b793d; }
+.product:hover { transform: translateY(-4px); border-color: #245bdb; }
 .product img {
   display: block;
   width: 100%;
@@ -250,37 +250,43 @@ footer {
     <a href="#home">Home</a>
     <a href="#shop">Shop</a>
     <a href="#about">About</a>
-    <a href="verification.html">Verified</a>
+    <a href="protect.html">LUXE PROTECT</a>
+    <a href="reels.html">Reels</a>
+    <a href="rewards.html">Rewards</a>
+    <a href="verification.html">Verification</a>
     <a href="dama.html">DAMA</a>
     <a href="vicky.html">Vicky AI</a>
     <a href="accounts.html">Account</a>
     <a href="seller.html">Sell</a>
-    <a href="admin.html">Admin</a>
+    <a href="settings.html">Settings</a>
   </nav>
   <button class="cart-button" onclick="openCart()">Cart (<span id="cartCount">0</span>)</button>
 </header>
 
 <section class="hero" id="home">
-  <div class="eyebrow">THE LUXE EXPERIENCE</div>
-  <h1>SHOP BEYOND <span>ORDINARY.</span></h1>
-  <p>Discover products, explore creators and experience a new way to shop. Welcome to LUXE STORE.</p>
+  <div class="eyebrow">A GLOBAL MARKETPLACE</div>
+  <h1>FIND WHAT YOU LOVE. <span>DISCOVER WHAT’S NEXT.</span></h1>
+  <p>Explore products from independent sellers around the world. Discover new brands and shop with more confidence.</p>
   <a href="#shop"><button class="gold-button">EXPLORE STORE →</button></a>
 </section>
 
 <section class="section" id="shop">
   <div class="section-heading">
-    <h2>FEATURED <span>COLLECTION</span></h2>
+    <h2>EXPLORE THE <span>MARKETPLACE</span></h2>
     <input class="search" id="search" placeholder="Search products..." oninput="renderProducts()">
   </div>
 
   <div class="categories">
     <button class="category active" onclick="setCategory('All',this)">All</button>
-    <button class="category" onclick="setCategory('Fashion',this)">Fashion</button>
-    <button class="category" onclick="setCategory('Tech',this)">Tech</button>
+    <button class="category" onclick="setCategory('Shoes',this)">Shoes & sneakers</button>
+    <button class="category" onclick="setCategory('Tech',this)">Phones & accessories</button>
     <button class="category" onclick="setCategory('Accessories',this)">Accessories</button>
-    <button class="category" onclick="setCategory('Lifestyle',this)">Lifestyle</button>
+    <button class="category" onclick="setCategory('Bags',this)">Bags & backpacks</button>
+    <button class="category" onclick="setCategory('Fashion',this)">Fashion</button>
+    <button class="category" onclick="setCategory('Lifestyle',this)">Home & living</button>
   </div>
 
+  <p id="catalogueStatus" style="font-size:12px;color:#777;margin:0 0 14px">Sample catalogue preview — live seller listings appear when the database is connected.</p>
   <div class="products" id="products"></div>
 </section>
 
@@ -289,21 +295,22 @@ footer {
     <h2>WHY <span>LUXE STORE?</span></h2>
   </div>
   <div class="features">
-    <div class="feature"><strong>✦ PREMIUM EXPERIENCE</strong><p>A clean, modern shopping experience built around quality and style.</p></div>
-    <div class="feature"><strong>✦ SELLER COMMUNITY</strong><p>A place for customers, sellers and creators to connect.</p></div>
-    <div class="feature"><strong>✦ LUXE REWARDS</strong><p>A rewards experience is part of the LUXE STORE vision.</p></div>
+    <div class="feature"><strong>✦ LUXE PROTECT</strong><p>Clear marketplace guidance and seller-led fulfilment. Learn how shopping protections are planned.</p><a href="protect.html">Explore LUXE PROTECT →</a></div>
+    <div class="feature"><strong>✦ LUXE REWARDS</strong><p>Eligible completed purchases can earn points that never expire.</p><a href="rewards.html">Explore rewards →</a></div>
+    <div class="feature"><strong>✦ LUXE REELS</strong><p>Discover short-form product videos and independent creators.</p><a href="reels.html">Explore Reels →</a></div>
+    <div class="feature"><strong>✦ CREATOR PARTNERS</strong><p>Seller and creator discovery with custom LUXE identity badges.</p></div>
   </div>
 </section>
 
 <footer>
   © 2026 LUXE STORE. ALL RIGHTS RESERVED.<br><br>
-  Built for the LUXE community.
+  <a href="settings.html">Settings</a> · <a href="rewards.html">Rewards</a> · <a href="reels.html">Reels</a> · <a href="https://wa.me/220872147800">Contact LUXE</a><br><br>Built for the LUXE community.
 </footer>
 
 <div id="cartPanel" onclick="if(event.target.id==='cartPanel') closeCart()">
   <div class="cart-content">
     <button class="close" onclick="closeCart()">×</button>
-    <h2>Your <span style="color:#d8ad55">Cart</span></h2>
+    <h2>Your <span style="color:#245bdb">Cart</span></h2>
     <div id="cartItems"></div>
     <h3 id="cartTotal">Total: D0</h3>
     <p style="color:#999;font-size:12px">Your cart is saved on this device. Secure checkout and payments are not connected yet.</p>
@@ -312,14 +319,17 @@ footer {
 </div>
 
 <script>
-const products = [
-  {name:"Classic Streetwear",category:"Fashion",price:850,image:"https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=700"},
-  {name:"Urban Sneakers",category:"Fashion",price:1450,image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700"},
-  {name:"Wireless Headphones",category:"Tech",price:1200,image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700"},
-  {name:"Smart Watch",category:"Tech",price:1800,image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"},
-  {name:"Premium Shades",category:"Accessories",price:650,image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700"},
-  {name:"Everyday Backpack",category:"Lifestyle",price:950,image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700"}
+let products = [
+  {name:"Classic Streetwear",category:"Fashion",price:850,seller:"Urban Edit",image:"https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=700"},
+  {name:"Urban Sneakers",category:"Shoes",price:1450,seller:"Streetline",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700"},
+  {name:"Wireless Headphones",category:"Tech",price:1200,seller:"Nova Tech",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700"},
+  {name:"Smart Watch",category:"Tech",price:1800,seller:"Volt Market",image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"},
+  {name:"Premium Shades",category:"Accessories",price:650,seller:"Vista Goods",image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700"},
+  {name:"Everyday Backpack",category:"Bags",price:950,seller:"Carry Co.",image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700"},
+  {name:"Classic Low-top Shoes",category:"Shoes",price:1850,seller:"Sole House",image:"https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=700"},
+  {name:"Crossbody Bag",category:"Bags",price:900,seller:"Carry Co.",image:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700"}
 ];
+let catalogueIsLive = false;
 
 let selectedCategory = "All";
 let cart = [];
@@ -339,24 +349,56 @@ function renderProducts() {
   const search = document.getElementById("search").value.toLowerCase();
   const filtered = products.filter(p =>
     (selectedCategory === "All" || p.category === selectedCategory) &&
-    p.name.toLowerCase().includes(search)
+    (p.name + " " + p.seller + " " + p.category).toLowerCase().includes(search)
   );
 
   document.getElementById("products").innerHTML = filtered.length
     ? filtered.map(p => `
       <article class="product">
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        ${(p.image || p.image_url) ? `<img src="${p.image || p.image_url}" alt="${p.name}" loading="lazy">` : `<div style="height:190px;background:#f2f4f7;display:grid;place-items:center;color:#8a8f98;font-size:12px">Image not provided</div>`}
         <div class="product-info">
-          <small>${p.category.toUpperCase()}</small>
+          <small>${String(p.category || "Other").toUpperCase()}</small>
           <h3>${p.name}</h3>
+          <div style="font-size:11px;color:#777;margin:0 0 10px">Sold by <strong style="color:#333">${p.seller || "Independent seller"}</strong></div>
           <div class="product-bottom">
-            <span class="price">D${p.price.toLocaleString()}</span>
-            <button class="add-button" onclick="addToCart('${p.name}')">+ Add</button>
+            <span class="price">${((p.currencyCode || p.currency_code || "GMD") === "GMD" ? "D" : (p.currencyCode || p.currency_code) + " ")}${Number(p.price ?? p.price_amount ?? 0).toLocaleString()}</span>
+            <button class="add-button" onclick="addToCart('${p.name.replace(/'/g, "\\'")}')">+ Add</button>
           </div>
         </div>
       </article>
     `).join("")
     : '<p class="empty">No products found. Try another search.</p>';
+}
+
+async function loadPublishedCatalogue() {
+  try {
+    const response = await fetch("/api/products", { headers: { "Accept": "application/json" } });
+    const data = await response.json();
+    if (!response.ok || !data.ok || !Array.isArray(data.products)) throw new Error("Catalogue not ready");
+    catalogueIsLive = true;
+    products = data.products.map(p => {
+      const raw = String(p.category || "Other").toLowerCase();
+      const category = raw.includes("shoe") ? "Shoes" :
+        (raw.includes("phone") || raw.includes("tech")) ? "Tech" :
+        raw.includes("bag") ? "Bags" :
+        raw.includes("accessor") ? "Accessories" :
+        raw.includes("fashion") ? "Fashion" : "Lifestyle";
+      return {
+        name: p.title,
+        category,
+        price: Number(p.price_amount),
+        currencyCode: p.currency_code,
+        seller: "Independent seller",
+        image_url: p.image_url || null
+      };
+    });
+    document.getElementById("catalogueStatus").textContent = products.length
+      ? "Showing published listings from LUXE sellers."
+      : "The live catalogue is connected but no products have been published yet.";
+    renderProducts();
+  } catch {
+    document.getElementById("catalogueStatus").textContent = "Sample catalogue preview — live seller listings are not connected yet.";
+  }
 }
 
 function setCategory(category, button) {
@@ -384,7 +426,7 @@ function renderCart() {
   document.getElementById("cartItems").innerHTML = cart.length
     ? cart.map((p,i) => `
       <div class="cart-line">
-        <span>${p.name}<br><small style="color:#d8ad55">D${p.price.toLocaleString()}</small></span>
+        <span>${p.name}<br><small style="color:#245bdb">D${p.price.toLocaleString()}</small></span>
         <button class="add-button" onclick="removeFromCart(${i})">Remove</button>
       </div>
     `).join("")
@@ -402,6 +444,7 @@ function removeFromCart(index) {
 
 document.getElementById("cartCount").textContent = cart.length;
 renderProducts();
+loadPublishedCatalogue();
 </script>
 </body>
 </html>
