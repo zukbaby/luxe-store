@@ -1,5 +1,6 @@
 const { authenticate } = require("./_lib/auth");
 const { query } = require("./_lib/database");
+const { randomUUID } = require("node:crypto");
 
 const MAX_BODY_BYTES = 4096;
 
@@ -75,7 +76,7 @@ module.exports = async function handler(req, res) {
     if (error && error.code === "DATABASE_NOT_CONFIGURED") {
       return send(res, 503, { ok: false, code: "DATABASE_NOT_CONFIGURED" });
     }
-    const requestId = crypto.randomUUID();
+    const requestId = randomUUID();
     console.error("LUXE profile request failed", { requestId });
     return send(res, 500, { ok: false, code: "INTERNAL_ERROR", requestId });
   }
