@@ -21,8 +21,8 @@ All routes below are contracts for future implementation. Until database and aut
 - GET /api/admin/verification-requests — authorized reviewer queue.
 - GET /api/admin/verification-requests/:id — restricted case details.
 - POST /api/admin/verification-requests/:id/decision — human decision only; require admin role, reason, and audit record.
-- GET /api/admin/audit — narrowly scoped audit access.
-- GET /api/admin/audit — owner-only recent administrative event history; returns limited event metadata only.\n- POST /api/admin/commands — configured owner only. Accepts the exact command `1weekban-username`; resolves a unique username, records a seven-day expiry, protects the owner and administrator accounts, and writes an audit event atomically. No arbitrary SQL or free-form commands are accepted.
+- GET /api/admin/audit — owner-only recent administrative event history; returns limited event metadata only.
+- POST /api/admin/commands — configured owner only. Accepts the exact command `1weekban-username`; resolves a unique username, records a seven-day expiry, protects the owner and administrator accounts, and writes an audit event atomically. No arbitrary SQL or free-form commands are accepted.
 
 ## Assistant endpoints (future)
 - POST /api/ai/dama — authenticated, rate-limited, public-catalogue-grounded assistant.
