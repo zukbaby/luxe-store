@@ -1,26 +1,28 @@
-# LUXE STORE API contracts (planned)
+# LUXE STORE API contracts
 
-All routes below are contracts for future implementation. Until database and authentication providers are configured, endpoints must return an unavailable response and must not read or mutate private data.
+All routes execute server-side. They must return unavailable responses until required providers, migrations, authorization and tests are ready.
 
 ## Public
 - GET /api/health — configuration presence only; never expose secret values.
-- GET /api/products — future published catalogue; only active, public fields.
-- GET /api/products/:id — future public product detail.
+- GET /api/products — published catalogue only; returns explicit public fields and a bounded result set.
+- GET /api/products/:id — planned public product detail.
 
 ## Authenticated customer
-- GET /api/me — own profile only.
-- PATCH /api/me — allowlisted profile fields only.
-- POST /api/verification-requests — applicant-owned request; private evidence uploaded only through a secure provider workflow.
+- GET /api/me — own profile only, derived from verified Clerk session.
+- PATCH /api/me — planned allowlisted profile fields only.
+- POST /api/verification-requests — planned applicant-owned request; do not accept identity-document uploads until private storage, retention and review controls are approved.
 
-## Authenticated seller
-- POST /api/seller/products — create a draft owned by current seller.
-- PATCH /api/seller/products/:id — update own draft only.
-- POST /api/seller/products/:id/submit — submit own draft for moderation.
+## Seller applications and listings
+- POST /api/seller/applications — planned seller application; user ID comes only from verified session; application remains pending until human owner review.
+- GET /api/seller/products — planned own listings only.
+- POST /api/seller/products — planned draft creation; role and ownership come from server-side profile.
+- PATCH /api/seller/products/:id — planned update of own draft only.
+- POST /api/seller/products/:id/submit — planned submit for moderation.
 
 ## Authenticated admin
 - GET /api/admin/verification-requests — authorized reviewer queue.
-- GET /api/admin/verification-requests/:id — restricted case details.
-- POST /api/admin/verification-requests/:id/decision — human decision only; require admin role, reason, and audit record.
+- GET /api/admin/seller-applications — owner-only seller review queue.
+- POST /api/admin/seller-applications/:id/decision — human decision only; require owner authorization and audit record.
 - GET /api/admin/audit — narrowly scoped audit access.
 
 ## Assistant endpoints (future)
@@ -34,4 +36,6 @@ All routes below are contracts for future implementation. Until database and aut
 - Validate content type, body size, schemas, IDs, and allowed fields.
 - Never trust client-provided roles, user IDs, prices, ownership, or verification status.
 - Never expose database or model-provider credentials.
-- Audit admin mutations and test denied access paths.
+- Audit privileged admin mutations and test denied access paths.
+- Rate-limit sign-in, applications, catalogue writes, DAMA requests and all write endpoints.
+- Seller approval is a human decision; submitting an application never grants seller privileges.
