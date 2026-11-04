@@ -46,7 +46,7 @@ module.exports = async function handler(req, res) {
 
   try {
     const rows = await query(
-      "update public.products set title = $1, description = $2, price_gmd = $3, currency_code = $4, category = $5, image_url = $6, updated_at = now() where id = $7 and seller_id = $8 and status = 'draft' returning id, title, description, price_gmd, currency_code, category, image_url, status, updated_at",
+      "update public.products set title = $1, description = $2, price_amount = $3, currency_code = $4, category = $5, image_url = $6, updated_at = now() where id = $7 and seller_id = $8 and status = 'draft' returning id, title, description, price_amount, currency_code, category, image_url, status, updated_at",
       [title, description, price, currencyCode, category, imageUrl, id, session.userId]
     );
     if (!rows || rows.length === 0) return res.status(404).json({ ok: false, code: "DRAFT_NOT_FOUND", message: "Only your own draft listings can be edited." });
