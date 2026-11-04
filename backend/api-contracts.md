@@ -22,7 +22,7 @@ All routes below are contracts for future implementation. Until database and aut
 - GET /api/admin/verification-requests/:id — restricted case details.
 - POST /api/admin/verification-requests/:id/decision — human decision only; require admin role, reason, and audit record.
 - GET /api/admin/audit — narrowly scoped audit access.
-- POST /api/admin/commands — configured owner only. Accepts the exact command `1weekban-username`; resolves a unique username, applies a seven-day expiry, protects the owner and admin accounts, and writes an audit event atomically. No arbitrary SQL or free-form commands are accepted.
+- POST /api/admin/commands — configured owner only. Accepts the exact command `1weekban-username`; resolves a unique username, records a seven-day expiry, protects the owner and administrator accounts, and writes an audit event atomically. No arbitrary SQL or free-form commands are accepted.
 
 ## Assistant endpoints (future)
 - POST /api/ai/dama — authenticated, rate-limited, public-catalogue-grounded assistant.
@@ -36,7 +36,7 @@ All routes below are contracts for future implementation. Until database and aut
 - Never trust client-provided roles, user IDs, prices, ownership, or verification status.
 - Never expose database or model-provider credentials.
 - Audit admin mutations and test denied access paths.
-
+- Shared authentication checks the server-side timed-ban state before protected API work.
 
 ## Marketplace additions (planned; migration 002)
 - GET /api/sellers/:slug — public storefront profile and published listings only.
@@ -58,18 +58,17 @@ All routes below are contracts for future implementation. Until database and aut
 - Do not store raw delivery addresses or identity documents in the marketplace tables.
 - Keep all new tables default-deny under RLS until provider identity mapping and policies are reviewed and tested.
 
-
 ## Seller applications (implemented in code; not live)
 - GET /api/seller/applications — authenticated user's own application history.
-- POST /api/seller/applications — submit an application with storeName, storeSlug, and description only. The user ID comes from the verified session; role/status/reviewer fields are not accepted.
+- POST /api/seller/applications — submit an application with storeName, storeSlug, and description only. The user ID comes from the verified Clerk session.
 - GET /api/admin/seller-applications — owner-only pending review queue.
 - POST /api/admin/seller-applications — owner-only human decision with applicationId, decision (approved/rejected), and optional reviewerNote. Approval, seller-role promotion, private-by-default storefront creation, and audit insertion are one SQL statement.
 - Migration 003 adds a seller application table, unique pending-per-user and active-slug indexes, RLS, and a verification script. It intentionally adds no RLS policies.
-- Apply migration 003 only after base schema and migration 002 in staging. Configure owner identity and verify the owner profile exists before testing decisions.
 - These routes remain unavailable until Clerk and Neon are configured, migrations are applied, and staging tests pass.
 
 ## Moderation command (implemented in code; not live)
 - Migration 004 adds unique usernames and server-controlled ban expiry/reason columns to profiles; it preserves RLS default-deny.
 - Users may set their own username through PATCH /api/me. Usernames are 3–24 lowercase letters, numbers or underscores and are unique case-insensitively.
-- The command endpoint accepts only `1weekban-username`, bans for exactly seven days, protects the owner/admin accounts, and records an audit event.
-- The command remains unavailable until migration 004 is applied and Clerk/Neon are configured and tested in staging.
+- The owner-only command accepts only `1weekban-username`, records a seven-day expiry, protects owner/admin accounts, and writes an audit event.
+- Shared API authentication centrally enforces unexpired bans. Expired bans stop restricting access automatically.
+- The feature remains unavailable until migration 004 is applied and Clerk/Neon are configured and tested in staging.
