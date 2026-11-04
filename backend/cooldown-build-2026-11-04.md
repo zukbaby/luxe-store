@@ -31,3 +31,26 @@ Branch: `cooldown-build-2026-11-04`
 - Changes are on the separate cooldown branch and are not production-live.
 - Do not merge, promote, or deploy until the deployment cooldown clears and the owner explicitly requests it.
 - Apply migrations in order in a staging database, run verification scripts, configure Clerk and Neon through their secure dashboards, then test owner, admin, banned-user and non-owner access before launch.
+
+
+## Consolidated marketplace and assistant build
+- Added migration 006 and verification script for the owner-reviewed product publishing lifecycle.
+- Added seller product draft APIs, seller-owned editing, and submit-for-review flow.
+- Added public catalogue, product detail and public seller storefront APIs.
+- Added owner-only product moderation queue with publish/return decisions, audit entries and seller notifications.
+- Rebuilt Seller Studio to use Clerk sessions and server APIs instead of browser-only localStorage drafts.
+- Rebuilt the marketplace and homepage to show only public, approved catalogue records and use persistent authenticated carts.
+- Added public seller storefront and product detail pages; product reviews are public only after moderation.
+- Added persistent cart API; it checks published listing and available stock but does not reserve stock or enable checkout.
+- Added verified-purchase review submission API; reviews require a delivered order and are not published automatically.
+- Added migration 007 and a database-backed per-user DAMA rate limiter.
+- Connected DAMA backend to Vercel AI Gateway's OpenAI-compatible Chat Completions API, with catalogue-only grounding and server-side credentials; added shared Clerk browser bootstrap and connected DAMA chat UI.
+- Added migration verification scripts and expanded API syntax checks.
+- Added `DAMA_MODEL` to the environment example. No AI Gateway key, model choice, database or Clerk provider was provisioned.
+
+## Current hard gates
+- Database/auth providers are not configured and migrations are not applied.
+- AI Gateway is not configured; DAMA returns a safe unavailable response until the owner configures it.
+- Vicky does not receive private evidence and cannot make decisions. Its evidence-summary integration remains disabled until secure evidence storage and a reviewer workflow exist.
+- Checkout, payment processing, fulfilment address collection, seller payouts, order management and support tickets remain disabled.
+- No production deploy or merge is authorized during the Vercel cooldown.
