@@ -49,3 +49,7 @@ Before applying it, review the SQL against the selected PostgreSQL provider and 
 
 ## Authentication/profile API progress
 `api/me.js` now implements a narrow self-service profile endpoint using the existing server-side Clerk token verifier and Neon query helper. GET reads only the verified caller's profile; PATCH creates/updates only `display_name` and cannot set roles or verification status. Missing provider configuration fails closed. The browser sign-in/sign-up UI, provider provisioning, database setup, and staging tests remain outstanding. See `backend/auth-profile-implementation.md` before enabling this route for real users.
+
+
+## Seller application workflow progress
+`api/seller/applications.js` implements caller-only application history and submission. `api/admin/seller-applications.js` provides an owner-only queue and human decision endpoint. An approval promotes the applicant's role, creates a private storefront, and writes an audit entry atomically; rejection does not change the applicant's role. The new migration keeps RLS enabled with no policies, and the endpoints remain non-live until provider setup and staging review are complete.
