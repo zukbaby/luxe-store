@@ -1,7 +1,7 @@
 # LUXE STORE backend foundation
 
 ## Current state
-The deployed site is still a static HTML prototype. These files are a reviewed starting point for a real backend, not a live database or authentication system.
+The deployed site remains a preview until providers and migrations are configured. The cooldown branch now contains real server-side API implementations for several workflows, but none is production-live until staging setup and tests are complete.
 
 ## Proposed stack
 - **Vercel Functions** for server-side APIs.
@@ -9,7 +9,7 @@ The deployed site is still a static HTML prototype. These files are a reviewed s
 - **Clerk** for managed sign-in and verified sessions.
 - **Vercel AI Gateway / AI SDK** for DAMA, added after authentication and usage limits are in place.
 
-The repository remains a static HTML site without an application framework. A minimal package manifest and server-side Clerk/Neon runtime helpers have now been added for Vercel Functions. The existing HTML pages still need a sign-in UI integration before account, admin, verification, or AI endpoints can be enabled.
+The repository remains a static HTML site without an application framework. A minimal package manifest and server-side Clerk/Neon runtime helpers have now been added for Vercel Functions. The account, seller, marketplace and DAMA pages now share a Clerk browser bootstrap. API endpoints still fail closed without provider credentials and a configured database.
 
 ## Data model
 `schema.sql` defines profiles, products, verification requests, and an append-only-style admin audit log. Row-level security is enabled and intentionally has no permissive policies yet. This is fail-closed: it will not work as a live app until policies and server-side identity checks are implemented and tested.
@@ -69,3 +69,12 @@ Product approvals/returns are owner-only, audited, and notify the seller. The pu
 DAMA calls the Vercel AI Gateway OpenAI-compatible endpoint from a server function, with the model ID supplied through `DAMA_MODEL`. It uses `AI_GATEWAY_API_KEY` or Vercel OIDC authentication, applies a database-backed per-user rate limit, and supplies only published public catalogue data. It is unavailable until the required environment and migrations are configured. See the official [Vercel AI Gateway API guide](https://vercel.com/docs/ai-gateway/sdks-and-apis).
 
 Checkout, payments, fulfilment addresses, private verification evidence, seller payouts, live order management and Vicky's evidence-summary workflow remain intentionally disabled pending secure design, provider setup and staging review.
+
+
+## Product catalogue and moderation
+Seller product drafts are owned by the authenticated seller. Draft edits are restricted to the owner, and submission changes status to `pending_review`. Only the configured owner can publish a product or return it to drafts. Public catalogue and seller storefront endpoints include only published, in-stock products from public storefronts.
+
+Buyer carts are persistent and account-scoped. Adding an item checks current listing status and stock, but does not reserve stock. There is deliberately no checkout route yet. Reviews require a delivered order and remain unpublished until an owner approves them. Product and review decisions are audited and notify the affected account.
+
+## DAMA
+DAMA uses Vercel AI Gateway's OpenAI-compatible Chat Completions endpoint. Set `DAMA_MODEL` to an available model ID and configure `AI_GATEWAY_API_KEY` or use Vercel OIDC. The API supplies only public, published catalogue data and uses a database-backed per-user rate limit. No key or model was configured by this build.
