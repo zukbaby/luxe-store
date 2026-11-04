@@ -19,6 +19,14 @@ Branch: `cooldown-build-2026-11-04`
 - Added the Admin panel People section with search, account result table and profile detail view.
 - Account directory responses exclude email addresses, credentials and private verification evidence.
 
+## Notifications centre added
+- Added migration 005 for seller, moderation and account notification categories, preserving the existing order/product/verification/support/system categories and default-deny RLS.
+- Added authenticated notification inbox API, unread count, individual mark-read and mark-all-read endpoints.
+- Added a signed-in My Account notification centre with refresh, unread count and safe text-only rendering.
+- Seller application decisions, verification decisions and seven-day bans now create user notifications atomically with the related database writes and audit records.
+- Added owner-only verification queue metadata and a separate owner-only human decision endpoint. The queue does not expose private identity evidence; decisions update the profile, audit record and user notification atomically.
+- Fixed shared Bearer token header parsing and expanded syntax checks.
+
 ## Deployment and safety status
 - Changes are on the separate cooldown branch and are not production-live.
 - Do not merge, promote, or deploy until the deployment cooldown clears and the owner explicitly requests it.
