@@ -4,7 +4,7 @@ All routes execute server-side. They must return unavailable responses until req
 
 ## Public
 - GET /api/health — configuration presence only; never expose secret values.
-- GET /api/products — published catalogue only; explicit public fields and bounded result set.
+- GET /api/products — published catalogue only; explicit public fields and bounded result set. Uses currency-neutral `price_amount` and `currency_code`.
 - GET /api/products/:id — planned public product detail.
 
 ## Authenticated customer
@@ -14,11 +14,11 @@ All routes execute server-side. They must return unavailable responses until req
 
 ## Seller applications and listings
 - GET /api/seller/applications — authenticated applicant's own application history.
-- POST /api/seller/applications — create a pending application; user ID comes only from verified session. Requires an existing profile row and the seller-application migration.
-- GET /api/seller/products — planned own listings only.
-- POST /api/seller/products — planned draft creation; role and ownership come from server-side profile.
-- PATCH /api/seller/products/:id — planned update of own draft only.
-- POST /api/seller/products/:id/submit — planned submit for moderation.
+- POST /api/seller/applications — create a pending application; user ID comes only from verified session. Requires an existing profile row and seller-application migration.
+- GET /api/seller/products — approved seller's own listings.
+- POST /api/seller/products — create a draft owned by the authenticated seller; browser cannot set seller ID or publication status.
+- PATCH /api/seller/products/:id — edit only the authenticated seller's own draft.
+- Product publishing and moderation are not implemented yet; drafts are not public.
 
 ## Owner-only administration
 - GET /api/admin/seller-applications — owner-only pending seller review queue.
