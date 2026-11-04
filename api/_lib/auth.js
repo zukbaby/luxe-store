@@ -17,7 +17,7 @@ function readCookie(req, name) {
 function getToken(req) {
   const authorization = req.headers && req.headers.authorization;
   if (typeof authorization === "string") {
-    const match = authorization.match(/^Bearer\\s+(.+)$/i);
+    const match = authorization.match(/^Bearer\s+(.+)$/i);
     if (match) return match[1].trim();
   }
   return readCookie(req, COOKIE_NAME);
