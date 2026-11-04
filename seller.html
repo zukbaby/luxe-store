@@ -1,5 +1,84 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LUXE STORE | Seller Studio Preview</title><style>
-*{box-sizing:border-box}body{margin:0;background:#f8f8f6;color:#191919;font-family:Arial,sans-serif}.top{background:#fff;padding:17px 6%;border-bottom:1px solid #eae7e0;display:flex;justify-content:space-between}.logo{color:#245bdb;font-weight:900;letter-spacing:3px}a{color:inherit;text-decoration:none}.wrap{max-width:1050px;margin:auto;padding:35px 18px}.eyebrow{color:#245bdb;letter-spacing:3px;font-size:10px;font-weight:bold}h1{font-size:36px;margin:10px 0 24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:#fff;border:1px solid #eae7e0;border-radius:12px;padding:20px}.muted{color:#777;font-size:13px;line-height:1.6}.field{display:grid;gap:7px;margin:12px 0}label{font-size:13px;font-weight:bold}input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:7px;font:inherit}textarea{min-height:80px}button{background:#245bdb;color:#fff;border:0;padding:11px 15px;border-radius:7px;font-weight:bold;cursor:pointer}.notice{background:#f2f6fc;color:#4d6280;border:1px solid #dce7f6;padding:13px;border-radius:8px;font-size:12px;line-height:1.6;margin-bottom:18px}.item{padding:12px 0;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:12px;font-size:13px}.state{color:#9a702b;font-size:11px}.metric{font-size:27px;font-weight:bold;margin-top:7px}@media(max-width:700px){.grid{grid-template-columns:1fr}}
-</style></head><body><header class="top"><a class="logo" href="index.html">LUXE STORE</a><a href="index.html">← Store</a></header><main class="wrap"><div class="eyebrow">SELLER STUDIO</div><h1>Your store workspace</h1><div class="notice"><b>Demo workspace.</b> Product drafts are saved only in this browser. No listing is published, no orders or payments are real, and seller verification is not active. A secure seller account and moderation backend are still required.</div><div class="grid"><section class="card"><h2>Store snapshot</h2><div class="muted">Draft products in this browser</div><div class="metric" id="count">0</div><p class="muted">Seller application: human review required</p><p class="muted">Published orders: not connected</p><p class="muted">Payouts: not connected</p></section><section class="card"><h2>Create product draft</h2><div class="field"><label for="storeName">Store display name</label><input id="storeName" maxlength="40" placeholder="Your public seller name"></div><form id="productForm"><div class="field"><label for="productName">Product name</label><input id="productName" maxlength="70" required></div><div class="field"><label for="price">Price (D)</label><input id="price" type="number" min="1" max="10000000" required></div><div class="field"><label for="category">Category</label><select id="category"><option>Shoes & sneakers</option><option>Phones & accessories</option><option>Bags & backpacks</option><option>Fashion</option><option>Home & living</option><option>Beauty</option><option>Sports & outdoors</option></select></div><div class="field"><label for="description">Description</label><textarea id="description" maxlength="300"></textarea></div><button>Save product draft</button></form></section><section class="card" style="grid-column:1/-1"><h2>My product drafts</h2><div id="items" class="muted">No drafts yet.</div></section></div><section class="card" style="margin-top:16px"><h2>Seller onboarding</h2><p class="muted">Seller accounts are separate from customer accounts. Applicants will submit a store profile for owner review. Identity checks and any applicable onboarding fee must use a secure, private process after the seller application system is connected. Do not upload identity documents or send payments through this preview.</p><span class="state">APPLICATIONS NOT LIVE</span></section></main><script>
-let drafts=[];try{const saved=JSON.parse(localStorage.getItem("luxe-seller-drafts")||"[]");drafts=Array.isArray(saved)?saved:[]}catch{}function render(){document.getElementById("count").textContent=drafts.length;const el=document.getElementById("items");el.innerHTML="";if(!drafts.length){el.textContent="No drafts yet.";return}drafts.forEach((p,i)=>{const row=document.createElement("div");row.className="item";const left=document.createElement("span");left.textContent=p.name+" · D"+Number(p.price).toLocaleString()+" · "+p.category;const right=document.createElement("span");right.className="state";right.textContent="DRAFT";row.append(left,right);el.appendChild(row)})}document.getElementById("productForm").addEventListener("submit",e=>{e.preventDefault();drafts.push({name:document.getElementById("productName").value.trim(),price:Number(document.getElementById("price").value),category:document.getElementById("category").value,description:document.getElementById("description").value});try{localStorage.setItem("luxe-seller-drafts",JSON.stringify(drafts))}catch{}e.target.reset();render()});render();
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LUXE STORE | Seller Studio</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#171717;font-family:Arial,sans-serif}.top{background:#fff;padding:17px 6%;border-bottom:1px solid #e8e8e8;display:flex;justify-content:space-between}.logo{color:#245bdb;font-weight:900;letter-spacing:3px}a{color:inherit;text-decoration:none}.wrap{max-width:1080px;margin:auto;padding:34px 18px}.eyebrow{color:#245bdb;letter-spacing:3px;font-size:10px;font-weight:bold}h1{font-size:36px;margin:10px 0 22px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:#fff;border:1px solid #e7e7e7;border-radius:12px;padding:20px}.muted{color:#777;font-size:13px;line-height:1.6}.field{display:grid;gap:7px;margin:12px 0}label{font-size:13px;font-weight:bold}input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:7px;font:inherit}textarea{min-height:85px}button{background:#245bdb;color:#fff;border:0;padding:11px 15px;border-radius:7px;font-weight:bold;cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}.notice{background:#f3f7ff;color:#405779;border:1px solid #dce7f8;padding:13px;border-radius:8px;font-size:12px;line-height:1.6;margin-bottom:18px}.status{padding:12px;border-radius:8px;background:#f6f7f9;color:#596575;font-size:12px;line-height:1.6;margin:12px 0}.status.error{background:#fff3f1;color:#8b3428}.status.ok{background:#effaf2;color:#27643b}.item{padding:12px 0;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:12px;font-size:13px}.state{color:#8a6a2b;font-size:11px;font-weight:bold}.metric{font-size:27px;font-weight:bold;margin-top:7px}.wide{grid-column:1/-1}.row{display:flex;gap:12px;flex-wrap:wrap}.row .field{flex:1;min-width:140px}@media(max-width:700px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}h1{font-size:30px}}
+</style>
+</head>
+<body>
+<header class="top"><a class="logo" href="index.html">LUXE STORE</a><a href="index.html">← Store</a></header>
+<main class="wrap">
+<div class="eyebrow">SELLER STUDIO</div><h1>Your store workspace</h1>
+<div class="notice"><b>Secure seller workspace.</b> Applications and drafts are sent to LUXE's server APIs. You must sign in; seller access is granted only after owner review. If the account or database provider is not configured, the page will say so rather than pretending your submission was saved.</div>
+<div id="globalStatus" class="status" role="status" aria-live="polite">Checking seller services…</div>
+<div class="grid">
+<section class="card"><h2>Store snapshot</h2><div class="muted">Your server-saved product drafts</div><div class="metric" id="draftCount">—</div><p class="muted">Published listings require a separate moderation decision. Orders, checkout and payouts are not enabled yet.</p></section>
+<section class="card"><h2>My seller applications</h2><div id="applications" class="muted">Checking your applications…</div></section>
+<section class="card"><h2>Apply to become a seller</h2><p class="muted">Submit your business details for human review. Applying does not grant seller access.</p>
+<form id="applicationForm">
+<div class="field"><label for="businessName">Business / store name</label><input id="businessName" maxlength="100" required></div>
+<div class="row"><div class="field"><label for="businessCategory">Main category</label><select id="businessCategory"><option>Shoes & sneakers</option><option>Phones & accessories</option><option>Bags & backpacks</option><option>Fashion</option><option>Home & living</option><option>Beauty</option><option>Sports & outdoors</option><option>Other</option></select></div><div class="field"><label for="countryCode">Country code (2 letters)</label><input id="countryCode" maxlength="2" placeholder="e.g. GM" required></div></div>
+<div class="field"><label for="contactEmail">Business contact email (optional)</label><input id="contactEmail" type="email" maxlength="254"></div>
+<div class="field"><label for="businessDescription">Tell us about your store</label><textarea id="businessDescription" maxlength="1000"></textarea></div>
+<button id="applyButton" type="submit">Submit seller application</button>
+<div id="applicationStatus" class="status" role="status" aria-live="polite">Applications require a signed-in account.</div>
+</form></section>
+<section class="card"><h2>Create a product draft</h2><p class="muted">Only approved sellers can save drafts. Drafts are private and are not shown in the public catalogue.</p>
+<form id="productForm">
+<div class="field"><label for="productName">Product name</label><input id="productName" maxlength="120" required></div>
+<div class="field"><label for="productPrice">Price</label><input id="productPrice" type="number" min="0" step="0.01" required></div>
+<div class="row"><div class="field"><label for="productCurrency">Currency code</label><input id="productCurrency" value="GMD" maxlength="3" required></div><div class="field"><label for="productCategory">Category</label><select id="productCategory"><option>Shoes & sneakers</option><option>Phones & accessories</option><option>Bags & backpacks</option><option>Fashion</option><option>Home & living</option><option>Beauty</option><option>Sports & outdoors</option><option>Other</option></select></div></div>
+<div class="field"><label for="productImage">Product image URL (HTTPS, optional)</label><input id="productImage" type="url" placeholder="https://…"></div>
+<div class="field"><label for="productDescription">Description</label><textarea id="productDescription" maxlength="4000"></textarea></div>
+<button id="saveProductButton" type="submit">Save draft securely</button>
+<div id="productStatus" class="status" role="status" aria-live="polite">Sign-in and approved seller access are required.</div>
+</form></section>
+<section class="card wide"><h2>My product drafts</h2><div id="products" class="muted">Loading your saved drafts…</div></section>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function message(id,text,type=""){const el=$(id);el.textContent=text;el.className="status"+(type?" "+type:"");}
+function friendly(data,status){
+ const code=data&&data.code;
+ if(code==="AUTH_REQUIRED"||code==="INVALID_SESSION")return "Please sign in first. The LUXE sign-in provider still needs to be connected.";
+ if(code==="AUTH_NOT_CONFIGURED")return "Sign-in is not configured yet. No submission was saved.";
+ if(code==="PROFILE_NOT_FOUND")return "Your account profile is not ready yet. Save your account profile after sign-in, then try again.";
+ if(code==="SELLER_ACCESS_REQUIRED")return "Your seller application must be approved by the owner before you can create product drafts.";
+ if(code==="PENDING_APPLICATION_EXISTS")return "You already have a pending seller application.";
+ if(code==="ORIGIN_NOT_ALLOWED")return "This request was blocked because its website origin could not be verified.";
+ if(code==="BODY_TOO_LARGE")return "Your submission is too large. Please shorten the description.";
+ return (data&&data.message)||"The service is not ready yet (HTTP "+status+"). Nothing was confirmed as saved.";
+}
+async function api(path,options={}){
+ const response=await fetch(path,{...options,credentials:"same-origin",headers:{"Accept":"application/json",...(options.body?{"Content-Type":"application/json"}:{}),...(options.headers||{})}});
+ let data={};try{data=await response.json()}catch{}
+ if(!response.ok||data.ok===false){const error=new Error(friendly(data,response.status));error.code=data.code;throw error}
+ return data;
+}
+function safe(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+async function loadApplications(){
+ try{const data=await api("/api/seller/applications");const list=data.applications||[];$("applications").innerHTML=list.length?list.map(a=>'<div class="item"><span><b>'+safe(a.business_name)+'</b><br><span class="muted">'+safe(a.category)+' · '+safe(a.country_code)+'</span></span><span class="state">'+safe(String(a.status).toUpperCase())+'</span></div>').join(""):"No applications submitted yet.";}
+ catch(e){$("applications").textContent=e.message;}
+}
+async function loadProducts(){
+ try{const data=await api("/api/seller/products");const list=data.products||[];$("draftCount").textContent=list.filter(p=>p.status==="draft").length;$("products").innerHTML=list.length?list.map(p=>'<div class="item"><span><b>'+safe(p.title)+'</b><br><span class="muted">'+safe(p.category)+' · '+safe(p.currency_code)+' '+Number(p.price_amount).toLocaleString()+'</span></span><span class="state">'+safe(String(p.status).toUpperCase())+'</span></div>').join(""):"No server-saved product drafts yet.";}
+ catch(e){$("draftCount").textContent="—";$("products").textContent=e.message;}
+}
+$("applicationForm").addEventListener("submit",async e=>{
+ e.preventDefault();$("applyButton").disabled=true;message("applicationStatus","Submitting securely…");
+ try{const data=await api("/api/seller/applications",{method:"POST",body:JSON.stringify({businessName:$("businessName").value.trim(),category:$("businessCategory").value,countryCode:$("countryCode").value.trim().toUpperCase(),contactEmail:$("contactEmail").value.trim(),description:$("businessDescription").value.trim()})});message("applicationStatus",data.message||"Application submitted for owner review.","ok");e.target.reset();await loadApplications();}
+ catch(err){message("applicationStatus",err.message,"error");}
+ finally{$("applyButton").disabled=false;}
+});
+$("productForm").addEventListener("submit",async e=>{
+ e.preventDefault();$("saveProductButton").disabled=true;message("productStatus","Saving draft securely…");
+ try{const data=await api("/api/seller/products",{method:"POST",body:JSON.stringify({title:$("productName").value.trim(),price:$("productPrice").value,currencyCode:$("productCurrency").value.trim().toUpperCase(),category:$("productCategory").value,imageUrl:$("productImage").value.trim(),description:$("productDescription").value.trim()})});message("productStatus",data.message||"Draft saved. It is not public.","ok");e.target.reset();$("productCurrency").value="GMD";await loadProducts();}
+ catch(err){message("productStatus",err.message,"error");}
+ finally{$("saveProductButton").disabled=false;}
+});
+(async()=>{await Promise.all([loadApplications(),loadProducts()]);message("globalStatus","Seller Studio is connected to the API routes. Live submissions still depend on configured sign-in, database and owner approval.");})();
+</script>
+</body></html>
