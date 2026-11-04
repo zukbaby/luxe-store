@@ -45,3 +45,7 @@ Animated GIF/video profile banners (up to five seconds) remain disabled for all 
 `backend/migrations/002_marketplace_core.sql` adds seller storefronts, persistent carts, orders and item price snapshots, product reviews, notifications, and catalogue category/SKU/stock fields. It enables RLS on every new table without adding permissive policies, so the migration is intentionally not a live feature switch.
 
 Before applying it, review the SQL against the selected PostgreSQL provider and apply the base `backend/schema.sql` first. Checkout must be implemented as a server-side transaction with row locks and database-derived prices and stock. Payment status must only change through verified provider webhooks. Delivery-address and identity-document storage require separate secure workflows and are intentionally not included here.
+
+
+## Authentication/profile API progress
+`api/me.js` now implements a narrow self-service profile endpoint using the existing server-side Clerk token verifier and Neon query helper. GET reads only the verified caller's profile; PATCH creates/updates only `display_name` and cannot set roles or verification status. Missing provider configuration fails closed. The browser sign-in/sign-up UI, provider provisioning, database setup, and staging tests remain outstanding. See `backend/auth-profile-implementation.md` before enabling this route for real users.
