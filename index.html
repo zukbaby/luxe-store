@@ -275,11 +275,11 @@ footer {
   </div>
 
   <div class="categories">
-    <button class="category active" onclick="setCategory('All',this)">All</button>
-    <button class="category" onclick="setCategory('Fashion',this)">Fashion</button>
-    <button class="category" onclick="setCategory('Tech',this)">Tech</button>
-    <button class="category" onclick="setCategory('Accessories',this)">Accessories</button>
-    <button class="category" onclick="setCategory('Lifestyle',this)">Lifestyle</button>
+    <button class="category active" onclick="setCategory('',this)">All</button>
+    <button class="category" onclick="setCategory('fashion',this)">Fashion</button>
+    <button class="category" onclick="setCategory('technology',this)">Tech</button>
+    <button class="category" onclick="setCategory('accessories',this)">Accessories</button>
+    <button class="category" onclick="setCategory('lifestyle',this)">Lifestyle</button>
   </div>
 
   <div class="products" id="products"></div>
@@ -312,97 +312,19 @@ footer {
   </div>
 </div>
 
-<script>
-const products = [
-  {name:"Classic Streetwear",category:"Fashion",price:850,image:"https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=700"},
-  {name:"Urban Sneakers",category:"Fashion",price:1450,image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700"},
-  {name:"Wireless Headphones",category:"Tech",price:1200,image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700"},
-  {name:"Smart Watch",category:"Tech",price:1800,image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"},
-  {name:"Premium Shades",category:"Accessories",price:650,image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700"},
-  {name:"Everyday Backpack",category:"Lifestyle",price:950,image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700"}
-];
-
-let selectedCategory = "All";
-let cart = [];
-try {
-  const savedCart = JSON.parse(localStorage.getItem("luxe-cart") || "[]");
-  cart = Array.isArray(savedCart) ? savedCart.filter(item =>
-    item && typeof item.name === "string" && Number.isFinite(item.price)
-  ) : [];
-} catch {
-  cart = [];
-}
-function saveCart() {
-  try { localStorage.setItem("luxe-cart", JSON.stringify(cart)); } catch {}
-}
-
-function renderProducts() {
-  const search = document.getElementById("search").value.toLowerCase();
-  const filtered = products.filter(p =>
-    (selectedCategory === "All" || p.category === selectedCategory) &&
-    p.name.toLowerCase().includes(search)
-  );
-
-  document.getElementById("products").innerHTML = filtered.length
-    ? filtered.map(p => `
-      <article class="product">
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
-        <div class="product-info">
-          <small>${p.category.toUpperCase()}</small>
-          <h3>${p.name}</h3>
-          <div class="product-bottom">
-            <span class="price">D${p.price.toLocaleString()}</span>
-            <button class="add-button" onclick="addToCart('${p.name}')">+ Add</button>
-          </div>
-        </div>
-      </article>
-    `).join("")
-    : '<p class="empty">No products found. Try another search.</p>';
-}
-
-function setCategory(category, button) {
-  selectedCategory = category;
-  document.querySelectorAll(".category").forEach(b => b.classList.remove("active"));
-  button.classList.add("active");
-  renderProducts();
-}
-
-function addToCart(name) {
-  const product = products.find(p => p.name === name);
-  cart.push(product);
-  saveCart();
-  document.getElementById("cartCount").textContent = cart.length;
-}
-
-function openCart() {
-  document.getElementById("cartPanel").style.display = "flex";
-  renderCart();
-}
-function closeCart() {
-  document.getElementById("cartPanel").style.display = "none";
-}
-function renderCart() {
-  document.getElementById("cartItems").innerHTML = cart.length
-    ? cart.map((p,i) => `
-      <div class="cart-line">
-        <span>${p.name}<br><small style="color:#d8ad55">D${p.price.toLocaleString()}</small></span>
-        <button class="add-button" onclick="removeFromCart(${i})">Remove</button>
-      </div>
-    `).join("")
-    : '<p class="empty">Your cart is empty.</p>';
-
-  const total = cart.reduce((sum,p) => sum + p.price, 0);
-  document.getElementById("cartTotal").textContent = "Total: D" + total.toLocaleString();
-}
-function removeFromCart(index) {
-  cart.splice(index,1);
-  saveCart();
-  document.getElementById("cartCount").textContent = cart.length;
-  renderCart();
-}
-
-document.getElementById("cartCount").textContent = cart.length;
-renderProducts();
+<script src="/luxe-auth.js"></script><script>
+let selectedCategory="",products=[],cart=[],clerk=null;
+function renderProducts(){const root=document.getElementById("products");root.replaceChildren();if(!products.length){const empty=document.createElement("p");empty.className="empty";empty.textContent="No published products are available yet.";root.append(empty);return}products.forEach(p=>{const card=document.createElement("article");card.className="product";const img=document.createElement("img");img.alt=p.title;img.loading="lazy";if(p.image_url&&/^https:\/\//i.test(p.image_url))img.src=p.image_url;else img.alt="Product image unavailable";const info=document.createElement("div");info.className="product-info";const category=document.createElement("small");category.textContent=String(p.category_slug||"LUXE").toUpperCase();const title=document.createElement("h3");title.textContent=p.title;const bottom=document.createElement("div");bottom.className="product-bottom";const price=document.createElement("span");price.className="price";price.textContent="D"+Number(p.price_gmd).toLocaleString();const add=document.createElement("button");add.className="add-button";add.type="button";add.textContent="Add";add.disabled=!clerk?.isSignedIn;add.title=clerk?.isSignedIn?"Add to cart":"Sign in to add items";add.addEventListener("click",()=>addToCart(p));bottom.append(price,add);info.append(category,title,bottom);card.append(img,info);root.append(card)})}
+async function loadProducts(){const root=document.getElementById("products");root.textContent="Loading approved listings…";try{const params=new URLSearchParams();const q=document.getElementById("search").value.trim();if(q)params.set("q",q);if(selectedCategory)params.set("category",selectedCategory);const r=await fetch("/api/products?"+params.toString(),{cache:"no-store"});const d=await r.json().catch(()=>({}));if(!r.ok){root.textContent=r.status===503?"The live catalogue is waiting for database setup. No sample prices are shown.":"Could not load the published catalogue.";products=[];return}products=d.products||[];renderProducts()}catch{root.textContent="Could not connect to the catalogue."}}
+function setCategory(category,button){selectedCategory=category;document.querySelectorAll(".category").forEach(b=>b.classList.remove("active"));button.classList.add("active");loadProducts()}
+async function getToken(){if(!clerk?.isSignedIn)throw new Error("Sign in to use your cart.");const t=await clerk.session.getToken();if(!t)throw new Error("Sign in again to use your cart.");return t}
+async function loadCart(){const token=await getToken();const r=await fetch("/api/cart",{headers:{Authorization:"Bearer "+token,Accept:"application/json"},cache:"no-store"});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.code||"Cart unavailable");cart=d.items||[];document.getElementById("cartCount").textContent=cart.reduce((sum,p)=>sum+p.quantity,0)}
+async function addToCart(product){try{const token=await getToken(),existing=cart.find(p=>p.product_id===product.id),quantity=(existing?.quantity||0)+1;const r=await fetch("/api/cart",{method:"PUT",headers:{"Content-Type":"application/json",Authorization:"Bearer "+token},body:JSON.stringify({productId:product.id,quantity})});const d=await r.json().catch(()=>({}));if(!r.ok){alert(d.code==="PRODUCT_UNAVAILABLE_OR_STOCK_LOW"?"This item is unavailable or stock is low.":"Could not add item to cart.");return}await loadCart()}catch{alert("Sign in and complete database setup before using your cart.")}}
+async function openCart(){const panel=document.getElementById("cartPanel");panel.style.display="flex";try{await loadCart();renderCart()}catch{document.getElementById("cartItems").textContent="Sign in and connect the account/database service to view your cart.";document.getElementById("cartTotal").textContent=""}}
+function closeCart(){document.getElementById("cartPanel").style.display="none"}
+function renderCart(){const root=document.getElementById("cartItems");root.replaceChildren();if(!cart.length){root.textContent="Your cart is empty."}cart.forEach((p,i)=>{const row=document.createElement("div");row.className="cart-line";const title=document.createElement("span");title.textContent=p.title+" × "+p.quantity;const price=document.createElement("small");price.textContent="D"+Number(p.line_total_gmd).toLocaleString();title.append(price);const remove=document.createElement("button");remove.className="add-button";remove.textContent="Remove";remove.addEventListener("click",()=>removeFromCart(i));row.append(title,remove);root.append(row)});const total=cart.reduce((sum,p)=>sum+Number(p.line_total_gmd),0);document.getElementById("cartTotal").textContent="Subtotal: D"+total.toLocaleString()}
+async function removeFromCart(index){try{const p=cart[index],token=await getToken();await fetch("/api/cart",{method:"DELETE",headers:{"Content-Type":"application/json",Authorization:"Bearer "+token},body:JSON.stringify({productId:p.product_id})});await loadCart();renderCart()}catch{alert("Could not update your cart.")}}
+document.getElementById("cartCount").textContent="0";window.LUXE_AUTH.then(async instance=>{clerk=instance;await loadProducts();if(clerk.isSignedIn)await loadCart();else document.getElementById("cartCount").textContent="0"}).catch(()=>{clerk=null;loadProducts()});
 </script>
 </body>
 </html>
