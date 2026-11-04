@@ -89,3 +89,29 @@ All routes below are contracts for future implementation. Until database and aut
 - GET /api/admin/audit returns up to 100 recent event metadata rows and omits raw details/evidence.\n- The owner-only command accepts only `1weekban-username`, records a seven-day expiry, protects owner/admin accounts, and writes an audit event.
 - Shared API authentication centrally enforces unexpired bans. Expired bans stop restricting access automatically.
 - The feature remains unavailable until migration 004 is applied and Clerk/Neon are configured and tested in staging.
+
+
+## Additional implemented marketplace APIs (code prepared; not live)
+- GET /api/products?q=&category= — public published and in-stock listings from public storefronts only.
+- GET /api/products/:id — public product details.
+- GET /api/sellers/:slug — public seller storefront and published listings.
+- GET /api/cart — authenticated caller's own cart.
+- PUT /api/cart — set an item quantity; server validates published status and current stock.
+- DELETE /api/cart — remove an item from the caller's own cart.
+- GET /api/seller/products — seller's own product listings.
+- POST /api/seller/products — create a draft using server-derived seller identity.
+- PATCH /api/seller/products/:id — edit the caller's own draft only.
+- POST /api/seller/products/:id/submit — submit a draft for owner moderation.
+- GET /api/admin/products — owner-only pending product review queue.
+- POST /api/admin/products — owner-only approve/publish or return-to-draft decision; updates audit log and seller notification.
+- GET /api/products/:id/reviews — published reviews only.
+- POST /api/products/:id/reviews — review only after a delivered order containing the product; new reviews remain unpublished.
+- POST /api/ai/dama — authenticated, database-rate-limited AI Gateway assistant supplied only with public published catalogue data.
+
+## Product workflow and safety
+- Migration 006 adds the pending_review product status and review metadata while preserving products RLS default-deny.
+- Migration 007 adds per-user DAMA rate-limit counters with RLS enabled and no client policies.
+- Seller product ownership, role, price, stock, listing state and reviewer identity are derived or enforced server-side.
+- Cart writes do not reserve inventory and are not checkout. Checkout remains disabled until transactional stock locking, fulfilment and verified payment processing are implemented.
+- Product reviews require a delivered order and remain hidden until moderated.
+- DAMA requires `DAMA_MODEL` plus `AI_GATEWAY_API_KEY` or Vercel OIDC. It must not invent catalogue facts, order status, shipping, refunds, payment status or seller metrics.
