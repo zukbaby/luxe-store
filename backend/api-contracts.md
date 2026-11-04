@@ -20,7 +20,8 @@ All routes below are contracts for future implementation. Until database and aut
 ## Authenticated admin
 - GET /api/admin/verification-requests — authorized reviewer queue.
 - GET /api/admin/verification-requests/:id — restricted case details.
-- POST /api/admin/verification-requests/:id/decision — human decision only; require admin role, reason, and audit record.
+- GET /api/admin/verification-requests — owner-only pending queue with limited applicant metadata; excludes private identity evidence.
+- POST /api/admin/verification-decisions — owner-only human approve/reject action; updates verification status, audit log and applicant notification atomically.
 - GET /api/admin/audit — owner-only recent administrative event history; returns limited event metadata only.
 - GET /api/admin/users?q=<search> — owner-only search by public username or display name, limited to 50 results.
 - GET /api/admin/users?id=<profile-id> — owner-only account summary and latest 25 moderation events; excludes credentials, contact details and private verification evidence.
@@ -48,8 +49,9 @@ All routes below are contracts for future implementation. Until database and aut
 - POST /api/checkout — server recalculates prices, locks stock rows, validates stock, and creates order records in one transaction. Payment is not assumed complete.
 - GET /api/orders — buyer's own order history; sellers receive only order items assigned to their seller ID.
 - GET /api/orders/:id — owner-scoped order detail with sensitive delivery data handled by a separate secure workflow.
-- GET /api/notifications — authenticated user's own notifications.
-- PATCH /api/notifications/:id/read — mark only the authenticated user's notification as read.
+- GET /api/notifications — authenticated user's own inbox, unread count and up to 50 recent notices.
+- PATCH /api/notifications — mark all of the authenticated user's notifications as read.
+- PATCH /api/notifications/:id — mark one of the authenticated user's notifications as read.
 - POST /api/products/:id/reviews — accept a review only after server verification of a completed purchase.
 - GET /api/products/:id/reviews — published reviews only.
 
@@ -67,6 +69,14 @@ All routes below are contracts for future implementation. Until database and aut
 - POST /api/admin/seller-applications — owner-only human decision with applicationId, decision (approved/rejected), and optional reviewerNote. Approval, seller-role promotion, private-by-default storefront creation, and audit insertion are one SQL statement.
 - Migration 003 adds a seller application table, unique pending-per-user and active-slug indexes, RLS, and a verification script. It intentionally adds no RLS policies.
 - These routes remain unavailable until Clerk and Neon are configured, migrations are applied, and staging tests pass.
+
+## Notifications centre (implemented in code; not live)
+- Migration 005 adds seller, moderation and account notification categories plus an unread inbox index; the existing order, product, verification and support categories remain.
+- GET /api/notifications returns only the signed-in user's latest 1–50 notifications and unread count.
+- PATCH /api/notifications marks only that user's unread notifications as read; PATCH /api/notifications/:id marks one owned notification as read.
+- Seller application decisions, verification decisions and seven-day moderation actions create notifications in the same SQL statement as their decision/audit writes.
+- The My Account page displays account, seller, verification and moderation notices, supports refresh, individual mark-read and mark-all-read.
+- Notification content and safe payloads are generated server-side; no user can read or alter another account's inbox.
 
 ## Account management centre (implemented in code; not live)
 - The Admin panel People section searches the owner-only account directory by username/display name and shows role, verification status and active restriction expiry.
