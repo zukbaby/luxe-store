@@ -12,7 +12,7 @@ This project needs managed authentication and PostgreSQL before private marketpl
 
 ## Database readiness
 - Confirm PostgreSQL version, region, backups, connection pooling, and restore procedure.
-- Review backend/schema.sql before applying it.
+- Review backend/schema.sql before applying it. Profile and role references use text IDs to match Clerk user IDs.
 - Implement and test row-level security policies based on verified auth identity.
 - Keep service credentials server-side and least-privileged.
 - Test that anonymous users cannot read profiles, verification records, or audit records.
@@ -24,7 +24,7 @@ This project needs managed authentication and PostgreSQL before private marketpl
 - Grant owner/admin privileges manually through a controlled process.
 - Test session expiry, sign-out, account recovery, and denied access.
 
-## Go-live gate
+## Runtime implementation now in the repository\n- `package.json` includes the Clerk backend and Neon serverless drivers.\n- `api/_lib/auth.js` verifies Clerk session tokens server-side and requires an authorized-party allowlist.\n- `api/_lib/database.js` exposes a server-only parameterized Neon query helper.\n- `api/_lib/authorization.js` contains an owner-only check based on the verified Clerk user ID.\n- These helpers are not yet wired into public/private feature routes; routes remain fail-closed until provider setup and staging tests are complete.\n\n## Go-live gate
 Do not enable account writes, admin actions, verification submissions, badge issuance, seller publishing, or AI endpoints until database connectivity, authentication, authorization, audit logging, and abuse controls pass staging tests.
 
 DAMA may only use published catalogue/help data. Vicky may only prepare neutral review assistance for an authorized human reviewer; it cannot make decisions or issue badges.
