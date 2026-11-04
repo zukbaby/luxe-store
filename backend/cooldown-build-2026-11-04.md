@@ -6,13 +6,14 @@ Branch: `cooldown-build-2026-11-04`
 
 ## Moderation command added
 - Added migration 004 for unique public usernames and timed ban metadata, with default-deny RLS retained.
-- Added `PATCH /api/me` support for a user's own username; usernames are 3–24 characters and use letters, numbers or underscores.
+- Added self-service username updates through `PATCH /api/me`; usernames are 3–24 characters using letters, numbers or underscores.
 - Added owner-only `POST /api/admin/commands` accepting only `1weekban-username`.
-- The command applies a seven-day ban expiry, refuses to ban the owner or administrator accounts, and writes the audit event in the same SQL statement.
+- The command records a seven-day ban expiry, refuses to ban the owner or administrator accounts, and writes an audit event atomically.
+- Updated shared authentication to check the ban expiry centrally for every API route that uses the authentication helper. A currently banned account receives a restricted response; expired bans no longer block access.
 - Added syntax validation for the new endpoint and documented the API contract.
-- This is backend code only: the migration is not applied, no database/auth provider is configured, and the command is not live. The admin page remains a visual preview.
+- This is backend code only: migration 004 is not applied, no database/auth provider is configured, and the command is not live.
 
 ## Deployment and safety status
 - Changes are on the separate cooldown branch and are not production-live.
 - Do not merge, promote, or deploy until the deployment cooldown clears and the owner explicitly requests it.
-- Apply migrations in order in a staging database, run verification scripts, configure Clerk and Neon through their secure dashboards, then test owner and non-owner access before launch.
+- Apply migrations in order in a staging database, run verification scripts, configure Clerk and Neon through their secure dashboards, then test owner, admin, banned-user and non-owner access before launch.
