@@ -13,7 +13,13 @@ Branch: `cooldown-build-2026-11-04`
 - Added syntax validation for the new endpoint and documented the API contract.
 - This is backend code only: migration 004 is not applied, no database/auth provider is configured, and the command is not live.
 
-- Added an owner-only audit log API and Admin panel tab showing the latest 50 administrative events. It displays event metadata only, not raw details or private evidence.\n\n## Deployment and safety status
+- Added an owner-only audit log API and Admin panel tab showing the latest 50 administrative events. It displays event metadata only, not raw details or private evidence.\n\n## Account management centre added
+- Added owner-only account search by username or display name, capped at 50 results.
+- Added limited account profile details with role, verification status, restriction expiry and up to 25 moderation history events.
+- Added the Admin panel People section with search, account result table and profile detail view.
+- Account directory responses exclude email addresses, credentials and private verification evidence.
+
+## Deployment and safety status
 - Changes are on the separate cooldown branch and are not production-live.
 - Do not merge, promote, or deploy until the deployment cooldown clears and the owner explicitly requests it.
 - Apply migrations in order in a staging database, run verification scripts, configure Clerk and Neon through their secure dashboards, then test owner, admin, banned-user and non-owner access before launch.
