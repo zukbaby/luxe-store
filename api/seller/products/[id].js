@@ -1,5 +1,6 @@
 const { authenticate } = require("../../_lib/auth");
 const { query } = require("../../_lib/database");
+const { sameOrigin, bodyWithinLimit } = require("../../_lib/request-security");
 
 function bodyOf(req) {
   if (req.body && typeof req.body === "object") return req.body;
@@ -23,10 +24,12 @@ module.exports = async function handler(req, res) {
   if (typeof id !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
     return res.status(400).json({ ok: false, code: "INVALID_PRODUCT_ID" });
   }
+  if (!sameOrigin(req)) return res.status(403).json({ ok: false, code: "ORIGIN_NOT_ALLOWED" });
   const contentType = String(req.headers && req.headers["content-type"] || "").toLowerCase();
   if (!contentType.includes("application/json")) return res.status(415).json({ ok: false, code: "JSON_REQUIRED" });
 
   const body = bodyOf(req);
+  if (!bodyWithinLimit(req, body)) return res.status(413).json({ ok: false, code: "BODY_TOO_LARGE" });
   if (!body || typeof body !== "object" || Array.isArray(body)) return res.status(400).json({ ok: false, code: "INVALID_BODY" });
 
   const title = typeof body.title === "string" ? body.title.trim() : "";
