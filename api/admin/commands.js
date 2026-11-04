@@ -67,6 +67,15 @@ module.exports = async function handler(req, res) {
                 jsonb_build_object('username', b.username, 'expiresAt', b.banned_until)
          from banned b
          returning id
+       ),
+       notification as (
+         insert into public.notifications
+           (user_id, kind, title, body, safe_payload)
+         select b.id, 'moderation_update', 'Account restriction notice',
+                'A seven-day restriction has been applied to your LUXE account.',
+                jsonb_build_object('expiresAt', b.banned_until)
+         from banned b
+         returning id
        )
        select id, username, banned_until from banned`,
       [username, owner.userId]
