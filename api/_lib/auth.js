@@ -23,10 +23,20 @@ function getToken(req) {
 }
 
 function getAuthorizedParties() {
-  return (process.env.CLERK_AUTHORIZED_PARTIES || "")
+  const configured = (process.env.CLERK_AUTHORIZED_PARTIES || "")
     .split(",")
     .map((value) => value.trim())
     .filter(Boolean);
+
+  // Use Vercel's deployment-assigned hostnames when no explicit allowlist is set.
+  // Never trust a request Host/Origin header to build this security boundary.
+  const vercelHosts = [
+    process.env.VERCEL_URL,
+    process.env.VERCEL_BRANCH_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ].filter(Boolean).map((host) => /^https?:\\/\\//i.test(host) ? host : "https://" + host);
+
+  return Array.from(new Set([...configured, ...vercelHosts]));
 }
 
 async function authenticate(req) {
