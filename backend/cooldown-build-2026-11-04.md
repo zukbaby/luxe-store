@@ -41,3 +41,13 @@ Branch: `cooldown-build-2026-11-04`
 
 ## Current branch comparison
 The branch was verified as 14 commits ahead of `main`, with no commits behind, after this cooldown work batch. These are saved GitHub changes only; no deployment was created by this work batch. The SQL has not been applied to a database and must be reviewed and tested in staging before use.
+
+
+## Account/authentication work started
+- Implemented `GET /api/me` with verified Clerk session checks and caller-only profile reads.
+- Implemented `PATCH /api/me` to create/update only the authenticated user's display name; unknown fields such as role, user ID, and verification status are rejected.
+- Added request-size checks, no-store responses, safe error IDs, and fail-closed behavior when auth/database configuration is missing.
+- Added `CLERK_AUTHORIZED_PARTIES` to the environment template and documented exact-origin allowlisting.
+- Added `backend/auth-profile-implementation.md` with setup steps, API contract, staging tests, and remaining UI/provider work.
+- Updated API contracts, README, and syntax-check script.
+- This does not yet provide browser sign-in/sign-up or a connected database. No user can create a live LUXE account until Clerk and Neon are provisioned and the frontend flow is integrated and tested.
