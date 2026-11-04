@@ -53,3 +53,19 @@ Before applying it, review the SQL against the selected PostgreSQL provider and 
 
 ## Seller application workflow progress
 `api/seller/applications.js` implements caller-only application history and submission. `api/admin/seller-applications.js` provides an owner-only queue and human decision endpoint. An approval promotes the applicant's role, creates a private storefront, and writes an audit entry atomically; rejection does not change the applicant's role. The new migration keeps RLS enabled with no policies, and the endpoints remain non-live until provider setup and staging review are complete.
+
+
+## Cooldown branch marketplace implementation
+The cooldown branch now includes public catalogue and storefront reads, authenticated seller draft creation/editing/submission, owner product review, authenticated persistent carts, public product details, verified-purchase review submission, notification inboxes, and a catalogue-grounded DAMA API. The Seller Studio, marketplace, homepage, product detail, seller storefront and DAMA pages call these APIs instead of inventing sample listings.
+
+Seller product status flow:
+- `draft`: seller-only and editable by its owner.
+- `pending_review`: hidden from the public catalogue and awaiting owner review.
+- `published`: visible only when the seller storefront is public and the item is in stock.
+- `archived`: not publicly listed.
+
+Product approvals/returns are owner-only, audited, and notify the seller. The public catalogue never displays draft or pending products. Persistent carts do not reserve stock; checkout must recheck and lock inventory in a database transaction.
+
+DAMA calls the Vercel AI Gateway OpenAI-compatible endpoint from a server function, with the model ID supplied through `DAMA_MODEL`. It uses `AI_GATEWAY_API_KEY` or Vercel OIDC authentication, applies a database-backed per-user rate limit, and supplies only published public catalogue data. It is unavailable until the required environment and migrations are configured. See the official [Vercel AI Gateway API guide](https://vercel.com/docs/ai-gateway/sdks-and-apis).
+
+Checkout, payments, fulfilment addresses, private verification evidence, seller payouts, live order management and Vicky's evidence-summary workflow remain intentionally disabled pending secure design, provider setup and staging review.
