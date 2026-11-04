@@ -39,3 +39,9 @@ A database/auth Marketplace connection can require provider authorization, accou
 
 ## Owner-only feature
 Animated GIF/video profile banners (up to five seconds) remain disabled for all users except the store owner until the owner explicitly enables broader access. Static profile images remain separate from this gated feature.
+
+
+## Marketplace data model expansion
+`backend/migrations/002_marketplace_core.sql` adds seller storefronts, persistent carts, orders and item price snapshots, product reviews, notifications, and catalogue category/SKU/stock fields. It enables RLS on every new table without adding permissive policies, so the migration is intentionally not a live feature switch.
+
+Before applying it, review the SQL against the selected PostgreSQL provider and apply the base `backend/schema.sql` first. Checkout must be implemented as a server-side transaction with row locks and database-derived prices and stock. Payment status must only change through verified provider webhooks. Delivery-address and identity-document storage require separate secure workflows and are intentionally not included here.
