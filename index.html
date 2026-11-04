@@ -280,7 +280,7 @@ footer {
     <h2>Your <span style="color:#d8ad55">Cart</span></h2>
     <div id="cartItems"></div>
     <h3 id="cartTotal">Total: D0</h3>
-    <p style="color:#999;font-size:12px">Demo cart only. Checkout and payments will be connected after the secure store backend is built.</p>
+    <p style="color:#999;font-size:12px">Your cart is saved on this device. Secure checkout and payments are not connected yet.</p>
     <button class="gold-button" onclick="alert('Checkout will be available in a future LUXE STORE update.')">CONTINUE</button>
   </div>
 </div>
@@ -297,6 +297,17 @@ const products = [
 
 let selectedCategory = "All";
 let cart = [];
+try {
+  const savedCart = JSON.parse(localStorage.getItem("luxe-cart") || "[]");
+  cart = Array.isArray(savedCart) ? savedCart.filter(item =>
+    item && typeof item.name === "string" && Number.isFinite(item.price)
+  ) : [];
+} catch {
+  cart = [];
+}
+function saveCart() {
+  try { localStorage.setItem("luxe-cart", JSON.stringify(cart)); } catch {}
+}
 
 function renderProducts() {
   const search = document.getElementById("search").value.toLowerCase();
@@ -332,6 +343,7 @@ function setCategory(category, button) {
 function addToCart(name) {
   const product = products.find(p => p.name === name);
   cart.push(product);
+  saveCart();
   document.getElementById("cartCount").textContent = cart.length;
 }
 
@@ -357,10 +369,12 @@ function renderCart() {
 }
 function removeFromCart(index) {
   cart.splice(index,1);
+  saveCart();
   document.getElementById("cartCount").textContent = cart.length;
   renderCart();
 }
 
+document.getElementById("cartCount").textContent = cart.length;
 renderProducts();
 </script>
 </body>
