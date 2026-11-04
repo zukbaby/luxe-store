@@ -286,6 +286,7 @@ footer {
     <button class="category" onclick="setCategory('Lifestyle',this)">Home & living</button>
   </div>
 
+  <p id="catalogueStatus" style="font-size:12px;color:#777;margin:0 0 14px">Sample catalogue preview — live seller listings appear when the database is connected.</p>
   <div class="products" id="products"></div>
 </section>
 
@@ -318,7 +319,7 @@ footer {
 </div>
 
 <script>
-const products = [
+let products = [
   {name:"Classic Streetwear",category:"Fashion",price:850,seller:"Urban Edit",image:"https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=700"},
   {name:"Urban Sneakers",category:"Shoes",price:1450,seller:"Streetline",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700"},
   {name:"Wireless Headphones",category:"Tech",price:1200,seller:"Nova Tech",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700"},
@@ -328,6 +329,7 @@ const products = [
   {name:"Classic Low-top Shoes",category:"Shoes",price:1850,seller:"Sole House",image:"https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=700"},
   {name:"Crossbody Bag",category:"Bags",price:900,seller:"Carry Co.",image:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700"}
 ];
+let catalogueIsLive = false;
 
 let selectedCategory = "All";
 let cart = [];
@@ -353,19 +355,50 @@ function renderProducts() {
   document.getElementById("products").innerHTML = filtered.length
     ? filtered.map(p => `
       <article class="product">
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        ${(p.image || p.image_url) ? `<img src="${p.image || p.image_url}" alt="${p.name}" loading="lazy">` : `<div style="height:190px;background:#f2f4f7;display:grid;place-items:center;color:#8a8f98;font-size:12px">Image not provided</div>`}
         <div class="product-info">
-          <small>${p.category.toUpperCase()}</small>
+          <small>${String(p.category || "Other").toUpperCase()}</small>
           <h3>${p.name}</h3>
-          <div style="font-size:11px;color:#777;margin:0 0 10px">Sold by <strong style="color:#333">${p.seller || "LUXE seller"}</strong></div>
+          <div style="font-size:11px;color:#777;margin:0 0 10px">Sold by <strong style="color:#333">${p.seller || "Independent seller"}</strong></div>
           <div class="product-bottom">
-            <span class="price">D${p.price.toLocaleString()}</span>
-            <button class="add-button" onclick="addToCart('${p.name}')">+ Add</button>
+            <span class="price">${((p.currencyCode || p.currency_code || "GMD") === "GMD" ? "D" : (p.currencyCode || p.currency_code) + " ")}${Number(p.price ?? p.price_amount ?? 0).toLocaleString()}</span>
+            <button class="add-button" onclick="addToCart('${p.name.replace(/'/g, "\\'")}')">+ Add</button>
           </div>
         </div>
       </article>
     `).join("")
     : '<p class="empty">No products found. Try another search.</p>';
+}
+
+async function loadPublishedCatalogue() {
+  try {
+    const response = await fetch("/api/products", { headers: { "Accept": "application/json" } });
+    const data = await response.json();
+    if (!response.ok || !data.ok || !Array.isArray(data.products)) throw new Error("Catalogue not ready");
+    catalogueIsLive = true;
+    products = data.products.map(p => {
+      const raw = String(p.category || "Other").toLowerCase();
+      const category = raw.includes("shoe") ? "Shoes" :
+        (raw.includes("phone") || raw.includes("tech")) ? "Tech" :
+        raw.includes("bag") ? "Bags" :
+        raw.includes("accessor") ? "Accessories" :
+        raw.includes("fashion") ? "Fashion" : "Lifestyle";
+      return {
+        name: p.title,
+        category,
+        price: Number(p.price_amount),
+        currencyCode: p.currency_code,
+        seller: "Independent seller",
+        image_url: p.image_url || null
+      };
+    });
+    document.getElementById("catalogueStatus").textContent = products.length
+      ? "Showing published listings from LUXE sellers."
+      : "The live catalogue is connected but no products have been published yet.";
+    renderProducts();
+  } catch {
+    document.getElementById("catalogueStatus").textContent = "Sample catalogue preview — live seller listings are not connected yet.";
+  }
 }
 
 function setCategory(category, button) {
@@ -411,6 +444,7 @@ function removeFromCart(index) {
 
 document.getElementById("cartCount").textContent = cart.length;
 renderProducts();
+loadPublishedCatalogue();
 </script>
 </body>
 </html>
