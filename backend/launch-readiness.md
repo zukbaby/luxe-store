@@ -26,3 +26,12 @@
 - [ ] Complete staging end-to-end tests before enabling production actions.
 
 Do not claim any unchecked item is live. Do not purchase services, domains, or paid plans without explicit approval from the authorized account owner.
+
+
+## Additional marketplace foundation (prepared, not live)
+- [ ] Review and apply `backend/migrations/002_marketplace_core.sql` after the base schema in a staging database.
+- [ ] Run `backend/migrations/002_marketplace_core.verify.sql` and confirm every new table remains default-deny.
+- [ ] Implement server-owned persistent carts, transaction-safe checkout, order access, notifications, and verified-purchase reviews.
+- [ ] Add idempotency records and verified payment-webhook event storage before enabling any checkout/payment path.
+- [ ] Define secure fulfilment address storage, retention, and seller access before collecting delivery addresses.
+- [ ] Test stock concurrency, checkout rollback, payment webhook replay protection, and buyer/seller access boundaries.
