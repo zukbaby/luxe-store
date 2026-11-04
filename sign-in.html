@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>LUXE STORE | Sign in</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#171717;font-family:Arial,sans-serif;min-height:100vh}.top{padding:18px 6%;border-bottom:1px solid #ececec}.logo{color:#245bdb;font-weight:900;letter-spacing:3px;text-decoration:none}.wrap{max-width:520px;margin:44px auto;padding:0 20px}.eyebrow{color:#245bdb;font-size:11px;font-weight:bold;letter-spacing:3px}h1{font-size:34px;margin:12px 0}.muted{color:#6f6f6f;font-size:14px;line-height:1.6}.panel{border:1px solid #e8e8e8;border-radius:14px;padding:22px;margin-top:22px;min-height:150px}.status{background:#f3f6fb;color:#52647e;border:1px solid #dce6f4;padding:13px;border-radius:8px;font-size:13px;line-height:1.55}.status.error{background:#fff4f2;color:#8b3428;border-color:#f2d7d2}#signIn{display:flex;justify-content:center;margin-top:12px}.foot{font-size:12px;color:#888;margin-top:22px;line-height:1.6}a{color:#245bdb}
+</style>
+</head>
+<body>
+<header class="top"><a class="logo" href="/">LUXE STORE</a></header>
+<main class="wrap">
+<div class="eyebrow">YOUR LUXE ACCOUNT</div>
+<h1>Welcome to LUXE.</h1>
+<p class="muted">Sign in or create your account securely. Your account role and any owner permissions are assigned by LUXE's server, never by the sign-in form.</p>
+<section class="panel">
+<div id="status" class="status" role="status" aria-live="polite">Checking secure sign-in configuration…</div>
+<div id="signIn"></div>
+</section>
+<p class="foot">Use only an account you are authorised to manage. Never share your password or sign-in codes. <a href="/accounts.html">Account help</a></p>
+</main>
+<script>
+const statusBox=document.getElementById("status");
+function status(message,error=false){statusBox.textContent=message;statusBox.className="status"+(error?" error":"");}
+function addScript(src,attrs={}){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.crossOrigin="anonymous";Object.entries(attrs).forEach(([k,v])=>s.setAttribute(k,v));s.onload=resolve;s.onerror=()=>reject(new Error("Could not load secure sign-in."));document.head.appendChild(s);});}
+async function start(){
+ try{
+  const response=await fetch("/api/public-config",{headers:{"Accept":"application/json"},cache:"no-store"});
+  const config=await response.json();
+  if(!response.ok||!config.configured||!config.publishableKey){status("Clerk is connected to Vercel, but its application keys are not ready yet. Sign-in is safely paused until the Clerk application is provisioned.",true);return;}
+  const key=config.publishableKey;
+  const parts=key.split("_");
+  if(parts.length<3){status("The Clerk publishable key format is invalid. Please check the Clerk application setup.",true);return;}
+  let frontendApi;
+  try{frontendApi=atob(parts[2]).replace(/\$$/,"");}catch{status("The Clerk frontend domain could not be read from the publishable key.",true);return;}
+  if(!/^[a-zA-Z0-9.-]+$/.test(frontendApi)){status("The Clerk frontend domain is invalid.",true);return;}
+  await addScript("https://"+frontendApi+"/npm/@clerk/ui@1/dist/ui.browser.js");
+  await addScript("https://"+frontendApi+"/npm/@clerk/clerk-js@6/dist/clerk.browser.js",{"data-clerk-publishable-key":key});
+  if(!window.Clerk){throw new Error("Clerk did not initialise.");}
+  await window.Clerk.load({ui:{ClerkUI:window.__internal_ClerkUICtor},afterSignInUrl:"/accounts.html",afterSignUpUrl:"/accounts.html"});
+  if(window.Clerk.isSignedIn){location.replace("/accounts.html");return;}
+  status("Secure sign-in is ready. Choose Google or another method enabled for LUXE STORE.");
+  window.Clerk.mountSignIn(document.getElementById("signIn"),{fallbackRedirectUrl:"/accounts.html",forceRedirectUrl:"/accounts.html"});
+ }catch(error){status(error&&error.message?error.message:"Secure sign-in could not be loaded. Please try again later.",true);}
+}
+start();
+</script>
+</body>
+</html>
