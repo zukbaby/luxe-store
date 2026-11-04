@@ -7,7 +7,7 @@
     "node": ">=20.9.0"
   },
   "scripts": {
-    "check:api": "node --check api/health.js && node --check api/auth/config.js && node --check api/me.js && node --check api/seller/applications.js && node --check api/admin/seller-applications.js && node --check api/admin/commands.js && node --check api/admin/audit.js && node --check api/admin/users.js && node --check api/_lib/auth.js && node --check api/_lib/database.js && node --check api/_lib/authorization.js && node --check api/admin/verification-requests.js && node --check api/admin/verification-decisions.js && node --check api/notifications.js && node --check api/notifications/[id].js"
+    "check:api": "node --check api/health.js && node --check api/auth/config.js && node --check api/me.js && node --check api/seller/applications.js && node --check api/admin/seller-applications.js && node --check api/admin/commands.js && node --check api/admin/audit.js && node --check api/admin/users.js && node --check api/_lib/auth.js && node --check api/_lib/database.js && node --check api/_lib/authorization.js && node --check api/admin/verification-requests.js && node --check api/admin/verification-decisions.js && node --check api/notifications.js && node --check api/notifications/[id].js && node --check api/products.js && node --check api/products/[id].js && node --check api/products/[id]/reviews.js && node --check api/sellers/[slug].js && node --check api/cart.js && node --check api/seller/products.js && node --check api/seller/products/[id].js && node --check api/seller/products/[id]/submit.js && node --check api/admin/products.js && node --check api/ai/dama.js && node --check luxe-auth.js"
   },
   "dependencies": {
     "@clerk/backend": "^3.25.0",
