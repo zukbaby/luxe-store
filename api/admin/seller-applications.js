@@ -101,6 +101,19 @@ module.exports = async function handler(req, res) {
                 jsonb_build_object('userId', d.user_id, 'storeSlug', d.store_slug)
          from decided d
          returning id
+       ),
+       notification as (
+         insert into public.notifications
+           (user_id, kind, title, body, safe_payload)
+         select d.user_id, 'seller_update',
+                case when d.status = 'approved' then 'Seller application approved'
+                     else 'Seller application update' end,
+                case when d.status = 'approved'
+                     then 'Your seller application was approved. Your Seller Studio access is being prepared.'
+                     else 'Your seller application has been reviewed. Sign in to check your application status.' end,
+                jsonb_build_object('applicationId', d.id, 'status', d.status)
+         from decided d
+         returning id
        )
        select d.id, d.user_id, d.store_name, d.store_slug, d.status
        from decided d`,
