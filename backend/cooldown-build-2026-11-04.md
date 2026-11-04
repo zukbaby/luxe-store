@@ -48,6 +48,8 @@ Branch: `cooldown-build-2026-11-04`
 - Added migration verification scripts and expanded API syntax checks.
 - Added `DAMA_MODEL` to the environment example. No AI Gateway key, model choice, database or Clerk provider was provisioned.
 
+- Added migration 008 and verification script for owner-only product review moderation; admin moderation queue can approve or reject buyer reviews and notify the author.
+
 ## Current hard gates
 - Database/auth providers are not configured and migrations are not applied.
 - AI Gateway is not configured; DAMA returns a safe unavailable response until the owner configures it.
