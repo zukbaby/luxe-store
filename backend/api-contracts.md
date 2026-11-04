@@ -8,8 +8,8 @@ All routes below are contracts for future implementation. Until database and aut
 - GET /api/products/:id — future public product detail.
 
 ## Authenticated customer
-- GET /api/me — implemented: verified Clerk session, own profile only; 404 if no profile exists.
-- PATCH /api/me — implemented: verified Clerk session, creates/updates own display name only; role and verification fields are rejected.
+- GET /api/me — verified Clerk session, own profile only; includes public username and own account ban expiry.
+- PATCH /api/me — verified Clerk session; updates own display name and/or unique username only. Role, ban and verification fields are rejected.
 - POST /api/verification-requests — applicant-owned request; private evidence uploaded only through a secure provider workflow.
 
 ## Authenticated seller
@@ -22,6 +22,7 @@ All routes below are contracts for future implementation. Until database and aut
 - GET /api/admin/verification-requests/:id — restricted case details.
 - POST /api/admin/verification-requests/:id/decision — human decision only; require admin role, reason, and audit record.
 - GET /api/admin/audit — narrowly scoped audit access.
+- POST /api/admin/commands — configured owner only. Accepts the exact command `1weekban-username`; resolves a unique username, applies a seven-day expiry, protects the owner and admin accounts, and writes an audit event atomically. No arbitrary SQL or free-form commands are accepted.
 
 ## Assistant endpoints (future)
 - POST /api/ai/dama — authenticated, rate-limited, public-catalogue-grounded assistant.
@@ -66,3 +67,9 @@ All routes below are contracts for future implementation. Until database and aut
 - Migration 003 adds a seller application table, unique pending-per-user and active-slug indexes, RLS, and a verification script. It intentionally adds no RLS policies.
 - Apply migration 003 only after base schema and migration 002 in staging. Configure owner identity and verify the owner profile exists before testing decisions.
 - These routes remain unavailable until Clerk and Neon are configured, migrations are applied, and staging tests pass.
+
+## Moderation command (implemented in code; not live)
+- Migration 004 adds unique usernames and server-controlled ban expiry/reason columns to profiles; it preserves RLS default-deny.
+- Users may set their own username through PATCH /api/me. Usernames are 3–24 lowercase letters, numbers or underscores and are unique case-insensitively.
+- The command endpoint accepts only `1weekban-username`, bans for exactly seven days, protects the owner/admin accounts, and records an audit event.
+- The command remains unavailable until migration 004 is applied and Clerk/Neon are configured and tested in staging.
