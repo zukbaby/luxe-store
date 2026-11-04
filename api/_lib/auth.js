@@ -59,7 +59,7 @@ async function authenticate(req) {
       authorizedParties
     });
 
-    if (!result || result.errors || !result.data || !result.data.sub) {
+    if (!result || (result.errors && result.errors.length > 0) || !result.data || !result.data.sub) {
       return {
         ok: false,
         status: 401,
