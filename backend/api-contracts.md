@@ -115,3 +115,11 @@ All routes below are contracts for future implementation. Until database and aut
 - Cart writes do not reserve inventory and are not checkout. Checkout remains disabled until transactional stock locking, fulfilment and verified payment processing are implemented.
 - Product reviews require a delivered order and remain hidden until moderated.
 - DAMA requires `DAMA_MODEL` plus `AI_GATEWAY_API_KEY` or Vercel OIDC. It must not invent catalogue facts, order status, shipping, refunds, payment status or seller metrics.
+
+
+## Product and review moderation
+- GET /api/admin/products — owner-only pending product queue.
+- POST /api/admin/products — owner-only publish/return decision with audit record and seller notification.
+- GET /api/admin/reviews — owner-only unpublished review queue.
+- POST /api/admin/reviews — owner-only approve/reject decision with audit record and buyer notification.
+- Migration 008 adds review moderation metadata; reviews are visible publicly only after approval.
