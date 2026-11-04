@@ -9,7 +9,7 @@ The deployed site is still a static HTML prototype. These files are a reviewed s
 - **Clerk** for managed sign-in and verified sessions.
 - **Vercel AI Gateway / AI SDK** for DAMA, added after authentication and usage limits are in place.
 
-The repository currently has no application framework or package manifest. The existing HTML pages should be migrated incrementally into a framework before enabling account, admin, verification, or AI endpoints.
+The repository remains a static HTML site without an application framework. A minimal package manifest and server-side Clerk/Neon runtime helpers have now been added for Vercel Functions. The existing HTML pages still need a sign-in UI integration before account, admin, verification, or AI endpoints can be enabled.
 
 ## Data model
 `schema.sql` defines profiles, products, verification requests, and an append-only-style admin audit log. Row-level security is enabled and intentionally has no permissive policies yet. This is fail-closed: it will not work as a live app until policies and server-side identity checks are implemented and tested.
@@ -29,11 +29,11 @@ A database/auth Marketplace connection can require provider authorization, accou
 
 ## Next implementation sequence
 1. Authorize and connect Neon Postgres and Clerk in the Vercel project.
-2. Add the server framework and SDKs; configure development/preview/production environment variables.
-3. Apply and test the schema and least-privilege RLS policies.
-4. Implement real sign-up/sign-in and profile APIs.
-5. Add server-enforced owner/admin access and audit logging.
-6. Implement seller product APIs and verification review workflow.
+2. Configure development/preview/production environment variables, including Clerk's authorized frontend origins and the verified owner user ID.
+3. Integrate the Clerk browser sign-in UI with the existing static pages and test server-side token verification.
+4. Apply and test the schema and least-privilege RLS policies.
+5. Implement profile APIs and server-enforced owner/admin access with audit logging.
+6. Implement seller product APIs and the human-led verification review workflow.
 7. Connect DAMA through the AI Gateway with server-side rate limits, safety boundaries, and no exposure of secrets.
 8. Run end-to-end tests before exposing any real-user functionality.
 
