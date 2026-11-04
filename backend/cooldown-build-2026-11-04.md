@@ -64,3 +64,10 @@ The branch was verified as 14 commits ahead of `main`, with no commits behind, a
 - Updated `seller.html` with a seller application form and application-history view connected to the new API routes. The page explains that seller access requires human review and shows clear sign-in / not-yet-configured states. Product drafts remain browser-local and are still not published.
 
 - Updated `admin.html` with a Seller applications review tab. It calls the owner-protected queue endpoint, handles sign-in/forbidden/not-configured states, and provides explicit human approve/reject actions with optional reviewer notes and confirmation. Decisions are sent to the audited server endpoint; the page does not bypass owner authorization.
+
+## Clerk browser authentication UI prepared
+- Added `api/auth/config.js` to return only the browser-safe Clerk publishable key; secret keys are never returned.
+- Rebuilt `accounts.html` around Clerk's official plain-JavaScript browser CDN quickstart, with mounted sign-in, sign-up, and user-button components.
+- Signed-in account profile reads and updates now send a verified Clerk session token as a Bearer token to the existing server-side `/api/me` API.
+- Added the public auth config endpoint to `check:api` syntax validation.
+- JavaScript UI and provider integration still require a configured Clerk application, database, exact origin allowlist, and staging verification. No live account registration is enabled while configuration is absent.
