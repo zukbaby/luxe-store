@@ -9,7 +9,7 @@ function validate(input){
  if(Object.keys(input).some(k=>!allowed.includes(k)))return {error:"UNSUPPORTED_FIELDS"};
  const title=typeof input.title==="string"?input.title.trim():"",description=typeof input.description==="string"?input.description.trim():"";
  const price=Number(input.priceGmd),image=input.imageUrl===undefined||input.imageUrl===""?null:input.imageUrl;
- const category=typeof input.categorySlug==="string"?input.categorySlug.trim().toLowerCase():"",sku=typeof input.sku==="string"?input.sku.trim():null,stock=input.stockQuantity===undefined?0:Number(input.stockQuantity);
+ const category=typeof input.categorySlug==="string"?input.categorySlug.trim().toLowerCase():"",rawSku=typeof input.sku==="string"?input.sku.trim():null,sku=rawSku||null,stock=input.stockQuantity===undefined?0:Number(input.stockQuantity);
  if(title.length<2||title.length>120)return {error:"INVALID_TITLE"};
  if(description.length>2000)return {error:"DESCRIPTION_TOO_LONG"};
  if(!Number.isFinite(price)||price<0||price>100000000)return {error:"INVALID_PRICE"};
