@@ -70,9 +70,9 @@ Animated GIF/video profile banners (up to five seconds) remain disabled for all 
 - JavaScript syntax checks passed for the updated API handlers and inline scripts in the storefront, account, seller and admin pages.
 
 ## Still blocked before real users can transact
-- No Clerk application or Neon database is connected to Vercel; no provider credentials are present.
+- Clerk is installed at the Vercel team/account level, but its installation currently has no LUXE STORE project selected. The project's Clerk environment-variable entries exist but have empty values; no usable Clerk application credentials are present yet. Neon is not connected.
 - `backend/schema.sql` and `backend/migrations/002_marketplace_expansion.sql` have not been applied or tested against a staging database.
-- Browser sign-in/sign-up UI is not yet connected. The account page can only work after a verified Clerk session exists.
+- A Clerk browser sign-in page has been added on the development branch, but it cannot initialise until Vercel provisions the Clerk keys and Google sign-in is enabled in the Clerk application.
 - Shared rate limiting, product submission-for-review/publishing, checkout, payment processing, payouts and order management are not enabled.
 - Seller approval APIs are implemented but cannot run until authentication, owner ID and database setup are complete.
 - These changes are on the development branch only. A new Vercel preview deployment is currently blocked by Vercel's 24-hour deployment creation limit; the existing READY preview still points to an older commit.
