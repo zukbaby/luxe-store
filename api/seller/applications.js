@@ -1,5 +1,6 @@
 const { authenticate } = require("../_lib/auth");
 const { query } = require("../_lib/database");
+const { sameOrigin, bodyWithinLimit } = require("../_lib/request-security");
 
 function headers(res) {
   res.setHeader("Cache-Control", "no-store");
@@ -40,12 +41,14 @@ module.exports = async function handler(req, res) {
     }
   }
 
+  if (!sameOrigin(req)) return res.status(403).json({ ok: false, code: "ORIGIN_NOT_ALLOWED" });
   const contentType = String(req.headers && req.headers["content-type"] || "").toLowerCase();
   if (!contentType.includes("application/json")) {
     return res.status(415).json({ ok: false, code: "JSON_REQUIRED", message: "Send application details as JSON." });
   }
 
   const body = readBody(req);
+  if (!bodyWithinLimit(req, body)) return res.status(413).json({ ok: false, code: "BODY_TOO_LARGE" });
   if (!body || typeof body !== "object" || Array.isArray(body)) {
     return res.status(400).json({ ok: false, code: "INVALID_BODY", message: "A valid application is required." });
   }
