@@ -12,20 +12,23 @@ The deployed site is a static HTML prototype. Serverless API scaffolding is bein
 ## Implemented server-side foundation
 - `api/health.js`: reports configuration presence only.
 - `api/me.js`: authenticated read of the caller's own profile.
-- `api/products.js`: public read of published products only, bounded to 60 rows.
+- `api/products.js`: public read of published products only, bounded to 60 rows, with currency-neutral prices.
 - `api/seller/applications.js`: authenticated application submission and own application history.
-- `api/admin/seller-applications.js`: owner-only pending application queue.
+- `api/seller/products.js`: approved sellers can create drafts and list their own products.
+- `api/seller/products/[id].js`: seller can edit only their own draft.
+- `api/admin/seller-applications.js`: owner-only pending seller review queue.
 - `api/admin/seller-applications/[id]/decision.js`: owner-only human approval/rejection, seller-role assignment on approval, and audit event in one SQL statement.
 - `api/_lib/auth.js`: verifies Clerk tokens server-side.
 - `api/_lib/authorization.js`: owner check based on the verified session and server-side owner ID.
 
 ## Data model
 - `schema.sql`: profiles, products, verification requests and admin audit log.
-- `migrations/002_marketplace_expansion.sql`: adds currency/category fields and seller applications. Review and apply only after Neon is provisioned and backed up.
+- `migrations/002_marketplace_expansion.sql`: renames the legacy GMD-only price field to currency-neutral `price_amount`, adds ISO currency/category fields, and creates seller applications. Review and apply only after Neon is provisioned and backed up.
 - Row-level security is enabled without permissive browser policies. Server APIs use verified identity and least privilege.
 
 ## Important prerequisites and gaps
 - Seller application submission requires a profile row created by a trusted sign-in provisioning flow; that flow is not yet implemented.
+- Product publishing/moderation is not implemented. Seller-created records remain drafts and are not public.
 - Shared rate limiting, body-size enforcement at the edge, CSRF/origin policy for cookie-authenticated writes, and full integration tests are still required before public launch.
 - The database migration has not been applied and no live provider credentials are configured.
 - No identity documents or payment proofs are collected by these endpoints.
@@ -50,7 +53,7 @@ A database/auth Marketplace connection can require provider authorization, accou
 3. Integrate the Clerk browser sign-in UI with the existing static pages and implement trusted profile provisioning.
 4. Apply and test the schema and least-privilege policies.
 5. Add shared rate limiting and CSRF/origin protections for authenticated writes.
-6. Build seller product management and moderation APIs.
+6. Build seller product submission-for-review and owner moderation endpoints.
 7. Connect DAMA through the AI Gateway with server-side rate limits and safety boundaries.
 8. Run end-to-end security tests before exposing any real-user functionality.
 
