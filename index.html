@@ -17,7 +17,7 @@
 <meta name="twitter:description" content="Discover products, explore creators and experience a new way to shop.">
 <style>
 :root {
-  --gold: #b88932;
+  --gold: #245bdb;
   --black: #ffffff;
   --panel: #ffffff;
   --muted: #6b6b6b;
@@ -68,7 +68,7 @@ nav a:hover { color: var(--gold); }
 .hero {
   padding: 85px 7% 75px;
   background:
-    radial-gradient(ellipse at 82% 28%, #d8ad5530, transparent 46%),
+    radial-gradient(ellipse at 82% 28%, #245bdb30, transparent 46%),
     linear-gradient(120deg, #fffdf8, #f7f5ef 72%);
   border-bottom: 1px solid #e9e3d8;
 }
@@ -138,7 +138,7 @@ nav a:hover { color: var(--gold); }
   overflow: hidden;
   transition: .2s;
 }
-.product:hover { transform: translateY(-4px); border-color: #9b793d; }
+.product:hover { transform: translateY(-4px); border-color: #245bdb; }
 .product img {
   display: block;
   width: 100%;
@@ -277,6 +277,7 @@ footer {
     <button class="category active" onclick="setCategory('All',this)">All</button>
     <button class="category" onclick="setCategory('Shoes',this)">Shoes & sneakers</button>
     <button class="category" onclick="setCategory('Tech',this)">Phones & accessories</button>
+    <button class="category" onclick="setCategory('Accessories',this)">Accessories</button>
     <button class="category" onclick="setCategory('Bags',this)">Bags & backpacks</button>
     <button class="category" onclick="setCategory('Fashion',this)">Fashion</button>
     <button class="category" onclick="setCategory('Lifestyle',this)">Home & living</button>
@@ -304,7 +305,7 @@ footer {
 <div id="cartPanel" onclick="if(event.target.id==='cartPanel') closeCart()">
   <div class="cart-content">
     <button class="close" onclick="closeCart()">×</button>
-    <h2>Your <span style="color:#d8ad55">Cart</span></h2>
+    <h2>Your <span style="color:#245bdb">Cart</span></h2>
     <div id="cartItems"></div>
     <h3 id="cartTotal">Total: D0</h3>
     <p style="color:#999;font-size:12px">Your cart is saved on this device. Secure checkout and payments are not connected yet.</p>
@@ -388,7 +389,7 @@ function renderCart() {
   document.getElementById("cartItems").innerHTML = cart.length
     ? cart.map((p,i) => `
       <div class="cart-line">
-        <span>${p.name}<br><small style="color:#d8ad55">D${p.price.toLocaleString()}</small></span>
+        <span>${p.name}<br><small style="color:#245bdb">D${p.price.toLocaleString()}</small></span>
         <button class="add-button" onclick="removeFromCart(${i})">Remove</button>
       </div>
     `).join("")
