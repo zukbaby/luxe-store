@@ -53,3 +53,9 @@ Do not paste credentials into chat or commit them. Do not enable live account cr
 - Seller/creator application and role-grant workflow.
 - Owner/admin role provisioning UI.
 - Database connectivity and end-to-end integration tests.
+
+## Account page integration
+- `accounts.html` now checks `GET /api/me` with same-origin credentials and no-store caching, and displays clear signed-out, missing-profile, not-configured, and connected states.
+- For an authenticated profile it displays the server-returned role and verification status as read-only fields and permits only display-name updates through `PATCH /api/me`.
+- Removed the old localStorage profile mock so the page no longer implies that a browser-only form creates a LUXE account.
+- Sign-in/sign-up UI remains intentionally unavailable until Clerk's official browser flow and provider configuration are completed. Do not invite users to create accounts yet.
