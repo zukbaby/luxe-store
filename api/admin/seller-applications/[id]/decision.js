@@ -1,5 +1,6 @@
 const { requireOwner } = require("../../../_lib/authorization");
 const { query } = require("../../../_lib/database");
+const { sameOrigin, bodyWithinLimit } = require("../../../_lib/request-security");
 
 function readBody(req) {
   if (req.body && typeof req.body === "object") return req.body;
@@ -29,12 +30,14 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ ok: false, code: "INVALID_APPLICATION_ID" });
   }
 
+  if (!sameOrigin(req)) return res.status(403).json({ ok: false, code: "ORIGIN_NOT_ALLOWED" });
   const contentType = String(req.headers && req.headers["content-type"] || "").toLowerCase();
   if (!contentType.includes("application/json")) {
     return res.status(415).json({ ok: false, code: "JSON_REQUIRED" });
   }
 
   const body = readBody(req);
+  if (!bodyWithinLimit(req, body)) return res.status(413).json({ ok: false, code: "BODY_TOO_LARGE" });
   const decision = body && body.decision;
   const note = body && typeof body.note === "string" ? body.note.trim() : "";
   if (!body || !["approved", "rejected"].includes(decision) || note.length > 500) {
