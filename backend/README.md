@@ -69,6 +69,11 @@ Animated GIF/video profile banners (up to five seconds) remain disabled for all 
 - Mutating profile, seller and review endpoints now require same-origin requests and enforce a 16 KB JSON body limit.
 - JavaScript syntax checks passed for the updated API handlers and inline scripts in the storefront, account, seller and admin pages.
 
+## Latest deployment-limit correction
+- The four separate DAMA/Vicky placeholder routes have been consolidated into `api/assistant.js`; Vercel rewrites preserve the existing public paths.
+- The development branch now contains exactly 12 routable API function files, matching the Hobby plan's per-deployment function ceiling. This change is saved but has not yet been confirmed by a fresh deployment.
+- The latest attempted build completed, but Vercel rejected the deployment at the output stage because the previous version exceeded the 12-function ceiling. A separate 24-hour deployment-creation limit is also active.
+
 ## Still blocked before real users can transact
 - Clerk is installed at the Vercel team/account level, but its installation currently has no LUXE STORE project selected. The project's Clerk environment-variable entries exist but have empty values; no usable Clerk application credentials are present yet. Neon is not connected.
 - `backend/schema.sql` and `backend/migrations/002_marketplace_expansion.sql` have not been applied or tested against a staging database.
