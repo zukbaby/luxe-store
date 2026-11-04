@@ -60,3 +60,5 @@ The branch was verified as 14 commits ahead of `main`, with no commits behind, a
 - Added `api/admin/seller-applications.js`: owner-only queue and human approve/reject action. Approval, seller-role promotion, private storefront creation, and audit logging are grouped in one SQL statement; failures roll back together.
 - Extended the API syntax-check script and documented staging gates.
 - No database migration has been applied, no provider has been connected, and no seller can yet use this as a live feature. No UI has been wired to these routes.
+
+- Updated `seller.html` with a seller application form and application-history view connected to the new API routes. The page explains that seller access requires human review and shows clear sign-in / not-yet-configured states. Product drafts remain browser-local and are still not published.
