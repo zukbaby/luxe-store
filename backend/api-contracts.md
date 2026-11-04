@@ -22,6 +22,8 @@ All routes below are contracts for future implementation. Until database and aut
 - GET /api/admin/verification-requests/:id — restricted case details.
 - POST /api/admin/verification-requests/:id/decision — human decision only; require admin role, reason, and audit record.
 - GET /api/admin/audit — owner-only recent administrative event history; returns limited event metadata only.
+- GET /api/admin/users?q=<search> — owner-only search by public username or display name, limited to 50 results.
+- GET /api/admin/users?id=<profile-id> — owner-only account summary and latest 25 moderation events; excludes credentials, contact details and private verification evidence.
 - POST /api/admin/commands — configured owner only. Accepts the exact command `1weekban-username`; resolves a unique username, records a seven-day expiry, protects the owner and administrator accounts, and writes an audit event atomically. No arbitrary SQL or free-form commands are accepted.
 
 ## Assistant endpoints (future)
@@ -65,6 +67,11 @@ All routes below are contracts for future implementation. Until database and aut
 - POST /api/admin/seller-applications — owner-only human decision with applicationId, decision (approved/rejected), and optional reviewerNote. Approval, seller-role promotion, private-by-default storefront creation, and audit insertion are one SQL statement.
 - Migration 003 adds a seller application table, unique pending-per-user and active-slug indexes, RLS, and a verification script. It intentionally adds no RLS policies.
 - These routes remain unavailable until Clerk and Neon are configured, migrations are applied, and staging tests pass.
+
+## Account management centre (implemented in code; not live)
+- The Admin panel People section searches the owner-only account directory by username/display name and shows role, verification status and active restriction expiry.
+- Selecting an account shows a limited profile summary and recent moderation history. No email addresses, credentials or private verification evidence are returned.
+- The directory endpoint is GET-only and capped at 50 search results; profile history is capped at 25 events.
 
 ## Moderation command (implemented in code; not live)
 - Migration 004 adds unique usernames and server-controlled ban expiry/reason columns to profiles; it preserves RLS default-deny.
