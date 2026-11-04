@@ -10,6 +10,7 @@ module.exports=async function handler(req,res){
  const input=req.body;if(!input||typeof input!=="object"||Array.isArray(input)||Buffer.byteLength(JSON.stringify(input),"utf8")>8192)return send(res,400,{ok:false,code:"INVALID_BODY"});
  const allowed=["title","description","priceGmd","imageUrl","categorySlug","sku","stockQuantity"];
  if(Object.keys(input).some(k=>!allowed.includes(k)))return send(res,400,{ok:false,code:"UNSUPPORTED_FIELDS"});
+ const role=await query("select role from public.profiles where id=$1 limit 1",[session.userId]);if(!role||!role.length||role[0].role!=="seller")return send(res,403,{ok:false,code:"SELLER_ROLE_REQUIRED"});
  const fields=[],values=[id,session.userId],map={title:"title",description:"description",priceGmd:"price_gmd",imageUrl:"image_url",categorySlug:"category_slug",sku:"sku",stockQuantity:"stock_quantity"};
  for(const [key,col] of Object.entries(map)){
   if(!(key in input))continue;let v=input[key];
