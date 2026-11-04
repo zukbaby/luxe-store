@@ -12,7 +12,7 @@ module.exports=async function handler(req,res){
   }
   const session=await authenticate(req);if(!session.ok)return send(res,session.status,{ok:false,code:session.code});
   const b=req.body;
-  if(!b||typeof b!=="object"||Array.isArray(b)||Object.keys(b).some(k=>!["orderId","rating","title","body"].includes(k))||typeof b.orderId!=="string"||!/^[0-9a-f-]{36}$/i.test(b.orderId)||!Number.isInteger(b.rating)||b.rating<1||b.rating>5||typeof (b.title||"")!=="string"||typeof (b.body||"")!=="string'||(b.title||"").length>100||(b.body||"").length>2000)return send(res,422,{ok:false,code:"INVALID_REVIEW"});
+  if(!b||typeof b!=="object"||Array.isArray(b)||Object.keys(b).some(k=>!["orderId","rating","title","body"].includes(k))||typeof b.orderId!=="string"||!/^[0-9a-f-]{36}$/i.test(b.orderId)||!Number.isInteger(b.rating)||b.rating<1||b.rating>5||typeof (b.title||"")!=="string"||typeof (b.body||"")!=="string"||(b.title||"").length>100||(b.body||"").length>2000)return send(res,422,{ok:false,code:"INVALID_REVIEW"});
   const rows=await query(
    `insert into public.product_reviews(product_id,buyer_id,order_id,rating,title,body,is_published)
     select $1,$2,$3,$4,$5,$6,false
