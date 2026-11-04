@@ -250,12 +250,15 @@ footer {
     <a href="#home">Home</a>
     <a href="#shop">Shop</a>
     <a href="#about">About</a>
+    <a href="reels.html">Reels</a>
+    <a href="rewards.html">Rewards</a>
     <a href="verification.html">Verified</a>
     <a href="dama.html">DAMA</a>
     <a href="vicky.html">Vicky AI</a>
     <a href="accounts.html">Account</a>
     <a href="seller.html">Sell</a>
-    <a href="admin.html">Admin</a>
+    <a href="settings.html">Settings</a>
+    <a href="admin.html">Admin Panel</a>
   </nav>
   <button class="cart-button" onclick="openCart()">Cart (<span id="cartCount">0</span>)</button>
 </header>
@@ -291,15 +294,16 @@ footer {
     <h2>WHY <span>LUXE STORE?</span></h2>
   </div>
   <div class="features">
-    <div class="feature"><strong>✦ PREMIUM EXPERIENCE</strong><p>A clean, modern shopping experience built around quality and style.</p></div>
-    <div class="feature"><strong>✦ SELLER COMMUNITY</strong><p>A place for customers, sellers and creators to connect.</p></div>
-    <div class="feature"><strong>✦ LUXE REWARDS</strong><p>A rewards experience is part of the LUXE STORE vision.</p></div>
+    <div class="feature"><strong>✦ LUXE PROTECT</strong><p>Clear marketplace guidance and seller-led fulfilment. Learn how shopping protections are planned.</p></div>
+    <div class="feature"><strong>✦ LUXE REWARDS</strong><p>Eligible completed purchases can earn points that never expire.</p><a href="rewards.html">Explore rewards →</a></div>
+    <div class="feature"><strong>✦ LUXE REELS</strong><p>Discover short-form product videos and independent creators.</p><a href="reels.html">Explore Reels →</a></div>
+    <div class="feature"><strong>✦ CREATOR PARTNERS</strong><p>Seller and creator discovery with custom LUXE identity badges.</p></div>
   </div>
 </section>
 
 <footer>
   © 2026 LUXE STORE. ALL RIGHTS RESERVED.<br><br>
-  Built for the LUXE community.
+  <a href="settings.html">Settings</a> · <a href="rewards.html">Rewards</a> · <a href="reels.html">Reels</a> · <a href="wa.me/220872147800">Contact LUXE</a><br><br>Built for the LUXE community.
 </footer>
 
 <div id="cartPanel" onclick="if(event.target.id==='cartPanel') closeCart()">
@@ -343,7 +347,7 @@ function renderProducts() {
   const search = document.getElementById("search").value.toLowerCase();
   const filtered = products.filter(p =>
     (selectedCategory === "All" || p.category === selectedCategory) &&
-    p.name.toLowerCase().includes(search)
+    (p.name + " " + p.seller + " " + p.category).toLowerCase().includes(search)
   );
 
   document.getElementById("products").innerHTML = filtered.length
