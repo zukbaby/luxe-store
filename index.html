@@ -261,24 +261,25 @@ footer {
 </header>
 
 <section class="hero" id="home">
-  <div class="eyebrow">THE LUXE EXPERIENCE</div>
-  <h1>SHOP BEYOND <span>ORDINARY.</span></h1>
-  <p>Discover products, explore creators and experience a new way to shop. Welcome to LUXE STORE.</p>
+  <div class="eyebrow">A GLOBAL MARKETPLACE</div>
+  <h1>FIND WHAT YOU LOVE. <span>DISCOVER WHAT’S NEXT.</span></h1>
+  <p>Explore products from independent sellers around the world. Discover new brands and shop with more confidence.</p>
   <a href="#shop"><button class="gold-button">EXPLORE STORE →</button></a>
 </section>
 
 <section class="section" id="shop">
   <div class="section-heading">
-    <h2>FEATURED <span>COLLECTION</span></h2>
+    <h2>EXPLORE THE <span>MARKETPLACE</span></h2>
     <input class="search" id="search" placeholder="Search products..." oninput="renderProducts()">
   </div>
 
   <div class="categories">
     <button class="category active" onclick="setCategory('All',this)">All</button>
+    <button class="category" onclick="setCategory('Shoes',this)">Shoes & sneakers</button>
+    <button class="category" onclick="setCategory('Tech',this)">Phones & accessories</button>
+    <button class="category" onclick="setCategory('Bags',this)">Bags & backpacks</button>
     <button class="category" onclick="setCategory('Fashion',this)">Fashion</button>
-    <button class="category" onclick="setCategory('Tech',this)">Tech</button>
-    <button class="category" onclick="setCategory('Accessories',this)">Accessories</button>
-    <button class="category" onclick="setCategory('Lifestyle',this)">Lifestyle</button>
+    <button class="category" onclick="setCategory('Lifestyle',this)">Home & living</button>
   </div>
 
   <div class="products" id="products"></div>
@@ -313,12 +314,14 @@ footer {
 
 <script>
 const products = [
-  {name:"Classic Streetwear",category:"Fashion",price:850,image:"https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=700"},
-  {name:"Urban Sneakers",category:"Fashion",price:1450,image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700"},
-  {name:"Wireless Headphones",category:"Tech",price:1200,image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700"},
-  {name:"Smart Watch",category:"Tech",price:1800,image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"},
-  {name:"Premium Shades",category:"Accessories",price:650,image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700"},
-  {name:"Everyday Backpack",category:"Lifestyle",price:950,image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700"}
+  {name:"Classic Streetwear",category:"Fashion",price:850,seller:"Urban Edit",image:"https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=700"},
+  {name:"Urban Sneakers",category:"Shoes",price:1450,seller:"Streetline",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700"},
+  {name:"Wireless Headphones",category:"Tech",price:1200,seller:"Nova Tech",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700"},
+  {name:"Smart Watch",category:"Tech",price:1800,seller:"Volt Market",image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"},
+  {name:"Premium Shades",category:"Accessories",price:650,seller:"Vista Goods",image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700"},
+  {name:"Everyday Backpack",category:"Bags",price:950,seller:"Carry Co.",image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700"},
+  {name:"Classic Low-top Shoes",category:"Shoes",price:1850,seller:"Sole House",image:"https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=700"},
+  {name:"Crossbody Bag",category:"Bags",price:900,seller:"Carry Co.",image:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700"}
 ];
 
 let selectedCategory = "All";
@@ -349,6 +352,7 @@ function renderProducts() {
         <div class="product-info">
           <small>${p.category.toUpperCase()}</small>
           <h3>${p.name}</h3>
+          <div style="font-size:11px;color:#777;margin:0 0 10px">Sold by <strong style="color:#333">${p.seller || "LUXE seller"}</strong></div>
           <div class="product-bottom">
             <span class="price">D${p.price.toLocaleString()}</span>
             <button class="add-button" onclick="addToCart('${p.name}')">+ Add</button>
