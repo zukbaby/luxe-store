@@ -4,7 +4,7 @@ function sameOrigin(req) {
   if (typeof origin !== "string" || typeof host !== "string" || !host) return false;
   try {
     const parsed = new URL(origin);
-    const local = /^(localhost|127\\.0\\.0\\.1)(:\\d+)?$/i.test(host);
+    const local = /^(localhost|127\.0\.0\.1)(:\d+)?$/i.test(host);
     const expected = (local ? "http://" : "https://") + host;
     return parsed.origin === expected;
   } catch {
