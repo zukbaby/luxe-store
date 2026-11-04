@@ -22,7 +22,7 @@ All routes below are contracts for future implementation. Until database and aut
 - GET /api/admin/verification-requests/:id — restricted case details.
 - POST /api/admin/verification-requests/:id/decision — human decision only; require admin role, reason, and audit record.
 - GET /api/admin/audit — narrowly scoped audit access.
-- POST /api/admin/commands — configured owner only. Accepts the exact command `1weekban-username`; resolves a unique username, records a seven-day expiry, protects the owner and administrator accounts, and writes an audit event atomically. No arbitrary SQL or free-form commands are accepted.
+- GET /api/admin/audit — owner-only recent administrative event history; returns limited event metadata only.\n- POST /api/admin/commands — configured owner only. Accepts the exact command `1weekban-username`; resolves a unique username, records a seven-day expiry, protects the owner and administrator accounts, and writes an audit event atomically. No arbitrary SQL or free-form commands are accepted.
 
 ## Assistant endpoints (future)
 - POST /api/ai/dama — authenticated, rate-limited, public-catalogue-grounded assistant.
@@ -69,6 +69,6 @@ All routes below are contracts for future implementation. Until database and aut
 ## Moderation command (implemented in code; not live)
 - Migration 004 adds unique usernames and server-controlled ban expiry/reason columns to profiles; it preserves RLS default-deny.
 - Users may set their own username through PATCH /api/me. Usernames are 3–24 lowercase letters, numbers or underscores and are unique case-insensitively.
-- The owner-only command accepts only `1weekban-username`, records a seven-day expiry, protects owner/admin accounts, and writes an audit event.
+- GET /api/admin/audit returns up to 100 recent event metadata rows and omits raw details/evidence.\n- The owner-only command accepts only `1weekban-username`, records a seven-day expiry, protects owner/admin accounts, and writes an audit event.
 - Shared API authentication centrally enforces unexpired bans. Expired bans stop restricting access automatically.
 - The feature remains unavailable until migration 004 is applied and Clerk/Neon are configured and tested in staging.
