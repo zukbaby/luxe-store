@@ -2,6 +2,8 @@
 -- Review and apply only after Neon is provisioned and a backup exists.
 -- This migration does not create seller accounts or approve applicants.
 
+alter table public.products rename column price_gmd to price_amount;
+
 alter table public.products
   add column if not exists currency_code char(3) not null default 'GMD',
   add column if not exists category varchar(80) not null default 'Other';
