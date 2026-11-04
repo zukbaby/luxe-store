@@ -59,3 +59,20 @@ A database/auth Marketplace connection can require provider authorization, accou
 
 ## Owner-only feature
 Animated GIF/video profile banners (up to five seconds) remain disabled for all users except the store owner until the owner explicitly enables wider access.
+
+
+## Latest frontend/API integration batch
+- `index.html` now requests the public published-product API and falls back to clearly labelled sample listings when the live catalogue is unavailable.
+- `accounts.html` now reads and updates only the signed-in user's display name through `/api/me`. The server creates a customer profile from the verified session; clients cannot set roles or verification state.
+- `seller.html` now submits seller applications and product drafts through authenticated APIs and displays server responses. It no longer pretends browser-local drafts are persistent marketplace records.
+- `admin.html` now reads the owner-protected seller review queue and sends explicit approve/reject decisions to the audited server endpoint.
+- Mutating profile, seller and review endpoints now require same-origin requests and enforce a 16 KB JSON body limit.
+- JavaScript syntax checks passed for the updated API handlers and inline scripts in the storefront, account, seller and admin pages.
+
+## Still blocked before real users can transact
+- No Clerk application or Neon database is connected to Vercel; no provider credentials are present.
+- `backend/schema.sql` and `backend/migrations/002_marketplace_expansion.sql` have not been applied or tested against a staging database.
+- Browser sign-in/sign-up UI is not yet connected. The account page can only work after a verified Clerk session exists.
+- Shared rate limiting, product submission-for-review/publishing, checkout, payment processing, payouts and order management are not enabled.
+- Seller approval APIs are implemented but cannot run until authentication, owner ID and database setup are complete.
+- These changes are on the development branch only. A new Vercel preview deployment is currently blocked by Vercel's 24-hour deployment creation limit; the existing READY preview still points to an older commit.
