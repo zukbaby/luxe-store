@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
     databaseConfigured: Boolean(process.env.DATABASE_URL),
     authConfigured: Boolean(
       process.env.CLERK_SECRET_KEY &&
-      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+      process.env.CLERK_AUTHORIZED_PARTIES
     ),
     ownerConfigured: Boolean(process.env.LUXE_OWNER_USER_ID)
   };
@@ -22,6 +22,6 @@ module.exports = async function handler(req, res) {
     status: "foundation",
     checks,
     liveFeaturesEnabled: false,
-    note: "Configuration checks only. Authentication, database operations, and admin actions are not enabled."
+    note: "Configuration presence only. This endpoint does not test provider connectivity or enable live features."
   });
 };
