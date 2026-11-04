@@ -35,3 +35,11 @@ Do not claim any unchecked item is live. Do not purchase services, domains, or p
 - [ ] Add idempotency records and verified payment-webhook event storage before enabling any checkout/payment path.
 - [ ] Define secure fulfilment address storage, retention, and seller access before collecting delivery addresses.
 - [ ] Test stock concurrency, checkout rollback, payment webhook replay protection, and buyer/seller access boundaries.
+
+
+## Seller onboarding (prepared, not live)
+- [ ] Review and apply `backend/migrations/003_seller_applications.sql` after the base schema and migration 002 in staging.
+- [ ] Run `backend/migrations/003_seller_applications.verify.sql` and confirm seller_applications remains RLS-enabled and policy-free.
+- [ ] Configure Clerk authorized parties, owner user ID, and confirm the owner has a database profile before testing owner review.
+- [ ] Test own-application isolation, duplicate pending applications, slug conflicts, invalid fields, unauthorized review denial, approval/rejection, atomic rollback, and audit records.
+- [ ] Build the seller application UI and owner review UI only after the server routes pass staging tests.
