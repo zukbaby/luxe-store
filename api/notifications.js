@@ -1,5 +1,5 @@
-const { authenticate } = require("../_lib/auth");
-const { query } = require("../_lib/database");
+const { authenticate } = require("./_lib/auth");
+const { query } = require("./_lib/database");
 const { randomUUID } = require("node:crypto");
 
 function send(res, status, payload) {
@@ -10,8 +10,8 @@ function send(res, status, payload) {
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method !== "GET") {
-    res.setHeader("Allow", "GET");
+  if (req.method !== "GET" && req.method !== "PATCH") {
+    res.setHeader("Allow", "GET, PATCH");
     return send(res, 405, { ok: false, code: "METHOD_NOT_ALLOWED" });
   }
 
@@ -26,6 +26,27 @@ module.exports = async function handler(req, res) {
   const limit = rawLimit === undefined ? 30 : Number(rawLimit);
   if (!Number.isInteger(limit) || limit < 1 || limit > 50) {
     return send(res, 422, { ok: false, code: "INVALID_LIMIT" });
+  }
+
+  if (req.method === "PATCH") {
+    if (!req.body || typeof req.body !== "object" || Array.isArray(req.body) ||
+        Object.keys(req.body).length !== 1 || req.body.read !== true) {
+      return send(res, 400, { ok: false, code: "INVALID_BODY" });
+    }
+    try {
+      const rows = await query(
+        "update public.notifications set read_at = coalesce(read_at, now()) where user_id = $1 and read_at is null returning id",
+        [session.userId]
+      );
+      return send(res, 200, { ok: true, markedRead: rows ? rows.length : 0 });
+    } catch (error) {
+      if (error && error.code === "DATABASE_NOT_CONFIGURED") {
+        return send(res, 503, { ok: false, code: "DATABASE_NOT_CONFIGURED" });
+      }
+      const requestId = randomUUID();
+      console.error("LUXE mark-all-read failed", { requestId });
+      return send(res, 500, { ok: false, code: "INTERNAL_ERROR", requestId });
+    }
   }
 
   try {
