@@ -8,8 +8,8 @@ All routes below are contracts for future implementation. Until database and aut
 - GET /api/products/:id — future public product detail.
 
 ## Authenticated customer
-- GET /api/me — own profile only.
-- PATCH /api/me — allowlisted profile fields only.
+- GET /api/me — implemented: verified Clerk session, own profile only; 404 if no profile exists.
+- PATCH /api/me — implemented: verified Clerk session, creates/updates own display name only; role and verification fields are rejected.
 - POST /api/verification-requests — applicant-owned request; private evidence uploaded only through a secure provider workflow.
 
 ## Authenticated seller
