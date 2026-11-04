@@ -29,7 +29,7 @@ async function start(){
  try{
   const response=await fetch("/api/public-config",{headers:{"Accept":"application/json"},cache:"no-store"});
   const config=await response.json();
-  if(!response.ok||!config.configured||!config.publishableKey){status("Clerk is connected to Vercel, but its application keys are not ready yet. Sign-in is safely paused until the Clerk application is provisioned.",true);return;}
+  if(!response.ok||!config.configured||!config.publishableKey){status("Clerk is installed in Vercel, but LUXE STORE is not linked to a Clerk application yet. Sign-in is safely paused until the project connection is completed.",true);return;}
   const key=config.publishableKey;
   const parts=key.split("_");
   if(parts.length<3){status("The Clerk publishable key format is invalid. Please check the Clerk application setup.",true);return;}
