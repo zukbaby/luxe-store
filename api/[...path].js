@@ -21,6 +21,7 @@ const handlers = {
   "seller/products": require("../server/api-handlers/api/seller/products"),
   "admin/products": require("../server/api-handlers/api/admin/products"),
   "ai/dama": require("../server/api-handlers/api/ai/dama"),
+  "ai/vicky": require("../server/api-handlers/api/ai/vicky"),
   "admin/reviews": require("../server/api-handlers/api/admin/reviews")
 };
 
