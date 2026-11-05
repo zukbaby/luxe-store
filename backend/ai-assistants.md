@@ -26,8 +26,11 @@ These are implementation contracts, not claims that either assistant is connecte
 
 ## Shared technical requirements
 - Both assistants use the same provider adapter and exactly one configured provider endpoint.
-- Provider configuration is fail-closed and requires LUXE_AI_FREE_ONLY=true; no paid fallback, automatic provider switching, or Vercel AI Gateway fallback.
-- The free-only flag is a deployment safeguard, not proof that a provider's plan is free. Verify provider terms, age requirements, data handling, commercial-use rules, and quotas before enabling it.
+- The adapter currently accepts only Cloudflare Workers AI direct chat-completions URLs on `api.cloudflare.com`, an account-ID path, and model IDs beginning `@cf/`. It rejects third-party provider URLs and non-Workers-AI model IDs.
+- Provider configuration is fail-closed and requires `LUXE_AI_FREE_ONLY=true`, `LUXE_AI_PROVIDER_URL`, `LUXE_AI_PROVIDER_MODEL`, and `LUXE_AI_PROVIDER_API_KEY`; no paid fallback, automatic provider switching, or Vercel AI Gateway fallback.
+- Use only the Cloudflare Workers Free plan and a model available under its free allocation. Cloudflare currently documents 10,000 Neurons/day on Workers Free; exceeding the free allocation fails rather than upgrading automatically. Recheck pricing before enabling. The free-only environment flag does not itself prevent account-plan upgrades or guarantee a $0 bill.
+- A parent/legal guardian must supervise provider-account ownership and acceptance of service terms. Do not bypass age or account requirements.
+- Verify provider terms, age requirements, data handling, commercial-use rules, and quotas before enabling it.
 - Authenticate every private request server-side and enforce role/resource ownership.
 - Validate and size-limit input; reject unsupported methods.
 - Apply per-user rate limits, request IDs, and no-store headers to private endpoints.
