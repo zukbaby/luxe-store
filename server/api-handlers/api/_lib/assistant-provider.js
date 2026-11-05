@@ -1,5 +1,10 @@
 const { randomUUID } = require("node:crypto");
 
+// Keep this allowlist narrow: a Cloudflare model ID alone does not prove it
+// is available on the Workers Free plan. Re-check Cloudflare pricing before
+// changing this list.
+const FREE_MODELS = new Set(["@cf/zai-org/glm-4.7-flash"]);
+
 function getProviderConfig() {
   const endpoint = process.env.LUXE_AI_PROVIDER_URL;
   const model = process.env.LUXE_AI_PROVIDER_MODEL;
@@ -9,12 +14,11 @@ function getProviderConfig() {
   let parsed;
   try { parsed = new URL(endpoint); } catch { return null; }
 
-  // LUXE currently supports only Cloudflare Workers AI direct inference.
-  // This prevents accidental routing to a paid third-party provider.
-  const cloudflarePath = /^\/client\/v4\/accounts\/[a-f0-9]{32}\/ai\/v1\/chat\/completions$/i;
+  // Only the Cloudflare direct chat-completions endpoint is accepted.
+  const cloudflarePath = /^\\/client\\/v4\\/accounts\\/[a-f0-9]{32}\\/ai\\/v1\\/chat\\/completions$/i;
   if (parsed.protocol !== "https:" || parsed.hostname !== "api.cloudflare.com" ||
       parsed.username || parsed.password || parsed.search || parsed.hash ||
-      !cloudflarePath.test(parsed.pathname) || !model.startsWith("@cf/")) return null;
+      !cloudflarePath.test(parsed.pathname) || !FREE_MODELS.has(model)) return null;
 
   return { endpoint: parsed.toString(), model, apiKey };
 }
