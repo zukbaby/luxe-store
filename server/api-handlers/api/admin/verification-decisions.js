@@ -31,11 +31,6 @@ module.exports = async function handler(req, res) {
        profile_change as (
          update public.profiles p
          set verification_status = c.status,
-             verification_badge = case
-               when p.verification_badge = 'gold' then 'gold'
-               when c.status = 'approved' then 'green'
-               else null
-             end,
              updated_at = now()
          from changed c where p.id = c.user_id returning p.id
        ),
