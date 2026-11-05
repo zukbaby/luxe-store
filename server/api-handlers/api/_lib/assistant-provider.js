@@ -23,9 +23,28 @@ function getProviderConfig() {
   return { endpoint: parsed.toString(), model, apiKey };
 }
 
+function validMessages(messages) {
+  if (!Array.isArray(messages) || messages.length < 1 || messages.length > 12) return false;
+  let totalLength = 0;
+  for (const message of messages) {
+    if (!message || typeof message !== "object" ||
+        !["system", "user", "assistant"].includes(message.role) ||
+        typeof message.content !== "string" || !message.content.trim() ||
+        message.content.length > 45000) return false;
+    totalLength += message.content.length;
+    if (totalLength > 50000) return false;
+  }
+  return true;
+}
+
 async function requestAssistantCompletion(messages, options = {}) {
   const config = getProviderConfig();
   if (!config) return { ok: false, code: "AI_PROVIDER_NOT_CONFIGURED" };
+  if (!validMessages(messages)) return { ok: false, code: "INVALID_AI_REQUEST" };
+
+  const requestedTokens = Number.isFinite(options.maxTokens) ? Math.floor(options.maxTokens) : 450;
+  const maxTokens = Math.min(450, Math.max(1, requestedTokens));
+
   try {
     const response = await fetch(config.endpoint, {
       method: "POST",
@@ -38,7 +57,7 @@ async function requestAssistantCompletion(messages, options = {}) {
         model: config.model,
         messages,
         temperature: 0.3,
-        max_tokens: options.maxTokens || 450,
+        max_tokens: maxTokens,
         stream: false
       }),
       signal: AbortSignal.timeout(20000)
