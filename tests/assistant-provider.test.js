@@ -1,7 +1,10 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { getProviderConfig } = require("../server/api-handlers/api/_lib/assistant-provider");
+const {
+  getProviderConfig,
+  requestAssistantCompletion
+} = require("../server/api-handlers/api/_lib/assistant-provider");
 
 const keys = [
   "LUXE_AI_FREE_ONLY",
@@ -39,7 +42,7 @@ test("provider stays disabled when any required setting is missing", () => {
   assert.equal(getProviderConfig(), null);
 });
 
-test("accepts only the Cloudflare account chat-completions endpoint and @cf models", () => {
+test("accepts only the Cloudflare account chat-completions endpoint and allowed model", () => {
   setConfig();
   const config = getProviderConfig();
   assert.ok(config);
@@ -61,4 +64,51 @@ test("rejects models outside the explicit free-model allowlist", () => {
   assert.equal(getProviderConfig(), null);
   setConfig({ LUXE_AI_PROVIDER_MODEL: "gpt-4o" });
   assert.equal(getProviderConfig(), null);
+});
+
+test("rejects malformed or oversized message payloads before making a request", async () => {
+  setConfig();
+  const originalFetch = global.fetch;
+  let called = false;
+  global.fetch = async () => { called = true; throw new Error("fetch should not run"); };
+  try {
+    const badRole = await requestAssistantCompletion([{ role: "developer", content: "no" }]);
+    const tooMany = await requestAssistantCompletion(
+      Array.from({ length: 13 }, () => ({ role: "user", content: "hello" }))
+    );
+    const tooLarge = await requestAssistantCompletion([
+      { role: "user", content: "x".repeat(45001) }
+    ]);
+    assert.equal(badRole.code, "INVALID_AI_REQUEST");
+    assert.equal(tooMany.code, "INVALID_AI_REQUEST");
+    assert.equal(tooLarge.code, "INVALID_AI_REQUEST");
+    assert.equal(called, false);
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test("caps completion output at 450 tokens", async () => {
+  setConfig();
+  const originalFetch = global.fetch;
+  let sentBody;
+  global.fetch = async (_url, options) => {
+    sentBody = JSON.parse(options.body);
+    return {
+      ok: true,
+      json: async () => ({ choices: [{ message: { content: " test reply " } }] })
+    };
+  };
+  try {
+    const result = await requestAssistantCompletion(
+      [{ role: "user", content: "hello" }],
+      { maxTokens: 99999 }
+    );
+    assert.equal(result.ok, true);
+    assert.equal(result.answer, "test reply");
+    assert.equal(sentBody.max_tokens, 450);
+    assert.equal(sentBody.stream, false);
+  } finally {
+    global.fetch = originalFetch;
+  }
 });
