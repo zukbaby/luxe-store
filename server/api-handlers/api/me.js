@@ -34,7 +34,7 @@ module.exports = async function handler(req, res) {
   try {
     if (req.method === "GET") {
       const rows = await query(
-        "select id, display_name, username, role, verification_status, verification_badge, case when id = $2 or lower(username) = 'official.dama' then 'blue' when verification_badge in ('green', 'gold') then verification_badge else null end as badge_color, banned_until, created_at, updated_at from public.profiles where id = $1 limit 1",
+        "select p.id, p.display_name, p.username, p.role, p.verification_status, to_jsonb(p)->>'verification_badge' as verification_badge, case when p.id = $2 or lower(p.username) = 'official.dama' then 'blue' when to_jsonb(p)->>'verification_badge' in ('green', 'gold') then to_jsonb(p)->>'verification_badge' else null end as badge_color, p.banned_until, p.created_at, p.updated_at from public.profiles p where p.id = $1 limit 1",
         [session.userId, process.env.LUXE_OWNER_USER_ID || ""]
       );
       if (!rows || rows.length === 0) {
@@ -79,7 +79,7 @@ module.exports = async function handler(req, res) {
          set display_name = coalesce(excluded.display_name, public.profiles.display_name),
              username = coalesce(excluded.username, public.profiles.username),
              updated_at = now()
-       returning id, display_name, username, role, verification_status, verification_badge, case when id = $4 or lower(username) = 'official.dama' then 'blue' when verification_badge in ('green', 'gold') then verification_badge else null end as badge_color, banned_until, created_at, updated_at`,
+       returning id, display_name, username, role, verification_status, to_jsonb(profiles)->>'verification_badge' as verification_badge, case when id = $4 or lower(username) = 'official.dama' then 'blue' when to_jsonb(profiles)->>'verification_badge' in ('green', 'gold') then to_jsonb(profiles)->>'verification_badge' else null end as badge_color, banned_until, created_at, updated_at`,
       [session.userId, displayName || "LUXE Member", username, process.env.LUXE_OWNER_USER_ID || ""]
     );
     return send(res, 200, { ok: true, profile: rows[0] });
