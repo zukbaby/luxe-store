@@ -1,5 +1,113 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LUXE STORE | Account Preview</title><style>
-*{box-sizing:border-box}body{margin:0;background:#fff;color:#191919;font-family:Arial,sans-serif}.top{padding:17px 6%;border-bottom:1px solid #ece8df;display:flex;justify-content:space-between}.logo{color:#b88932;font-weight:900;letter-spacing:3px}a{color:inherit;text-decoration:none}.wrap{max-width:760px;margin:auto;padding:42px 20px}.eyebrow{color:#b88932;font-size:11px;letter-spacing:3px;font-weight:bold}h1{font-size:40px;margin:12px 0}.muted{color:#777;line-height:1.6;font-size:14px}.card{border:1px solid #ece8df;border-radius:14px;padding:22px;margin:18px 0}.field{display:grid;gap:7px;margin:14px 0}label{font-size:13px;font-weight:bold}input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:7px;font-size:14px}button{background:#b88932;color:white;border:0;padding:12px 16px;border-radius:7px;font-weight:bold;cursor:pointer}.notice{background:#fff8e8;color:#715827;border:1px solid #efdfb9;padding:13px;border-radius:8px;font-size:12px;line-height:1.6}.profile{display:none;background:#f9f8f5;border-radius:10px;padding:16px;margin-top:15px}.row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-</style></head><body><header class="top"><a class="logo" href="index.html">LUXE STORE</a><a href="index.html">← Store</a></header><main class="wrap"><div class="eyebrow">YOUR LUXE SPACE</div><h1>Account preview</h1><p class="muted">Preview your customer profile layout and account preferences.</p><div class="notice"><b>Prototype only.</b> This form stores a display name and email locally in this browser. It does not create an account, verify an email, set a password or sync data to LUXE STORE. Do not enter sensitive information.</div><section class="card"><h2>Profile details</h2><form id="profileForm"><div class="field"><label for="displayName">Display name</label><input id="displayName" maxlength="40" placeholder="Your display name" required></div><div class="field"><label for="email">Email (preview only)</label><input id="email" type="email" maxlength="100" placeholder="you@example.com" required></div><div class="field"><label for="accountType">Account type</label><select id="accountType"><option>Customer</option><option>Creator interest</option><option>Seller interest</option></select></div><button>Save preview profile</button></form><div class="profile" id="profileCard"><div class="row"><b id="savedName"></b><span style="color:#b88932;font-size:12px">LOCAL PREVIEW</span></div><p class="muted" id="savedEmail"></p><p class="muted" id="savedType"></p></div></section><a href="seller.html" style="color:#96702e;font-weight:bold">Explore seller tools →</a></main><script>
-const form=document.getElementById("profileForm");try{const p=JSON.parse(localStorage.getItem("luxe-profile-preview")||"null");if(p){display(p)}}catch{}function display(p){document.getElementById("profileCard").style.display="block";document.getElementById("savedName").textContent=p.name;document.getElementById("savedEmail").textContent=p.email;document.getElementById("savedType").textContent=p.type;document.getElementById("displayName").value=p.name;document.getElementById("email").value=p.email;document.getElementById("accountType").value=p.type}form.addEventListener("submit",e=>{e.preventDefault();const p={name:document.getElementById("displayName").value.trim(),email:document.getElementById("email").value.trim(),type:document.getElementById("accountType").value};try{localStorage.setItem("luxe-profile-preview",JSON.stringify(p))}catch{}display(p)});
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08285b">
+<title>LUXE STORE | Sign in or create account</title>
+<style>
+:root{--navy:#06275b;--deep:#041a3d;--blue:#0878f9;--ink:#142238;--muted:#6d7b90;--line:#e7edf5;--soft:#f5f8fc;--green:#16a36a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#f7faff,#fff 360px);color:var(--ink);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+.top{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100% - 1180px)/2))}
+.brand{display:flex;align-items:center;gap:10px;color:var(--navy);font-size:25px;font-weight:900;letter-spacing:-.8px;text-decoration:none}.brand span{color:var(--blue)}
+.back{color:var(--navy);font-size:13px;font-weight:bold;text-decoration:none}
+.wrap{max-width:1100px;margin:42px auto;padding:0 20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,470px);gap:44px;align-items:center}
+.intro{padding:20px 0}.eyebrow{color:var(--blue);font-size:11px;letter-spacing:3px;font-weight:900}.intro h1{font-size:clamp(38px,5vw,58px);line-height:1.02;letter-spacing:-2px;margin:13px 0;color:var(--navy)}.intro p{font-size:15px;line-height:1.7;color:var(--muted);max-width:490px}
+.perks{display:grid;gap:13px;margin-top:26px}.perk{display:flex;gap:12px;align-items:center;font-size:13px;color:#34455f}.perk i{font-style:normal;width:35px;height:35px;border-radius:10px;background:#eaf3ff;display:grid;place-items:center;font-size:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:25px;box-shadow:0 18px 55px #0b2a5010;min-height:360px}.card h2{font-size:22px;margin:0 0 7px;color:var(--navy)}.sub{font-size:13px;color:var(--muted);margin:0 0 20px;line-height:1.5}
+#authMount{min-height:250px}.status{padding:13px;border-radius:10px;background:#f3f7fc;border:1px solid var(--line);color:#4c5e76;font-size:13px;line-height:1.55}.status.error{background:#fff5f4;border-color:#f4d1ce;color:#9c3931}.status.success{background:#effaf5;border-color:#cceedd;color:#146a47}
+#signedIn{display:none}.userline{display:flex;align-items:center;gap:12px;padding:14px;background:var(--soft);border:1px solid var(--line);border-radius:12px;margin:16px 0}.avatar{width:44px;height:44px;border-radius:50%;background:#e5f0ff;color:var(--blue);display:grid;place-items:center;font-weight:900;font-size:18px}.usertext{min-width:0}.usertext b{display:block;overflow-wrap:anywhere}.usertext small{display:block;color:var(--muted);margin-top:4px}.primary,.secondary{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:12px 16px;font-size:13px;font-weight:bold;text-decoration:none;cursor:pointer}.primary{background:var(--blue);color:#fff;border:1px solid var(--blue)}.secondary{background:#fff;color:var(--navy);border:1px solid var(--line)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.fine{font-size:11px;color:var(--muted);line-height:1.5;margin-top:17px}
+@media(max-width:800px){.wrap{grid-template-columns:1fr;gap:20px;margin:20px auto}.intro{padding:8px 0}.intro h1{font-size:40px}.perks{grid-template-columns:1fr 1fr}.card{padding:19px}.top{height:62px}}
+@media(max-width:430px){.perks{grid-template-columns:1fr}.brand{font-size:21px}}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="/">LUXE <span>STORE</span></a><a class="back" href="/">← Back to marketplace</a></header>
+<main class="wrap">
+<section class="intro">
+<div class="eyebrow">YOUR LUXE ACCOUNT</div>
+<h1>Welcome back.<br>Shop with confidence.</h1>
+<p>Sign in to your LUXE STORE account or create one to keep your marketplace activity connected across your devices.</p>
+<div class="perks">
+<div class="perk"><i>♡</i><span>Save favourite products and sellers</span></div>
+<div class="perk"><i>📦</i><span>Keep your account activity together</span></div>
+<div class="perk"><i>🛡️</i><span>One secure sign-in for LUXE services</span></div>
+<div class="perk"><i>🌍</i><span>Access the global marketplace</span></div>
+</div>
+</section>
+<section class="card">
+<div id="signedOut">
+<h2>Sign in or join LUXE</h2>
+<p class="sub">Use your email or a supported sign-in provider.</p>
+<div id="status" class="status">Connecting to secure sign-in…</div>
+<div id="authMount"></div>
+</div>
+<div id="signedIn">
+<h2>You're signed in</h2>
+<p class="sub">Your LUXE account session is active on this device.</p>
+<div class="userline"><div class="avatar" id="avatar">L</div><div class="usertext"><b id="userName">LUXE member</b><small id="userEmail">Signed-in account</small></div></div>
+<div id="ownerStatus" class="status">Checking account permissions…</div>
+<div id="userIdWrap" class="fine" hidden>Account ID: <code id="userId"></code></div>
+<div id="userButton"></div>
+<div class="actions"><a class="primary" href="/">Continue shopping</a><button class="secondary" id="signOut">Sign out</button></div>
+</div>
+<p class="fine">Your password and verification codes are handled by the secure sign-in provider. Never share them in chat.</p>
+</section>
+</main>
+<script>
+(function(){
+  const statusEl=document.getElementById("status");
+  const signedOut=document.getElementById("signedOut");
+  const signedIn=document.getElementById("signedIn");
+  const setStatus=(message,error)=>{statusEl.textContent=message;statusEl.className="status"+(error?" error":"");};
+  function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=src;s.async=true;s.crossOrigin="anonymous";s.onload=resolve;s.onerror=()=>reject(new Error("Could not load secure sign-in resources."));document.head.appendChild(s);});}
+  async function start(){
+    try{
+      const response=await fetch("/api/auth/config",{cache:"no-store"});
+      const config=await response.json();
+      if(!response.ok||!config.configured){
+        setStatus("Sign-in setup is not finished yet. The store owner must connect the Clerk keys in Vercel before accounts can be created.",true);
+        return;
+      }
+      const frontendApi=atob(config.publishableKey.split("_")[2]).replace(/\$$/,"");
+      const base="https://"+frontendApi;
+      await loadScript(base+"/npm/@clerk/ui@1/dist/ui.browser.js");
+      await loadScript(base+"/npm/@clerk/clerk-js@6/dist/clerk.browser.js");
+      if(!window.Clerk)throw new Error("The secure sign-in SDK did not initialize.");
+      const clerk=window.Clerk;
+      await clerk.load({ui:{ClerkUI:window.__internal_ClerkUICtor},signInUrl:"/accounts.html",signUpUrl:"/accounts.html"});
+      if(clerk.isSignedIn){
+        signedOut.style.display="none";signedIn.style.display="block";
+        const user=clerk.user||{};
+        const label=user.username||user.fullName||user.firstName||"LUXE member";
+        document.getElementById("userName").textContent=label;
+        document.getElementById("userEmail").textContent=(user.primaryEmailAddress&&user.primaryEmailAddress.emailAddress)||"Signed-in account";
+        document.getElementById("avatar").textContent=(label[0]||"L").toUpperCase();
+        if(clerk.mountUserButton)clerk.mountUserButton(document.getElementById("userButton"));
+        const token=await clerk.session.getToken();
+        const me=await fetch("/api/auth/me",{headers:{Authorization:"Bearer "+token},cache:"no-store"});
+        const data=await me.json();
+        if(me.ok&&data.authenticated){
+          document.getElementById("userId").textContent=data.userId;
+          document.getElementById("userIdWrap").hidden=false;
+          const owner=await fetch("/api/auth/owner",{headers:{Authorization:"Bearer "+token},cache:"no-store"});
+          const ownerData=await owner.json();
+          const ownerStatus=document.getElementById("ownerStatus");
+          if(owner.ok&&ownerData.isOwner){ownerStatus.textContent="Founder access confirmed. Owner tools can be enabled for this account.";ownerStatus.className="status success";}
+          else{ownerStatus.textContent="Your account is active. Founder permissions still need to be assigned securely by the store owner.";ownerStatus.className="status";}
+        }else{
+          document.getElementById("ownerStatus").textContent=data.message||"Your session is active, but server verification needs configuration.";
+          document.getElementById("ownerStatus").className="status error";
+        }
+        document.getElementById("signOut").addEventListener("click",async()=>{await clerk.signOut();location.reload();});
+      }else{
+        setStatus("Secure sign-in is ready. Choose an available sign-in method below.");
+        clerk.mountSignIn(document.getElementById("authMount"),{fallbackRedirectUrl:"/"});
+      }
+    }catch(error){setStatus(error.message||"Sign-in could not be loaded. Please try again.",true);}
+  }
+  start();
+})();
+</script>
+</body>
+</html>
