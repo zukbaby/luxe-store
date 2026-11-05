@@ -1,6 +1,7 @@
 const { authenticate } = require("../_lib/auth");
 const { query } = require("../_lib/database");
 const { randomUUID } = require("node:crypto");
+const { getProviderConfig, requestAssistantCompletion } = require("../_lib/assistant-provider");
 
 function send(res,status,payload){res.setHeader("Cache-Control","no-store");res.setHeader("Content-Type","application/json; charset=utf-8");res.setHeader("X-Content-Type-Options","nosniff");return res.status(status).json(payload)}
 module.exports=async function handler(req,res){
@@ -8,9 +9,7 @@ module.exports=async function handler(req,res){
  const session=await authenticate(req);if(!session.ok)return send(res,session.status,{ok:false,code:session.code,message:session.message});
  const body=req.body;
  if(!body||typeof body!=="object"||Array.isArray(body)||Object.keys(body).length!==1||typeof body.message!=="string"||body.message.trim().length<1||body.message.trim().length>1000)return send(res,422,{ok:false,code:"INVALID_MESSAGE"});
- const apiKey=process.env.AI_GATEWAY_API_KEY||process.env.VERCEL_OIDC_TOKEN;
- const model=process.env.DAMA_MODEL;
- if(!apiKey||!model)return send(res,503,{ok:false,code:"DAMA_NOT_CONFIGURED",message:"DAMA's AI connection has not been configured yet."});
+ if(!getProviderConfig())return send(res,503,{ok:false,code:"DAMA_NOT_CONFIGURED",message:"DAMA's shared free-only AI provider has not been configured yet."});
  const message=body.message.trim();
  try{
   const limits=await query(
@@ -46,15 +45,9 @@ module.exports=async function handler(req,res){
    "Keep replies concise and age-appropriate.",
    "Public catalogue JSON: "+JSON.stringify(catalogue)
   ].join("\n");
-  const response=await fetch("https://ai-gateway.vercel.sh/v1/chat/completions",{
-   method:"POST",headers:{"Authorization":"Bearer "+apiKey,"Content-Type":"application/json"},
-   body:JSON.stringify({model,messages:[{role:"system",content:system},{role:"user",content:message}],temperature:0.3,max_tokens:450}),
-   signal:AbortSignal.timeout(20000)
-  });
-  if(!response.ok){const requestId=randomUUID();console.error("DAMA gateway response failed",{requestId,status:response.status});return send(res,502,{ok:false,code:"AI_PROVIDER_UNAVAILABLE",requestId})}
-  const result=await response.json();
-  const answer=result&&result.choices&&result.choices[0]&&result.choices[0].message&&result.choices[0].message.content;
-  if(typeof answer!=="string"||!answer.trim())return send(res,502,{ok:false,code:"EMPTY_AI_RESPONSE"});
+  const completion=await requestAssistantCompletion([{role:"system",content:system},{role:"user",content:message}],{maxTokens:450});
+  if(!completion.ok)return send(res,502,{ok:false,code:completion.code,requestId:completion.requestId});
+  const answer=completion.answer;
   return send(res,200,{ok:true,answer:answer.trim(),products:catalogue.slice(0,12).map(p=>({id:p.id,title:p.title,priceGmd:p.priceGmd,store:p.store,stock:p.stock}))});
  }catch(error){
   if(error&&error.code==="DATABASE_NOT_CONFIGURED")return send(res,503,{ok:false,code:"DATABASE_NOT_CONFIGURED"});
