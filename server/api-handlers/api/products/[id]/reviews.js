@@ -10,7 +10,7 @@ module.exports=async function handler(req,res){
    const rows=await query(
     `select r.id,r.rating,r.title,r.body,r.created_at,p.username,p.display_name,
        case when p.id=$2 or lower(p.username)='official.dama' then 'blue'
-            when p.verification_badge in ('green','gold') then p.verification_badge
+            when to_jsonb(p)->>'verification_badge' in ('green','gold') then to_jsonb(p)->>'verification_badge'
             else null end as badge_color
      from public.product_reviews r
      join public.profiles p on p.id=r.buyer_id
