@@ -10,6 +10,7 @@ const handlers = {
   "admin/seller-applications": require("../server/api-handlers/api/admin/seller-applications"),
   "admin/commands": require("../server/api-handlers/api/admin/commands"),
   "admin/badges": require("../server/api-handlers/api/admin/badges"),
+  "admin/vicky-plans": require("../server/api-handlers/api/admin/vicky-plans"),
   "admin/audit": require("../server/api-handlers/api/admin/audit"),
   "admin/users": require("../server/api-handlers/api/admin/users"),
   "admin/verification-requests": require("../server/api-handlers/api/admin/verification-requests"),
