@@ -2,8 +2,10 @@
   const ns = "http://www.w3.org/2000/svg";
   const tiers = {
     blue: { label: "LUXE Founder / Official badge", className: "blue" },
+    cyan: { label: "Vicky AI Plus badge", className: "cyan" },
+    purple: { label: "Vicky AI Pro badge", className: "purple" },
     green: { label: "LUXE Verified member", className: "green" },
-    gold: { label: "LUXE VIP member", className: "gold" }
+    gold: { label: "LUXE VIP / Vicky AI Gold badge", className: "gold" }
   };
 
   function create(tier) {
@@ -40,5 +42,10 @@
     if (badge) element.appendChild(badge);
   }
 
-  global.LUXE_BADGES = Object.freeze({ create, setName });
+  function vickyTier(plan) {
+    const tier = String(plan || "free").toLowerCase();
+    return ({ free: "blue", plus: "cyan", pro: "purple", gold: "gold" })[tier] || "blue";
+  }
+
+  global.LUXE_BADGES = Object.freeze({ create, setName, vickyTier });
 })(window);
