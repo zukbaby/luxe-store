@@ -31,12 +31,15 @@ module.exports = async function handler(req, res) {
   try {
     if (id) {
       const profiles = await query(
-        `select id, username, display_name, role, verification_status,
+        `select id, username, display_name, role, verification_status, verification_badge,
+                case when id = $2 or lower(username) = 'official.dama' then 'blue'
+                     when verification_badge in ('green', 'gold') then verification_badge
+                     else null end as badge_color,
                 banned_until, ban_reason, created_at, updated_at
          from public.profiles
          where id = $1
          limit 1`,
-        [id]
+        [id, process.env.LUXE_OWNER_USER_ID || ""]
       );
       if (!profiles || profiles.length === 0) {
         return send(res, 404, { ok: false, code: "USER_NOT_FOUND" });
@@ -57,7 +60,10 @@ module.exports = async function handler(req, res) {
     }
 
     const rows = await query(
-      `select id, username, display_name, role, verification_status,
+      `select id, username, display_name, role, verification_status, verification_badge,
+              case when id = $2 or lower(username) = 'official.dama' then 'blue'
+                   when verification_badge in ('green', 'gold') then verification_badge
+                   else null end as badge_color,
               banned_until, created_at
        from public.profiles
        where $1 = ''
@@ -65,7 +71,7 @@ module.exports = async function handler(req, res) {
           or lower(display_name) like '%' || lower($1) || '%'
        order by created_at desc
        limit 50`,
-      [q]
+      [q, process.env.LUXE_OWNER_USER_ID || ""]
     );
     return send(res, 200, { ok: true, users: rows || [], limit: 50 });
   } catch (error) {
