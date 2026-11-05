@@ -30,7 +30,13 @@ module.exports = async function handler(req, res) {
        ),
        profile_change as (
          update public.profiles p
-         set verification_status = c.status, updated_at = now()
+         set verification_status = c.status,
+             verification_badge = case
+               when c.status = 'approved' then 'green'
+               when p.verification_badge = 'gold' then 'gold'
+               else null
+             end,
+             updated_at = now()
          from changed c where p.id = c.user_id returning p.id
        ),
        audit as (
