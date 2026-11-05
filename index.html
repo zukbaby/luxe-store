@@ -1,407 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LUXE STORE | Shop Beyond Ordinary</title>
-<meta name="description" content="Discover products, explore creators and experience a new way to shop at LUXE STORE.">
-<meta name="theme-color" content="#ffffff">
-<link rel="canonical" href="https://luxe-store-zukbaby.vercel.app/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="LUXE STORE">
-<meta property="og:title" content="LUXE STORE | Shop Beyond Ordinary">
-<meta property="og:description" content="Discover products, explore creators and experience a new way to shop.">
-<meta property="og:url" content="https://luxe-store-zukbaby.vercel.app/">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LUXE STORE | Shop Beyond Ordinary">
-<meta name="twitter:description" content="Discover products, explore creators and experience a new way to shop.">
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LUXE STORE — Shop Smarter. Live Better.</title>
+<meta name="description" content="Discover products and shop across the LUXE STORE global marketplace."><meta name="theme-color" content="#08285b">
 <style>
-:root {
-  --gold: #b88932;
-  --black: #ffffff;
-  --panel: #ffffff;
-  --muted: #6b6b6b;
-  --white: #171717;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: #ffffff;
-  color: #171717;
-  font-family: Arial, sans-serif;
-}
-header {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background: #ffffffed;
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid #e9e3d8;
-  padding: 17px 6%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-}
-.logo {
-  color: var(--gold);
-  font-size: 24px;
-  font-weight: 900;
-  letter-spacing: 4px;
-}
-nav { display: flex; gap: 20px; align-items: center; }
-nav a {
-  color: #444;
-  text-decoration: none;
-  font-size: 13px;
-}
-nav a:hover { color: var(--gold); }
-.cart-button, .gold-button {
-  background: var(--gold);
-  color: #ffffff;
-  border: 0;
-  padding: 11px 17px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-}
-.hero {
-  padding: 85px 7% 75px;
-  background:
-    radial-gradient(ellipse at 82% 28%, #d8ad5530, transparent 46%),
-    linear-gradient(120deg, #fffdf8, #f7f5ef 72%);
-  border-bottom: 1px solid #e9e3d8;
-}
-.eyebrow {
-  color: var(--gold);
-  letter-spacing: 4px;
-  font-size: 11px;
-  font-weight: bold;
-}
-.hero h1 {
-  font-size: clamp(42px, 8vw, 78px);
-  line-height: .98;
-  max-width: 720px;
-  margin: 20px 0;
-}
-.hero h1 span { color: var(--gold); }
-.hero p { color: #666; max-width: 440px; line-height: 1.7; }
-.section { padding: 45px 6%; }
-.section-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 24px;
-}
-.section-heading h2 { margin: 0; font-size: 25px; }
-.section-heading h2 span { color: var(--gold); }
-.search {
-  background: #ffffff;
-  color: #222;
-  border: 1px solid #dedede;
-  border-radius: 5px;
-  padding: 12px 14px;
-  width: min(100%, 260px);
-  outline: none;
-}
-.categories {
-  display: flex;
-  gap: 9px;
-  overflow-x: auto;
-  padding-bottom: 18px;
-}
-.category {
-  background: #f5f4f1;
-  border: 1px solid #e5e1d9;
-  color: #444;
-  border-radius: 30px;
-  padding: 9px 16px;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.category.active, .category:hover {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: #ffffff;
-}
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 18px;
-}
-.product {
-  background: var(--panel);
-  border: 1px solid #e9e6df;
-  border-radius: 9px;
-  overflow: hidden;
-  transition: .2s;
-}
-.product:hover { transform: translateY(-4px); border-color: #9b793d; }
-.product img {
-  display: block;
-  width: 100%;
-  height: 190px;
-  object-fit: cover;
-  background: #f0eee9;
-}
-.product-info { padding: 15px; }
-.product-info small { color: var(--gold); }
-.product-info h3 { margin: 9px 0; font-size: 17px; }
-.product-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-.price { color: var(--gold); font-weight: bold; }
-.add-button {
-  background: transparent;
-  border: 1px solid var(--gold);
-  color: var(--gold);
-  border-radius: 4px;
-  padding: 8px 11px;
-  cursor: pointer;
-}
-.add-button:hover { background: var(--gold); color: #090909; }
-.empty { color: var(--muted); padding: 25px 0; }
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
-}
-.feature {
-  background: #faf9f6;
-  border: 1px solid #ebe7df;
-  padding: 22px;
-  border-radius: 8px;
-}
-.feature strong { color: var(--gold); display: block; margin-bottom: 9px; }
-.feature p { color: #666; font-size: 13px; line-height: 1.6; margin-bottom: 0; }
-footer {
-  border-top: 1px solid #29231a;
-  padding: 30px 6%;
-  color: #777;
-  font-size: 12px;
-  text-align: center;
-}
-#cartPanel {
-  display: none;
-  position: fixed;
-  z-index: 10;
-  inset: 0;
-  background: #0008;
-  justify-content: flex-end;
-}
-.cart-content {
-  width: min(420px, 100%);
-  background: #ffffff;
-  padding: 25px;
-  height: 100%;
-  overflow-y: auto;
-  border-left: 1px solid #e5dccb;
-}
-.cart-line {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 0;
-  border-bottom: 1px solid #e8e5df;
-}
-.close {
-  float: right;
-  background: none;
-  color: #222;
-  border: 0;
-  font-size: 25px;
-  cursor: pointer;
-}
-@media(max-width:600px) {
-  header { padding: 14px 4%; gap: 10px; }
-  .logo { font-size: 19px; letter-spacing: 2px; flex: 0 0 auto; }
-  nav {
-    gap: 12px;
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow-x: auto;
-    white-space: nowrap;
-    scrollbar-width: none;
-    padding: 5px 0;
-  }
-  nav::-webkit-scrollbar { display: none; }
-  nav a { font-size: 11px; flex: 0 0 auto; }
-  .cart-button { padding: 9px 11px; flex: 0 0 auto; white-space: nowrap; }
-  .hero { padding: 65px 6%; }
-  .section { padding: 35px 5%; }
-  .products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .product img { height: 135px; }
-  .product-info { padding: 11px; }
-  .product-info h3 { font-size: 14px; }
-  .product-bottom { align-items: flex-start; flex-direction: column; }
-}
-</style>
-</head>
-<body>
-
-<header>
-  <div class="logo">LUXE STORE</div>
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#shop">Shop</a>
-    <a href="#about">About</a>
-    <a href="verification.html">Verified</a>
-    <a href="dama.html">DAMA</a>
-    <a href="vicky.html">Vicky AI</a>
-    <a href="accounts.html">Account</a>
-    <a href="seller.html">Sell</a>
-    <a href="admin.html">Admin</a>
-  </nav>
-  <button class="cart-button" onclick="openCart()">Cart (<span id="cartCount">0</span>)</button>
+:root{--navy:#06275b;--deep:#041a3d;--blue:#0878f9;--ink:#142238;--muted:#6d7b90;--line:#e7edf5;--soft:#f5f8fc;--green:#16a36a}*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:Arial,Helvetica,sans-serif;background:#fff}a{text-decoration:none;color:inherit}button,input{font:inherit}.top{height:38px;background:var(--deep);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 3%;font-size:12px;gap:12px}.top span{white-space:nowrap}.header{height:94px;display:grid;grid-template-columns:290px minmax(220px,1fr) auto;align-items:center;gap:22px;padding:0 3%;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:10px}.bag{width:48px;height:48px}.brand-name{font-size:29px;font-weight:900;letter-spacing:-1px;color:#102c55}.brand-name span{color:var(--blue)}.tagline{font-size:9px;letter-spacing:3px;font-weight:bold;color:#65758b}.search{height:50px;border:1px solid #dce4ef;border-radius:28px;background:#f5f7fa;display:flex;overflow:hidden}.search input{border:0;outline:0;background:transparent;min-width:0;flex:1;padding:0 20px}.search button{width:50px;margin:3px;border:0;border-radius:50%;background:var(--navy);color:#fff;font-size:22px}.actions{display:flex;gap:18px}.action{border:0;background:none;display:grid;justify-items:center;gap:3px;font-size:11px;cursor:pointer}.action i{font-style:normal;font-size:23px}.nav{height:58px;display:flex;align-items:center;gap:28px;padding:0 3%;border-bottom:1px solid var(--line);white-space:nowrap;overflow-x:auto}.nav a{font-size:13px;font-weight:bold}.nav a:hover{color:var(--blue)}.nav .all{background:var(--blue);color:white;padding:13px 18px;border-radius:8px}.wrap{max-width:1600px;margin:auto;padding:18px 26px 55px}.layout{display:grid;grid-template-columns:225px minmax(0,1fr);gap:20px}.cats{border:1px solid var(--line);border-radius:12px;overflow:hidden;height:max-content}.cats h3{margin:0;padding:15px 17px;background:#f7faff;border-bottom:1px solid var(--line);font-size:14px}.cat{width:100%;height:43px;display:flex;align-items:center;gap:12px;text-align:left;padding:0 15px;background:#fff;border:0;color:#25344b;font-size:13px;cursor:pointer}.cat:hover,.cat.active{background:#edf6ff;color:#0673ee}.cat em{font-style:normal;font-size:17px;width:20px}.cat small{margin-left:auto;color:#8392a7}.hero{height:310px;position:relative;overflow:hidden;border-radius:13px;padding:38px 48px;color:white;background:radial-gradient(ellipse at 76% 80%,#0878f9 0,transparent 38%),linear-gradient(115deg,#041a3d,#06275b 60%,#03132d);box-shadow:0 8px 28px #0d2b5018}.hero:after{content:"";position:absolute;width:450px;height:450px;border:1px solid #36a9ff55;border-radius:50%;right:8%;top:-230px;box-shadow:0 0 0 35px #169aff0b,0 0 0 75px #169aff08}.hero-copy{position:relative;z-index:2;max-width:480px}.hero h1{font-size:clamp(42px,5vw,66px);letter-spacing:-2px;line-height:.98;margin:0 0 10px}.hero h1 span{color:#168cff}.hero h2{font-size:26px;margin:0 0 12px}.hero p{font-size:14px;line-height:1.55;color:#d8e8fa;max-width:380px}.shopnow{display:inline-block;background:#087cf9;color:#fff;padding:13px 27px;border-radius:24px;font-weight:bold;margin-top:5px}.hero-products{position:absolute;right:3%;bottom:8px;width:53%;height:95%;display:flex;align-items:center;justify-content:center;gap:5px;z-index:1}.hero-products img{width:31%;height:80%;object-fit:contain;filter:drop-shadow(0 16px 12px #0008)}.hero-products img:nth-child(2){height:94%;z-index:2}.hero-products img:nth-child(1){height:60%;transform:translateY(25px)}.hero-tools{position:absolute;right:14px;top:13px;z-index:4;display:flex;gap:7px}.hero-tools a,.hero-tools button{background:#061c3edb;border:1px solid #ffffff55;color:white;border-radius:20px;padding:8px 11px;font-size:11px;font-weight:bold;cursor:pointer}.dots{position:absolute;bottom:13px;left:50%;display:flex;gap:8px;z-index:3}.dots i{width:8px;height:8px;border-radius:50%;background:#ffffffaa}.dots i:first-child{width:22px;background:#168cff}.benefits{margin:15px 0 22px;min-height:75px;border:1px solid var(--line);border-radius:12px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center}.benefit{display:flex;align-items:center;justify-content:center;gap:10px;border-right:1px solid var(--line);padding:8px}.benefit:last-child{border:0}.benefit i{font-style:normal;font-size:24px}.benefit b{display:block;font-size:12px}.benefit small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.section-head{display:flex;justify-content:space-between;align-items:center;margin:22px 0 13px}.section-head h2{font-size:21px;margin:0}.section-head h2:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#168cff;margin:0 8px 3px 0}.section-head a{color:var(--blue);font-size:13px;font-weight:bold}.products{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.product{border:1px solid #e8edf4;border-radius:10px;overflow:hidden;background:white;transition:.2s}.product:hover{transform:translateY(-3px);box-shadow:0 8px 24px #12345618}.product-img{height:150px;background:#f5f7fa}.product-img img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}.product-info{padding:10px}.product-info small{font-size:10px;color:#77869a}.product-info h3{font-size:12px;line-height:1.35;min-height:32px;margin:5px 0 8px}.product-row{display:flex;align-items:center;justify-content:space-between;gap:5px}.price{font-size:13px;font-weight:900;color:#102e58}.add{background:white;color:var(--blue);border:1px solid var(--blue);border-radius:6px;padding:6px 8px;font-size:10px;font-weight:bold;cursor:pointer}.add:hover{background:var(--blue);color:white}.trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}.trust article{border:1px solid var(--line);border-radius:11px;padding:16px;display:flex;gap:10px;align-items:center}.trust i{font-style:normal;font-size:24px}.trust b{font-size:12px;display:block}.trust small{font-size:10px;color:var(--muted)}.footer{margin-top:30px;padding:22px;background:#f5f8fc;border:1px solid var(--line);border-radius:12px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.footer b{color:#16345d}.assistants{position:fixed;right:17px;bottom:16px;width:230px;z-index:20;display:grid;gap:8px}.assistant{display:flex;align-items:center;gap:9px;padding:9px;background:#fff;border:1px solid #e4edf7;border-radius:17px;box-shadow:0 8px 28px #102b501c}.avatar{width:48px;height:48px;flex:none;border-radius:50%;background:#eaf3ff;display:grid;place-items:center;font-size:25px}.assistant b{font-size:13px}.assistant small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.online{color:#16a36a!important}.badge{display:inline-grid;place-items:center;width:16px;height:16px;background:#0878f9;color:white;font-size:10px;clip-path:polygon(50% 0,63% 8%,79% 5%,87% 20%,100% 32%,94% 50%,100% 67%,86% 79%,81% 95%,63% 92%,50% 100%,36% 92%,19% 96%,13% 80%,0 67%,6% 50%,0 33%,14% 20%,19% 5%,37% 8%)}.badge.green{background:#16a36a}.arrow{margin-left:auto;color:#78869a;font-size:20px}.think{background:#fff;border:1px solid var(--line);border-radius:28px;padding:10px 15px;display:flex;justify-content:space-around;align-items:center;box-shadow:0 8px 28px #102b501c;font-size:12px;font-weight:bold}.think button{border:0;border-radius:50%;background:var(--blue);color:#fff;width:35px;height:35px}.overlay{display:none;position:fixed;inset:0;background:#071a35a8;z-index:50;justify-content:flex-end}.overlay.open{display:flex}.drawer{background:white;width:min(420px,100%);height:100%;padding:22px;overflow:auto}.drawer-head{display:flex;justify-content:space-between;align-items:center}.drawer-head button{border:0;border-radius:50%;width:34px;height:34px;font-size:20px}.cart-line{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.cart-line img{width:55px;height:55px;object-fit:contain;background:#f5f7fa}.cart-line div{flex:1;font-size:12px}.cart-line small{display:block;color:var(--muted);margin-top:4px}.remove{border:0;background:none;color:#c44}.total{display:flex;justify-content:space-between;font-weight:bold;padding:18px 0}.note{font-size:11px;line-height:1.5;color:var(--muted);background:#f5f8fc;padding:12px;border-radius:8px}.empty{text-align:center;padding:40px;color:var(--muted)}
+@media(max-width:1150px){.header{grid-template-columns:240px 1fr auto;gap:12px}.brand-name{font-size:25px}.products{grid-template-columns:repeat(3,minmax(0,1fr))}.benefit{gap:6px}.hero-products{width:49%}}
+@media(max-width:780px){.top{height:34px;padding:0 10px;font-size:10px}.top span:nth-child(2){display:none}.header{height:auto;min-height:75px;padding:10px 12px;grid-template-columns:1fr auto;gap:10px}.bag{width:39px;height:39px}.brand-name{font-size:23px}.tagline{font-size:8px}.search{grid-column:1/-1;grid-row:2;height:43px}.actions{gap:6px}.action{font-size:9px}.action i{font-size:19px}.nav{height:48px;padding:0 12px;gap:17px}.nav a{font-size:11px}.wrap{padding:12px}.layout{grid-template-columns:1fr}.cats{order:2}.catlist{display:grid;grid-template-columns:repeat(2,1fr)}.hero{height:260px;padding:26px 22px}.hero-copy{max-width:65%}.hero h1{font-size:clamp(32px,7vw,47px)}.hero h2{font-size:17px}.hero p{font-size:11px}.hero-products{width:48%;right:-5%}.hero-tools{top:7px;right:7px}.hero-tools a,.hero-tools button{font-size:9px;padding:7px}.benefits{grid-template-columns:repeat(2,1fr);padding:6px}.benefit{justify-content:flex-start;border:0;padding:8px 10px}.benefit:last-child{grid-column:1/-1}.benefit b{font-size:11px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-img{height:135px}.trust{grid-template-columns:repeat(2,1fr)}.assistants{width:185px;right:8px;bottom:8px}.assistant{padding:7px;min-height:58px}.avatar{width:39px;height:39px;font-size:20px}.assistant b{font-size:12px}.assistant small{font-size:9px}.think{padding:5px 10px}.think button{width:30px;height:30px}.footer{font-size:10px;padding:16px}}
+@media(max-width:420px){.hero{height:240px}.hero-copy{max-width:68%}.hero h1{font-size:31px}.hero h2{font-size:15px}.hero-products{right:-12%;width:50%}.product-img{height:120px}.assistants{width:165px}.avatar{width:34px;height:34px}.assistant{gap:6px}.assistant small{font-size:8px}}
+</style></head><body>
+<div class="top"><span>🚚 Free shipping on orders over $50</span><span>🛡 LUXE PROTECT · Shop with confidence</span><span>🎁 Earn rewards with LUXE REWARDS</span><span>English⌄ &nbsp; ◎ USD⌄</span></div>
+<header class="header">
+<a class="brand" href="index.html"><svg class="bag" viewBox="0 0 64 64" aria-label="LUXE STORE bag"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#168cff"/><stop offset="1" stop-color="#06275b"/></linearGradient></defs><path d="M13 21h38l4 37H9z" fill="url(#g)" stroke="#092b59" stroke-width="2"/><path d="M22 23v-7a10 10 0 0 1 20 0v7" fill="none" stroke="#092b59" stroke-width="5" stroke-linecap="round"/><path d="m22 38 10 9 10-9" fill="none" stroke="white" stroke-width="2.5"/></svg><div><div class="brand-name">LUXE <span>STORE</span></div><div class="tagline">SHOP · DISCOVER · ENJOY</div></div></a>
+<form class="search" id="searchForm"><input id="searchInput" placeholder="Search for products..." aria-label="Search products"><button aria-label="Search">⌕</button></form>
+<div class="actions"><button class="action" onclick="location.href='accounts.html'"><i>♙</i>Sign in<br>Account⌄</button><button class="action" onclick="notice('Wishlist','Sign in to save your favourite products.')"><i>♡</i>Wishlist</button><button class="action" onclick="openCart()"><i>🛒 <sup id="count">0</sup></i>Cart</button></div>
 </header>
-
-<section class="hero" id="home">
-  <div class="eyebrow">THE LUXE EXPERIENCE</div>
-  <h1>SHOP BEYOND <span>ORDINARY.</span></h1>
-  <p>Discover products, explore creators and experience a new way to shop. Welcome to LUXE STORE.</p>
-  <a href="#shop"><button class="gold-button">EXPLORE STORE →</button></a>
-</section>
-
-<section class="section" id="shop">
-  <div class="section-heading">
-    <h2>FEATURED <span>COLLECTION</span></h2>
-    <input class="search" id="search" placeholder="Search products..." oninput="renderProducts()">
-  </div>
-
-  <div class="categories">
-    <button class="category active" onclick="setCategory('All',this)">All</button>
-    <button class="category" onclick="setCategory('Fashion',this)">Fashion</button>
-    <button class="category" onclick="setCategory('Tech',this)">Tech</button>
-    <button class="category" onclick="setCategory('Accessories',this)">Accessories</button>
-    <button class="category" onclick="setCategory('Lifestyle',this)">Lifestyle</button>
-  </div>
-
-  <div class="products" id="products"></div>
-</section>
-
-<section class="section" id="about">
-  <div class="section-heading">
-    <h2>WHY <span>LUXE STORE?</span></h2>
-  </div>
-  <div class="features">
-    <div class="feature"><strong>✦ PREMIUM EXPERIENCE</strong><p>A clean, modern shopping experience built around quality and style.</p></div>
-    <div class="feature"><strong>✦ SELLER COMMUNITY</strong><p>A place for customers, sellers and creators to connect.</p></div>
-    <div class="feature"><strong>✦ LUXE REWARDS</strong><p>A rewards experience is part of the LUXE STORE vision.</p></div>
-  </div>
-</section>
-
-<footer>
-  © 2026 LUXE STORE. ALL RIGHTS RESERVED.<br><br>
-  Built for the LUXE community.
-</footer>
-
-<div id="cartPanel" onclick="if(event.target.id==='cartPanel') closeCart()">
-  <div class="cart-content">
-    <button class="close" onclick="closeCart()">×</button>
-    <h2>Your <span style="color:#d8ad55">Cart</span></h2>
-    <div id="cartItems"></div>
-    <h3 id="cartTotal">Total: D0</h3>
-    <p style="color:#999;font-size:12px">Your cart is saved on this device. Secure checkout and payments are not connected yet.</p>
-    <button class="gold-button" onclick="alert('Checkout will be available in a future LUXE STORE update.')">CONTINUE</button>
-  </div>
-</div>
-
+<nav class="nav"><a class="all" href="#categories">☰ &nbsp; All Categories⌄</a><a href="#deals">🔥 Hot Deals</a><a href="#popular">New Arrivals</a><a href="#rewards">⭐ LUXE REWARDS</a><a href="#reels">▶ LUXE REELS</a><a href="seller.html">Sellers</a><a href="dama.html">Support</a><a href="#more">More⌄</a></nav>
+<main class="wrap"><div class="layout">
+<aside class="cats" id="categories"><h3>☰ &nbsp; All Categories</h3><div class="catlist" id="catlist">
+<button class="cat active" data-cat="All"><em>👟</em>Shoes & Sneakers<small>›</small></button><button class="cat" data-cat="Phones"><em>📱</em>Phones & Accessories<small>›</small></button><button class="cat" data-cat="Bags"><em>🎒</em>Bags & Backpacks<small>›</small></button><button class="cat" data-cat="Fashion"><em>👕</em>Fashion & Clothing<small>›</small></button><button class="cat" data-cat="Electronics"><em>💻</em>Electronics<small>›</small></button><button class="cat" data-cat="Home"><em>⌂</em>Home & Living<small>›</small></button><button class="cat" data-cat="Beauty"><em>🌸</em>Beauty & Personal Care<small>›</small></button><button class="cat" data-cat="Sports"><em>🌐</em>Sports & Outdoors<small>›</small></button><button class="cat" data-cat="Gaming"><em>🎮</em>Gaming & Consoles<small>›</small></button><button class="cat" data-cat="All"><em>•••</em>More Categories<small>›</small></button>
+</div></aside>
+<div>
+<section class="hero"><div class="hero-copy"><h1>LUXE <span>STORE</span></h1><h2>Shop Smarter. Live Better.</h2><p>Your global marketplace for the best products, unbeatable deals and more.</p><a class="shopnow" href="#popular">Shop Now →</a></div><div class="hero-products" aria-hidden="true"><img src="https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=500&auto=format&fit=crop" alt=""><img src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=650&auto=format&fit=crop" alt=""><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop" alt=""></div><div class="hero-tools"><a href="admin.html">♛ Admin Panel</a><button onclick="notice('Owner Commands','Command console preview. Protected command execution requires secure owner authentication before launch.')">⚙ Commands⌄</button></div><div class="dots"><i></i><i></i><i></i></div></section>
+<section class="benefits"><div class="benefit"><i>🛡</i><div><b>LUXE PROTECT</b><small>Secure Shopping</small></div></div><div class="benefit" id="rewards"><i>🏆</i><div><b>LUXE REWARDS</b><small>Earn & Redeem</small></div></div><div class="benefit"><i>🚚</i><div><b>Fast & Reliable</b><small>Worldwide Delivery</small></div></div><div class="benefit"><i>🎧</i><div><b>24/7 Support</b><small>We're here to help</small></div></div><div class="benefit"><i>◎</i><div><b>Global Marketplace</b><small>Shop from anywhere</small></div></div></section>
+<section id="popular"><div class="section-head"><h2>Popular Products</h2><a href="#popular">View All →</a></div><div class="products" id="products"></div></section>
+<section class="trust" id="deals"><article><i>🛡️</i><div><b>LUXE PROTECT</b><small>Shop with confidence</small></div></article><article><i>🎁</i><div><b>LUXE REWARDS</b><small>Rewards on eligible orders</small></div></article><article id="reels"><i>🎬</i><div><b>LUXE REELS</b><small>Discover shoppable videos</small></div></article><article><i>🌍</i><div><b>Global Marketplace</b><small>Discover sellers worldwide</small></div></article></section>
+<div id="more"></div><footer class="footer"><div><b>LUXE STORE</b><br>Shop Smarter. Live Better.<br>Discover · Shop · Connect</div><div><a href="verification.html">Verification</a> · <a href="dama.html">DAMA Support</a> · <a href="vicky.html">Vicky AI</a> · <a href="seller.html">Become a Seller</a></div><div>© 2026 LUXE STORE. All rights reserved.</div></footer>
+</div></div></main>
+<aside class="assistants"><a class="assistant" href="dama.html"><div class="avatar">👩🏻‍💻</div><div><b>DAMA <span class="badge">✓</span></b><small>LUXE STORE Assistant</small><small class="online">● Online · Preview</small></div><span class="arrow">›</span></a><a class="assistant" href="vicky.html"><div class="avatar">🤖</div><div><b>Vicky AI <span class="badge green">✓</span></b><small>Your Personal AI</small><small class="online">● Online · Preview</small></div><span class="arrow">›</span></a><div class="think"><span>◫ &nbsp; Think</span><span>🎙</span><button onclick="location.href='dama.html'">◖</button></div></aside>
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeCart()"><section class="drawer"><div class="drawer-head"><h2>Your Cart</h2><button onclick="closeCart()">×</button></div><div id="cartItems"></div><div class="total"><span>Subtotal</span><span id="total">D0</span></div><p class="note">Storefront preview: secure checkout, seller inventory and payment processing must be connected before real orders can be placed.</p></section></div>
+<div id="noticeBox" style="display:none;position:fixed;z-index:80;inset:0;background:#061a3580;place-items:center;padding:20px"><div style="background:white;border-radius:14px;padding:22px;max-width:350px;width:100%"><b id="noticeTitle">LUXE STORE</b><p id="noticeText" style="font-size:13px;line-height:1.6;color:#697586"></p><button onclick="document.getElementById('noticeBox').style.display='none'" style="background:#0878f9;color:white;border:0;border-radius:8px;padding:9px 16px">Okay</button></div></div>
 <script>
-const products = [
-  {name:"Classic Streetwear",category:"Fashion",price:850,image:"https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=700"},
-  {name:"Urban Sneakers",category:"Fashion",price:1450,image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700"},
-  {name:"Wireless Headphones",category:"Tech",price:1200,image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700"},
-  {name:"Smart Watch",category:"Tech",price:1800,image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"},
-  {name:"Premium Shades",category:"Accessories",price:650,image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700"},
-  {name:"Everyday Backpack",category:"Lifestyle",price:950,image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700"}
-];
-
-let selectedCategory = "All";
-let cart = [];
-try {
-  const savedCart = JSON.parse(localStorage.getItem("luxe-cart") || "[]");
-  cart = Array.isArray(savedCart) ? savedCart.filter(item =>
-    item && typeof item.name === "string" && Number.isFinite(item.price)
-  ) : [];
-} catch {
-  cart = [];
-}
-function saveCart() {
-  try { localStorage.setItem("luxe-cart", JSON.stringify(cart)); } catch {}
-}
-
-function renderProducts() {
-  const search = document.getElementById("search").value.toLowerCase();
-  const filtered = products.filter(p =>
-    (selectedCategory === "All" || p.category === selectedCategory) &&
-    p.name.toLowerCase().includes(search)
-  );
-
-  document.getElementById("products").innerHTML = filtered.length
-    ? filtered.map(p => `
-      <article class="product">
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
-        <div class="product-info">
-          <small>${p.category.toUpperCase()}</small>
-          <h3>${p.name}</h3>
-          <div class="product-bottom">
-            <span class="price">D${p.price.toLocaleString()}</span>
-            <button class="add-button" onclick="addToCart('${p.name}')">+ Add</button>
-          </div>
-        </div>
-      </article>
-    `).join("")
-    : '<p class="empty">No products found. Try another search.</p>';
-}
-
-function setCategory(category, button) {
-  selectedCategory = category;
-  document.querySelectorAll(".category").forEach(b => b.classList.remove("active"));
-  button.classList.add("active");
-  renderProducts();
-}
-
-function addToCart(name) {
-  const product = products.find(p => p.name === name);
-  cart.push(product);
-  saveCart();
-  document.getElementById("cartCount").textContent = cart.length;
-}
-
-function openCart() {
-  document.getElementById("cartPanel").style.display = "flex";
-  renderCart();
-}
-function closeCart() {
-  document.getElementById("cartPanel").style.display = "none";
-}
-function renderCart() {
-  document.getElementById("cartItems").innerHTML = cart.length
-    ? cart.map((p,i) => `
-      <div class="cart-line">
-        <span>${p.name}<br><small style="color:#d8ad55">D${p.price.toLocaleString()}</small></span>
-        <button class="add-button" onclick="removeFromCart(${i})">Remove</button>
-      </div>
-    `).join("")
-    : '<p class="empty">Your cart is empty.</p>';
-
-  const total = cart.reduce((sum,p) => sum + p.price, 0);
-  document.getElementById("cartTotal").textContent = "Total: D" + total.toLocaleString();
-}
-function removeFromCart(index) {
-  cart.splice(index,1);
-  saveCart();
-  document.getElementById("cartCount").textContent = cart.length;
-  renderCart();
-}
-
-document.getElementById("cartCount").textContent = cart.length;
-renderProducts();
-</script>
-</body>
-</html>
+const products=[
+{id:1,n:"Blue & White Sneakers",c:"Shoes",p:1450,i:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop",t:"POPULAR"},
+{id:2,n:"Modern Smartphone",c:"Phones",p:8500,i:"https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600&auto=format&fit=crop",t:"HOT"},
+{id:3,n:"Everyday Backpack",c:"Bags",p:950,i:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format&fit=crop",t:"TRENDING"},
+{id:4,n:"Wireless Headphones",c:"Electronics",p:1200,i:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop",t:"POPULAR"},
+{id:5,n:"Smart Watch",c:"Electronics",p:1800,i:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop",t:"NEW"},
+{id:6,n:"Wireless Earbuds",c:"Electronics",p:750,i:"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=600&auto=format&fit=crop",t:"DEAL"},
+{id:7,n:"Classic Hoodie",c:"Fashion",p:1100,i:"https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&auto=format&fit=crop",t:"NEW"},
+{id:8,n:"Lifestyle Sunglasses",c:"Beauty",p:650,i:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&auto=format&fit=crop",t:"POPULAR"},
+{id:9,n:"Gaming Controller",c:"Gaming",p:1650,i:"https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?w=600&auto=format&fit=crop",t:"GAMING"},
+{id:10,n:"Running Shoes",c:"Sports",p:1750,i:"https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=600&auto=format&fit=crop",t:"SPORT"},
+{id:11,n:"Minimal Home Lamp",c:"Home",p:900,i:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=600&auto=format&fit=crop",t:"HOME"},
+{id:12,n:"Travel Duffel Bag",c:"Bags",p:1350,i:"https://images.unsplash.com/photo-1622560480654-d96214fdc887?w=600&auto=format&fit=crop",t:"TRENDING"}];
+let category="All",cart=[];try{const x=JSON.parse(localStorage.getItem("luxe-cart-v2")||"[]");if(Array.isArray(x))cart=x.filter(v=>products.some(p=>p.id===v.id))}catch{}
+function render(){const q=document.getElementById("searchInput").value.toLowerCase().trim();const found=products.filter(p=>(category==="All"||p.c===category)&&(!q||p.n.toLowerCase().includes(q)||p.c.toLowerCase().includes(q)));document.getElementById("products").innerHTML=found.length?found.map(p=>'<article class="product"><div class="product-img"><img src="'+p.i+'" alt="'+p.n+'" loading="lazy"></div><div class="product-info"><small>'+p.t+' · '+p.c.toUpperCase()+'</small><h3>'+p.n+'</h3><div class="product-row"><span class="price">D'+p.p.toLocaleString()+'</span><button class="add" onclick="add('+p.id+')">+ Add</button></div></div></article>').join(""):'<p>No matching products. Try another search.</p>'}
+document.querySelectorAll(".cat").forEach(b=>b.addEventListener("click",()=>{category=b.dataset.cat;document.querySelectorAll(".cat").forEach(x=>x.classList.toggle("active",x===b));render()}));document.getElementById("searchInput").addEventListener("input",render);document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();render()});
+function save(){try{localStorage.setItem("luxe-cart-v2",JSON.stringify(cart))}catch{}}function add(id){const p=products.find(x=>x.id===id);cart.push(p);save();updateCount();openCart()}function updateCount(){document.getElementById("count").textContent=cart.length}
+function openCart(){document.getElementById("overlay").classList.add("open");drawCart()}function closeCart(){document.getElementById("overlay").classList.remove("open")}function drawCart(){const el=document.getElementById("cartItems");if(!cart.length){el.innerHTML='<div class="empty">🛒<br><br>Your cart is empty.</div>';document.getElementById("total").textContent="D0";return}el.innerHTML=cart.map((p,i)=>'<div class="cart-line"><img src="'+p.i+'" alt=""><div><b>'+p.n+'</b><small>D'+p.p.toLocaleString()+'</small></div><button class="remove" onclick="removeItem('+i+')">Remove</button></div>').join("");document.getElementById("total").textContent="D"+cart.reduce((s,p)=>s+p.p,0).toLocaleString()}function removeItem(i){cart.splice(i,1);save();updateCount();drawCart()}
+function notice(t,m){document.getElementById("noticeTitle").textContent=t;document.getElementById("noticeText").textContent=m;document.getElementById("noticeBox").style.display="grid"}
+updateCount();render();
+</script></body></html>
