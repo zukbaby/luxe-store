@@ -32,8 +32,8 @@ module.exports = async function handler(req, res) {
          update public.profiles p
          set verification_status = c.status,
              verification_badge = case
-               when c.status = 'approved' then 'green'
                when p.verification_badge = 'gold' then 'gold'
+               when c.status = 'approved' then 'green'
                else null
              end,
              updated_at = now()
