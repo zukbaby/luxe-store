@@ -31,13 +31,14 @@ module.exports = async function handler(req, res) {
   try {
     if (id) {
       const profiles = await query(
-        `select id, username, display_name, role, verification_status, verification_badge,
-                case when id = $2 or lower(username) = 'official.dama' then 'blue'
-                     when verification_badge in ('green', 'gold') then verification_badge
+        `select p.id, p.username, p.display_name, p.role, p.verification_status,
+                to_jsonb(p)->>'verification_badge' as verification_badge,
+                case when p.id = $2 or lower(p.username) = 'official.dama' then 'blue'
+                     when to_jsonb(p)->>'verification_badge' in ('green', 'gold') then to_jsonb(p)->>'verification_badge'
                      else null end as badge_color,
-                banned_until, ban_reason, created_at, updated_at
-         from public.profiles
-         where id = $1
+                p.banned_until, p.ban_reason, p.created_at, p.updated_at
+         from public.profiles p
+         where p.id = $1
          limit 1`,
         [id, process.env.LUXE_OWNER_USER_ID || ""]
       );
@@ -60,15 +61,16 @@ module.exports = async function handler(req, res) {
     }
 
     const rows = await query(
-      `select id, username, display_name, role, verification_status, verification_badge,
-              case when id = $2 or lower(username) = 'official.dama' then 'blue'
-                   when verification_badge in ('green', 'gold') then verification_badge
+      `select p.id, p.username, p.display_name, p.role, p.verification_status,
+              to_jsonb(p)->>'verification_badge' as verification_badge,
+              case when p.id = $2 or lower(p.username) = 'official.dama' then 'blue'
+                   when to_jsonb(p)->>'verification_badge' in ('green', 'gold') then to_jsonb(p)->>'verification_badge'
                    else null end as badge_color,
-              banned_until, created_at
-       from public.profiles
+              p.banned_until, p.created_at
+       from public.profiles p
        where $1 = ''
-          or lower(coalesce(username, '')) like '%' || lower($1) || '%'
-          or lower(display_name) like '%' || lower($1) || '%'
+          or lower(coalesce(p.username, '')) like '%' || lower($1) || '%'
+          or lower(p.display_name) like '%' || lower($1) || '%'
        order by created_at desc
        limit 50`,
       [q, process.env.LUXE_OWNER_USER_ID || ""]
