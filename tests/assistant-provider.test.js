@@ -14,8 +14,8 @@ const original = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
 function setConfig(overrides = {}) {
   const values = {
     LUXE_AI_FREE_ONLY: "true",
-    LUXE_AI_PROVIDER_URL: "https://api.cloudflare.com/client/v4/accounts/08ed1d7abb4887fb7fc8fd4a4e5637fb/ai/v1/chat/completions",
-    LUXE_AI_PROVIDER_MODEL: "@cf/meta/llama-3.1-8b-instruct",
+    LUXE_AI_PROVIDER_URL: "https://api.cloudflare.com/client/v4/accounts/00000000000000000000000000000000/ai/v1/chat/completions",
+    LUXE_AI_PROVIDER_MODEL: "@cf/zai-org/glm-4.7-flash",
     LUXE_AI_PROVIDER_API_KEY: "test-only-not-a-real-secret",
     ...overrides
   };
@@ -44,15 +44,15 @@ test("accepts only the Cloudflare account chat-completions endpoint and @cf mode
   const config = getProviderConfig();
   assert.ok(config);
   assert.equal(new URL(config.endpoint).hostname, "api.cloudflare.com");
-  assert.match(new URL(config.endpoint).pathname, /\/ai\/v1\/chat\/completions$/);
-  assert.match(config.model, /^@cf\//);
+  assert.match(new URL(config.endpoint).pathname, /\\/ai\\/v1\\/chat\\/completions$/);
+  assert.equal(config.model, "@cf/zai-org/glm-4.7-flash");
 });
 
 test("rejects third-party endpoints and unsupported Cloudflare paths", () => {
   setConfig({ LUXE_AI_PROVIDER_URL: "https://api.openai.com/v1/chat/completions" });
   assert.equal(getProviderConfig(), null);
 
-  setConfig({ LUXE_AI_PROVIDER_URL: "https://api.cloudflare.com/client/v4/accounts/08ed1d7abb4887fb7fc8fd4a4e5637fb/ai/run/@cf/meta/llama-3.1-8b-instruct" });
+  setConfig({ LUXE_AI_PROVIDER_URL: "https://api.cloudflare.com/client/v4/accounts/00000000000000000000000000000000/ai/run/@cf/zai-org/glm-4.7-flash" });
   assert.equal(getProviderConfig(), null);
 });
 
