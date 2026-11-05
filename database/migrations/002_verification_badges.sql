@@ -15,9 +15,4 @@ EXCEPTION
 END
 $$;
 
--- Existing human-approved verification requests become green badges.
-UPDATE public.profiles
-SET verification_badge = 'green',
-    updated_at = now()
-WHERE verification_status = 'approved'
-  AND verification_badge IS NULL;
+-- Badge tiers are granted only by an explicit owner command after eligibility is checked.
