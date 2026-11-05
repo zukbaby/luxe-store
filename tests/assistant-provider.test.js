@@ -56,7 +56,9 @@ test("rejects third-party endpoints and unsupported Cloudflare paths", () => {
   assert.equal(getProviderConfig(), null);
 });
 
-test("rejects non-Workers-AI model identifiers", () => {
+test("rejects models outside the explicit free-model allowlist", () => {
+  setConfig({ LUXE_AI_PROVIDER_MODEL: "@cf/moonshotai/kimi-k2.7-code" });
+  assert.equal(getProviderConfig(), null);
   setConfig({ LUXE_AI_PROVIDER_MODEL: "gpt-4o" });
   assert.equal(getProviderConfig(), null);
 });
