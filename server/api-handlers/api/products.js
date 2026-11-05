@@ -9,14 +9,18 @@ module.exports=async function handler(req,res){
  try{
   const rows=await query(
    `select p.id,p.title,p.description,p.price_gmd,p.image_url,p.category_slug,
-           p.stock_quantity,p.created_at,s.store_name,s.store_slug
+           p.stock_quantity,p.created_at,s.store_name,s.store_slug,pr.username,pr.display_name,
+           case when pr.id=$3 or lower(pr.username)='official.dama' then 'blue'
+                when to_jsonb(pr)->>'verification_badge' in ('green','gold') then to_jsonb(pr)->>'verification_badge'
+                else null end as badge_color
     from public.products p
     join public.seller_storefronts s on s.seller_id=p.seller_id and s.is_public=true
+    join public.profiles pr on pr.id=p.seller_id
     where p.status='published' and p.stock_quantity>0
       and ($1='' or p.title ilike '%' || $1 || '%' or p.description ilike '%' || $1 || '%')
       and ($2='' or p.category_slug=$2)
     order by p.is_featured desc,p.created_at desc limit 60`,
-   [q,category]
+   [q,category,process.env.LUXE_OWNER_USER_ID||""]
   );
   return send(res,200,{ok:true,products:rows||[]});
  }catch(error){
