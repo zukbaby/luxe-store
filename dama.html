@@ -15,6 +15,32 @@
 @keyframes dama-aura{to{transform:rotate(360deg)}}
 @keyframes dama-spectrum-flow{to{background-position:220% 0}}
 @media(prefers-reduced-motion:reduce){.dama-electric:before,.dama-bolt,.dama-spectrum{animation:none}}
+
+/* DAMA chat theme: midnight navy, electric blue and polished gold */
+.chat{position:relative;background:#06152e;border:1px solid #b88a27;box-shadow:0 12px 38px #06152e35,0 0 24px #d5a62c20}
+.chat:before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:15px;background:radial-gradient(ellipse at 85% 0%,#174b8a55,transparent 42%),radial-gradient(ellipse at 5% 100%,#b8862520,transparent 38%)}
+.chat>*{position:relative}
+.dama-electric{background:linear-gradient(115deg,#07152d,#10294a 58%,#211b13);border:1px solid #bd922f;border-radius:12px;margin:12px 12px 0;padding:13px 15px;box-shadow:inset 0 0 22px #e5b63812,0 0 18px #d5a62c18}
+.dama-electric:before{inset:-100% -40%;background:conic-gradient(from 0deg,transparent 0 42%,#e9bd4d30 47%,#36a9ff38 51%,transparent 58%);opacity:.55}
+.dama-electric-line{color:#f5d77b;letter-spacing:1px}
+.dama-bolt{color:#101a2b;background:linear-gradient(145deg,#fff0a0,#e4ad30 58%,#a96e13);box-shadow:0 0 12px #ffdc67aa,0 0 25px #f4bf4c55}
+.dama-spectrum{background:none;color:#f8d878;-webkit-text-fill-color:#f8d878;letter-spacing:1.2px;text-shadow:0 0 12px #e6b94b66;animation:none}
+.dama-electric small{color:#b8cbe2}
+.chathead{background:linear-gradient(100deg,#081a35,#102c50);border-bottom:1px solid #b88a2755;padding:17px 20px}
+.chathead b{color:#fff;letter-spacing:.25px}
+.live{background:#142d49;color:#c8d7e8;border:1px solid #315478}
+.notice{background:#0b203d;color:#b7c8dc;border-bottom:1px solid #284361}
+.messages{background:radial-gradient(ellipse at 90% 5%,#14365b55,transparent 38%),linear-gradient(145deg,#07172e,#0b1e38 65%,#08162b);background-attachment:local}
+.msg{background:linear-gradient(145deg,#142d4b,#10243d);border:1px solid #315276;color:#edf4ff;box-shadow:0 4px 14px #0003;border-bottom-left-radius:4px}
+.msg.user{background:linear-gradient(120deg,#0757a8,#087ff0);border:1px solid #48a5ff;color:#fff;border-bottom-left-radius:13px;border-bottom-right-radius:4px;box-shadow:0 5px 18px #0878f944}
+.composer{background:#081a33;border-top:1px solid #b88a2755}
+.composer input{background:#102844;border:1px solid #365474;color:#fff}
+.composer input::placeholder{color:#9aadc3}
+.composer input:focus{border-color:#d9ae46;box-shadow:0 0 0 3px #d9ae4622}
+.composer button{background:linear-gradient(145deg,#ffe58a,#d5a32c 58%,#a96d12);color:#172238;box-shadow:0 3px 14px #d5a32c44}
+.composer button:disabled{opacity:.6}
+.foot{color:#8fa5bd}
+@media(prefers-reduced-motion:reduce){.dama-electric:before{animation:none}}
 </style><script>(function(){try{if(localStorage.getItem("luxe_profile_complete")!=="1"||!localStorage.getItem("luxe_display_username")){if(!location.pathname.endsWith("/accounts.html"))location.replace("/accounts.html");}}catch{location.replace("/accounts.html");}})();</script>
 </head><body>
 <div class="promo"><span>GLOBAL MARKETPLACE · SHOP SMARTER</span><span>Official LUXE STORE assistant</span></div>
