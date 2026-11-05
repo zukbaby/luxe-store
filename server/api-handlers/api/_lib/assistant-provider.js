@@ -8,8 +8,14 @@ function getProviderConfig() {
 
   let parsed;
   try { parsed = new URL(endpoint); } catch { return null; }
-  if (parsed.protocol !== "https:" || parsed.username || parsed.password || parsed.search || parsed.hash) return null;
-  if (!parsed.pathname.endsWith("/chat/completions")) return null;
+
+  // LUXE currently supports only Cloudflare Workers AI direct inference.
+  // This prevents accidental routing to a paid third-party provider.
+  const cloudflarePath = /^\/client\/v4\/accounts\/[a-f0-9]{32}\/ai\/v1\/chat\/completions$/i;
+  if (parsed.protocol !== "https:" || parsed.hostname !== "api.cloudflare.com" ||
+      parsed.username || parsed.password || parsed.search || parsed.hash ||
+      !cloudflarePath.test(parsed.pathname) || !model.startsWith("@cf/")) return null;
+
   return { endpoint: parsed.toString(), model, apiKey };
 }
 
@@ -35,7 +41,7 @@ async function requestAssistantCompletion(messages, options = {}) {
     });
     if (!response.ok) {
       const requestId = randomUUID();
-      console.error("LUXE shared AI provider returned an error", { requestId, status: response.status });
+      console.error("LUXE Workers AI request returned an error", { requestId, status: response.status });
       return { ok: false, code: "AI_PROVIDER_UNAVAILABLE", requestId };
     }
     const result = await response.json();
@@ -45,7 +51,7 @@ async function requestAssistantCompletion(messages, options = {}) {
     return { ok: true, answer: answer.trim() };
   } catch {
     const requestId = randomUUID();
-    console.error("LUXE shared AI provider request failed", { requestId });
+    console.error("LUXE Workers AI request failed", { requestId });
     return { ok: false, code: "AI_PROVIDER_UNAVAILABLE", requestId };
   }
 }
