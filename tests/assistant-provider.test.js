@@ -44,7 +44,7 @@ test("accepts only the Cloudflare account chat-completions endpoint and @cf mode
   const config = getProviderConfig();
   assert.ok(config);
   assert.equal(new URL(config.endpoint).hostname, "api.cloudflare.com");
-  assert.match(new URL(config.endpoint).pathname, /\\/ai\\/v1\\/chat\\/completions$/);
+  assert.ok(new URL(config.endpoint).pathname.endsWith("/ai/v1/chat/completions"));
   assert.equal(config.model, "@cf/zai-org/glm-4.7-flash");
 });
 
