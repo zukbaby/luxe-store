@@ -7,7 +7,16 @@ module.exports=async function handler(req,res){
  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id))return send(res,422,{ok:false,code:"INVALID_PRODUCT_ID"});
  try{
   if(req.method==="GET"){
-   const rows=await query("select id,rating,title,body,created_at from public.product_reviews where product_id=$1 and is_published=true order by created_at desc limit 50",[id]);
+   const rows=await query(
+    `select r.id,r.rating,r.title,r.body,r.created_at,p.username,p.display_name,
+       case when p.id=$2 or lower(p.username)='official.dama' then 'blue'
+            when p.verification_badge in ('green','gold') then p.verification_badge
+            else null end as badge_color
+     from public.product_reviews r
+     join public.profiles p on p.id=r.buyer_id
+     where r.product_id=$1 and r.is_published=true
+     order by r.created_at desc limit 50`,
+    [id,process.env.LUXE_OWNER_USER_ID||""]);
    return send(res,200,{ok:true,reviews:rows||[]});
   }
   const session=await authenticate(req);if(!session.ok)return send(res,session.status,{ok:false,code:session.code});
