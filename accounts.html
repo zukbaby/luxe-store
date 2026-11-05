@@ -16,7 +16,7 @@
 <style>.luxe-verified-badge{display:inline-flex;align-items:center;justify-content:center;width:1.15em;height:1.15em;vertical-align:-.18em;flex:none;margin-inline-start:.32em;filter:drop-shadow(0 1px 2px #00000018)}.luxe-verified-badge svg{display:block;width:100%;height:100%}.luxe-verified-badge--blue{color:#2478e5;filter:drop-shadow(0 0 3px #2478e555)}.luxe-verified-badge--green{color:#16845b}.luxe-verified-badge--gold{color:#b88932}</style>
 <script src="/luxe-badges.js"></script><script>
 const el=id=>document.getElementById(id);
-function setProfileName(p){window.LUXE_BADGES?.setName(el('profileName'),p?.display_name,p?.badge_color);}let clerk=null;let activeMount=null;let profile=null;
+function setProfileName(p){const node=el('profileName');window.LUXE_BADGES?.setName(node,p?.display_name,p?.badge_color);node?.classList.toggle('luxe-founder-name',p?.badge_color==='blue'&&p?.username!=='official.dama');}let clerk=null;let activeMount=null;let profile=null;
 function message(t){el('message').textContent=t}
 function loadScript(src,attrs={}){return new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.async=true;script.crossOrigin='anonymous';Object.entries(attrs).forEach(([k,v])=>script.setAttribute(k,v));script.onload=resolve;script.onerror=()=>reject(new Error('Could not load the secure sign-in library.'));document.head.appendChild(script)})}
 function showAuthState(){el('authArea').classList.remove('hidden');el('signedIn').classList.add('hidden');el('role').textContent='Signed out';el('dot').classList.remove('good');el('session').textContent='Sign in securely or create an account.';mountAuth('signin')}
