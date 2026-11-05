@@ -15,7 +15,7 @@ function getProviderConfig() {
   try { parsed = new URL(endpoint); } catch { return null; }
 
   // Only the Cloudflare direct chat-completions endpoint is accepted.
-  const cloudflarePath = /^\\/client\\/v4\\/accounts\\/[a-f0-9]{32}\\/ai\\/v1\\/chat\\/completions$/i;
+  const cloudflarePath = /^\/client\/v4\/accounts\/[a-f0-9]{32}\/ai\/v1\/chat\/completions$/i;
   if (parsed.protocol !== "https:" || parsed.hostname !== "api.cloudflare.com" ||
       parsed.username || parsed.password || parsed.search || parsed.hash ||
       !cloudflarePath.test(parsed.pathname) || !FREE_MODELS.has(model)) return null;
