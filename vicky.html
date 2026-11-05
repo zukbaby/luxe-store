@@ -29,7 +29,7 @@
   const response=await fetch("/api/ai/dama",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assistant:"vicky",messages:history.slice(-10)})});
   if(!response.ok){let error={};try{error=await response.json()}catch{}reply=error.message||"Vicky couldn't connect just now. Please try again.";replyBubble.textContent=reply;status.textContent="Connection issue";engine.textContent="Check connection";}
   else{userBubble.receipt.textContent="✓✓";userBubble.receipt.classList.add("seen");userBubble.receipt.setAttribute("aria-label","Seen by Vicky AI");if(response.body&&response.body.getReader){const reader=response.body.getReader(),decoder=new TextDecoder();while(true){const part=await reader.read();if(part.done)break;reply+=decoder.decode(part.value,{stream:true});replyBubble.textContent=reply;box.scrollTop=box.scrollHeight;}reply+=decoder.decode();replyBubble.textContent=reply||"I couldn't generate a reply just now. Please try again.";if(reply)history.push({role:"assistant",content:reply});status.textContent="Connected";engine.textContent="Responding";}
-  else{reply=await response.text();replyBubble.textContent=reply;history.push({role:"assistant",content:reply});status.textContent="Connected";engine.textContent="Responding";}
+  else{reply=await response.text();replyBubble.textContent=reply;history.push({role:"assistant",content:reply});status.textContent="Connected";engine.textContent="Responding";}}
  }catch{replyBubble.textContent="I couldn't connect to Vicky's AI service. Please check your connection and try again.";status.textContent="Connection issue";engine.textContent="Check connection";}
  finally{busy=false;send.disabled=false;send.textContent="Send";input.focus();}
  }
