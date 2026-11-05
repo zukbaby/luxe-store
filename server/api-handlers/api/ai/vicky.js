@@ -20,9 +20,15 @@ module.exports = async function handler(req, res) {
 
   const body = req.body;
   if (!body || typeof body !== "object" || Array.isArray(body) ||
-      Object.keys(body).length !== 1 || typeof body.message !== "string" ||
-      body.message.trim().length < 1 || body.message.trim().length > 1000) {
-    return send(res, 422, { ok: false, code: "INVALID_MESSAGE" });
+      Object.keys(body).length !== 1 || !Array.isArray(body.messages) ||
+      body.messages.length < 1 || body.messages.length > 10 ||
+      body.messages.some((item) => !item || typeof item !== "object" ||
+        Object.keys(item).sort().join(",") !== "content,role" ||
+        !["user", "assistant"].includes(item.role) ||
+        typeof item.content !== "string" || !item.content.trim() ||
+        item.content.trim().length > 1000) ||
+      body.messages[body.messages.length - 1].role !== "user") {
+    return send(res, 422, { ok: false, code: "INVALID_MESSAGES" });
   }
 
   if (!getProviderConfig()) {
@@ -63,7 +69,7 @@ module.exports = async function handler(req, res) {
 
     const completion = await requestAssistantCompletion([
       { role: "system", content: system },
-      { role: "user", content: body.message.trim() }
+      ...body.messages.map((item) => ({ role: item.role, content: item.content.trim() }))
     ], { maxTokens: 450 });
 
     if (!completion.ok) {
