@@ -1,7 +1,7 @@
 # DAMA and Vicky AI — assistant contracts
 
 ## Status
-These are implementation contracts, not claims that either assistant is connected or live. Until a trusted model provider, persistent database, authenticated sessions, and server-side authorization are configured and tested, all assistant endpoints must fail closed.
+These are implementation contracts, not claims that either assistant is connected or live. Both assistants use one shared provider adapter with separate prompts and access boundaries. The provider is disabled unless an explicitly configured HTTPS endpoint, model, server-side key, and free-only confirmation flag are present. There is no paid-provider fallback.
 
 ## DAMA — store guide
 - Help shoppers discover products using only published, active catalogue records.
@@ -13,24 +13,24 @@ These are implementation contracts, not claims that either assistant is connecte
 - Never request passwords, one-time codes, payment card details, or identity documents.
 - Never expose private customer, seller, or admin records.
 - Never promise purchases, refunds, verification, or account changes without confirmed authorized API success.
-- Apply per-user and per-IP rate limits; keep provider keys server-side.
+- Apply per-user rate limits; keep provider keys server-side.
 
-## Vicky AI — verification review assistant
-- Check submission completeness and compare claims with published LUXE criteria.
-- Identify inconsistencies or missing evidence for an authorized human reviewer.
-- Draft neutral review summaries and requests for more information.
-- Vicky cannot approve, reject, suspend, or issue a badge.
-- Final decisions require an authenticated, authorized human administrator.
-- Do not infer identity, protected traits, or trustworthiness from appearance or unrelated attributes.
-- Never request identity documents in public chat or the preview.
-- Store sensitive evidence only in private storage with strict access controls, retention limits, and audit trails.
-- Keep reviewer notes factual and relevant; do not train on applicant documents by default.
+## Vicky AI — personal assistant
+- Provide general help with learning, writing, brainstorming, planning, and everyday questions.
+- Keep Vicky's personality and conversation interface separate from DAMA.
+- Do not access private account records, purchases, payment records, seller records, or admin data.
+- Never request passwords, one-time codes, payment card details, identity documents, or precise location.
+- Do not provide medical, legal, or financial decisions; offer general information and recommend a trusted adult or qualified professional for important matters.
+- Do not help with dangerous, illegal, exploitative, or age-restricted activities.
+- Never claim to have completed actions outside the chat.
 
 ## Shared technical requirements
+- Both assistants use the same provider adapter and exactly one configured provider endpoint.
+- Provider configuration is fail-closed and requires LUXE_AI_FREE_ONLY=true; no paid fallback, automatic provider switching, or Vercel AI Gateway fallback.
+- The free-only flag is a deployment safeguard, not proof that a provider's plan is free. Verify provider terms, age requirements, data handling, commercial-use rules, and quotas before enabling it.
 - Authenticate every private request server-side and enforce role/resource ownership.
 - Validate and size-limit input; reject unsupported methods.
-- Apply rate limits, request IDs, and no-store headers to private endpoints.
-- Use least-privilege database credentials and restrictive row-level security.
-- Record admin decisions in an append-only audit trail.
+- Apply per-user rate limits, request IDs, and no-store headers to private endpoints.
+- Never send passwords, OTPs, payment details, identity documents, or other sensitive records to the model provider.
 - Keep secrets out of browser bundles, source control, logs, and assistant replies.
 - Test authorization boundaries and failure paths before enabling live actions.
