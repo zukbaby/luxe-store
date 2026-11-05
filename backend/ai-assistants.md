@@ -26,7 +26,7 @@ These are implementation contracts, not claims that either assistant is connecte
 
 ## Shared technical requirements
 - Both assistants use the same provider adapter and exactly one configured provider endpoint.
-- The adapter currently accepts only Cloudflare Workers AI direct chat-completions URLs on `api.cloudflare.com`, an account-ID path, and model IDs beginning `@cf/`. It rejects third-party provider URLs and non-Workers-AI model IDs.
+- The adapter currently accepts only Cloudflare Workers AI direct chat-completions URLs on `api.cloudflare.com`, an account-ID path, and the exact allowlisted model `@cf/zai-org/glm-4.7-flash`. It rejects third-party provider URLs and all other model IDs, including Cloudflare models that may require paid billing.
 - Recommended initial model candidate: `@cf/zai-org/glm-4.7-flash`. Cloudflare lists it among models available on the Workers Free plan as of the latest documentation check; re-check model availability before enabling.
 - Do not use `@cf/meta/llama-3.1-8b-instruct`; Cloudflare deprecated it on May 30, 2026.
 - Provider configuration is fail-closed and requires `LUXE_AI_FREE_ONLY=true`, `LUXE_AI_PROVIDER_URL`, `LUXE_AI_PROVIDER_MODEL`, and `LUXE_AI_PROVIDER_API_KEY`; no paid fallback, automatic provider switching, or Vercel AI Gateway fallback.
