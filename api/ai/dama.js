@@ -81,7 +81,7 @@ module.exports = async function handler(req, res) {
 
   const system = {
     role: "system",
-    content: "You are DAMA, the helpful support assistant for LUXE STORE, a global third-party marketplace. Be clear, friendly, and honest. Help with general shopping navigation, seller onboarding guidance, platform features, and support directions. You do not have access to live inventory, accounts, orders, payments, seller records, private customer data, or admin controls. Never claim to have placed an order, changed an account, approved a seller, issued a verification badge, or completed a payment. Direct account-specific or order-specific issues to official human support. Do not ask users to send passwords, payment card details, identity documents, or private authentication codes. If unsure, say so. Do not invent prices, stock, shipping dates, or policies."
+    content: "You are DAMA, the helpful support assistant for LUXE STORE, a global third-party marketplace. Be clear, friendly, and honest. Help with general shopping navigation, seller onboarding guidance, platform features, and support directions. Keep replies concise by default (usually 1–3 short sentences) and avoid long introductions. You do not have access to live inventory, accounts, orders, payments, seller records, private customer data, or admin controls. Never claim to have placed an order, changed an account, approved a seller, issued a verification badge, or completed a payment. Direct account-specific or order-specific issues to official human support. Do not ask users to send passwords, payment card details, identity documents, or private authentication codes. If unsure, say so. Do not invent prices, stock, shipping dates, or policies."
   };
 
   try {
@@ -94,10 +94,11 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         model,
         messages: [system, ...messages],
-        max_tokens: 500,
-        temperature: 0.4
+        max_tokens: 300,
+        temperature: 0.4,
+        stream: true
       }),
-      signal: AbortSignal.timeout(20_000)
+      signal: AbortSignal.timeout(25_000)
     });
 
     if (!response.ok) {
@@ -108,14 +109,74 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const data = await response.json();
-    const answer = data && data.choices && data.choices[0] &&
-      data.choices[0].message && data.choices[0].message.content;
-    if (typeof answer !== "string" || !answer.trim()) {
-      return json(res, 502, { ok: false, code: "EMPTY_AI_RESPONSE" });
+    if (!response.body) {
+      return json(res, 502, { ok: false, code: "EMPTY_AI_STREAM" });
     }
 
-    return json(res, 200, { ok: true, assistant: "DAMA", reply: answer.trim() });
+    res.statusCode = 200;
+    res.setHeader("Cache-Control", "no-cache, no-transform");
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Accel-Buffering", "no");
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let answer = "";
+    let finished = false;
+
+    while (!finished) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      buffer += decoder.decode(chunk.value, { stream: true });
+      const lines = buffer.split("\\n");
+      buffer = lines.pop() || "";
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data:")) continue;
+        const payload = trimmed.slice(5).trim();
+        if (payload === "[DONE]") {
+          finished = true;
+          break;
+        }
+        try {
+          const event = JSON.parse(payload);
+          const piece = event && event.choices && event.choices[0] &&
+            event.choices[0].delta && event.choices[0].delta.content;
+          if (typeof piece === "string" && piece) {
+            answer += piece;
+            res.write(piece);
+          }
+        } catch {
+          // Ignore non-JSON keepalive or metadata events.
+        }
+      }
+    }
+
+    const finalText = decoder.decode();
+    if (finalText) buffer += finalText;
+    if (buffer.trim().startsWith("data:")) {
+      const payload = buffer.trim().slice(5).trim();
+      if (payload && payload !== "[DONE]") {
+        try {
+          const event = JSON.parse(payload);
+          const piece = event && event.choices && event.choices[0] &&
+            event.choices[0].delta && event.choices[0].delta.content;
+          if (typeof piece === "string" && piece) {
+            answer += piece;
+            res.write(piece);
+          }
+        } catch {
+          // Ignore an incomplete final event.
+        }
+      }
+    }
+
+    if (!answer.trim()) {
+      res.write("I couldn't generate a reply just now. Please try again.");
+    }
+    return res.end();
   } catch {
     return json(res, 502, {
       ok: false,
