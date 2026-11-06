@@ -23,9 +23,40 @@
  const box=document.getElementById("vicky-messages"),form=document.getElementById("vicky-form"),input=document.getElementById("vicky-prompt"),send=document.getElementById("vicky-send"),status=document.getElementById("vicky-chat-status"),engine=document.getElementById("vicky-engine-status");
  if(!box||!form)return;
  const ownerControl=document.getElementById("owner-tier-control"),tierButtons=ownerControl?ownerControl.querySelectorAll("[data-tier]"):[],tierStatus=document.getElementById("owner-tier-status"),chat=document.querySelector(".vicky-chat");
- const isOwner=(()=>{try{return (localStorage.getItem("luxe_display_username")||"").trim().toLowerCase()==="zvk";}catch{return false;}})();
- function applyTier(tier){if(!["plus","pro","gold"].includes(tier))tier="plus";chat.classList.remove("tier-plus","tier-pro","tier-gold");chat.classList.add("tier-"+tier);tierButtons.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.tier===tier)));if(tierStatus)tierStatus.textContent="Your Vicky AI "+tier[0].toUpperCase()+tier.slice(1)+" look is selected. Refreshing…";}
- if(isOwner&&ownerControl){ownerControl.hidden=false;let active="plus";try{active=localStorage.getItem("luxe_owner_vicky_tier")||"plus";}catch{}if(!["plus","pro","gold"].includes(active))active="plus";applyTier(active);tierButtons.forEach(button=>button.addEventListener("click",()=>{const tier=button.dataset.tier;if(!["plus","pro","gold"].includes(tier))return;try{localStorage.setItem("luxe_owner_vicky_tier",tier);}catch{}applyTier(tier);location.reload();}));}
+ function applyTier(tier){if(!["plus","pro","gold"].includes(tier))tier="plus";chat.classList.remove("tier-plus","tier-pro","tier-gold");chat.classList.add("tier-"+tier);tierButtons.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.tier===tier)));if(tierStatus)tierStatus.textContent="Your Vicky AI "+tier[0].toUpperCase()+tier.slice(1)+" look is selected.";}
+ async function initializeOwnerTierControl(){
+  if(!ownerControl)return;
+  try{
+   const check=await fetch("/api/owner/vicky-tier",{method:"GET",credentials:"same-origin",headers:{"Accept":"application/json"}});
+   if(!check.ok)return;
+   const owner=await check.json();
+   if(!owner||owner.isOwner!==true)return;
+   ownerControl.hidden=false;
+   let active="plus";
+   try{active=localStorage.getItem("luxe_owner_vicky_tier")||"plus";}catch{}
+   if(!["plus","pro","gold"].includes(active))active="plus";
+   applyTier(active);
+   tierButtons.forEach(button=>button.addEventListener("click",async()=>{
+    const tier=button.dataset.tier;
+    if(!["plus","pro","gold"].includes(tier))return;
+    tierButtons.forEach(b=>b.disabled=true);
+    if(tierStatus)tierStatus.textContent="Verifying owner selection…";
+    try{
+     const saved=await fetch("/api/owner/vicky-tier",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({tier})});
+     const result=await saved.json();
+     if(!saved.ok||!result||result.isOwner!==true||result.tier!==tier)throw new Error("Owner verification failed");
+     try{localStorage.setItem("luxe_owner_vicky_tier",tier);}catch{}
+     applyTier(tier);
+     location.reload();
+    }catch{
+     if(tierStatus)tierStatus.textContent="Owner verification failed. Please sign in again.";
+    }finally{tierButtons.forEach(b=>b.disabled=false);}
+   }));
+  }catch{
+   if(tierStatus)tierStatus.textContent="Sign in with the owner account to use these controls.";
+  }
+ }
+ initializeOwnerTierControl();
  const history=[];let busy=false;
  function bubble(text,who){const el=document.createElement("div");el.className="vicky-msg"+(who==="user"?" user":"");el.textContent=text;if(who==="user"){const receipt=document.createElement("span");receipt.className="vicky-read-receipt";receipt.textContent="✓";receipt.setAttribute("aria-label","Sent");el.appendChild(receipt);el.receipt=receipt;}box.appendChild(el);box.scrollTop=box.scrollHeight;return el;}
  async function ask(value){const q=(value||input.value).trim();if(!q||busy)return;busy=true;const userBubble=bubble(q,"user");history.push({role:"user",content:q});input.value="";send.disabled=true;send.textContent="…";status.textContent="Vicky is thinking…";const replyBubble=bubble("","assistant");let reply="";
