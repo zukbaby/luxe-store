@@ -105,15 +105,36 @@ module.exports = async function handler(req, res) {
     });
 
     if (!response.ok) {
+      // Keep provider diagnostics private; never expose credentials or raw payloads.
       return json(res, 502, {
         ok: false,
         code: "AI_PROVIDER_ERROR",
-        message: "The AI service could not be reached right now. Please try again later."
+        message: "DAMA's AI provider returned an error. Please try again shortly."
       });
     }
 
     if (!response.body) {
-      return json(res, 502, { ok: false, code: "EMPTY_AI_STREAM" });
+      return json(res, 502, { ok: false, code: "EMPTY_AI_RESPONSE",
+        message: "DAMA received an empty response. Please try again." });
+    }
+
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      const payload = await response.json();
+      const answer =
+        (payload && payload.result && typeof payload.result.response === "string" && payload.result.response) ||
+        (payload && payload.choices && payload.choices[0] &&
+          payload.choices[0].message && payload.choices[0].message.content) ||
+        (payload && payload.response && typeof payload.response === "string" && payload.response) ||
+        "";
+      if (!answer.trim()) {
+        return json(res, 502, { ok: false, code: "EMPTY_AI_RESPONSE",
+          message: "DAMA received an empty response. Please try again." });
+      }
+      res.setHeader("Cache-Control", "no-store");
+      res.setHeader("Content-Type", "text/plain; charset=utf-8");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      return res.status(200).send(answer.trim());
     }
 
     res.statusCode = 200;
