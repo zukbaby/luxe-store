@@ -1,48 +1,47 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#08285b">
-<title>LUXE STORE | Verification badges</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#06275b">
+<title>LUXE STORE | Verification</title>
 <style>
-:root{--navy:#08285b;--blue:#2478e5;--green:#16845b;--gold:#bd913b;--ink:#18263a;--muted:#718096;--line:#e8edf4}
-*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
-header{height:68px;padding:0 5%;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:22px;font-weight:900;letter-spacing:-.7px;color:var(--navy);text-decoration:none}.logo span{color:#0878f9}
-header a:last-child{font-size:13px;color:var(--muted);text-decoration:none}
-.wrap{max-width:920px;margin:0 auto;padding:48px 22px}.eyebrow{font-size:11px;letter-spacing:2px;font-weight:900;color:#0878f9}
-h1{font-size:clamp(32px,5vw,48px);letter-spacing:-1.5px;color:var(--navy);margin:12px 0}
-.lead{max-width:680px;color:var(--muted);font-size:15px;line-height:1.7}
-.preview{border:1px solid var(--line);border-radius:16px;padding:24px;margin:28px 0;box-shadow:0 12px 34px #08285b0b}
-.profile{display:flex;align-items:center;gap:13px}.avatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#eaf2ff;color:var(--navy);font-weight:900}
-.name{font-size:19px;font-weight:850;display:flex;align-items:center;gap:6px}.handle{font-size:12px;color:var(--muted);margin-top:5px}
-.badge{width:22px;height:22px;display:inline-block;vertical-align:middle;flex:none}
-.badge-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
-.item{border:1px solid var(--line);border-radius:13px;padding:18px}.item .badge{width:30px;height:30px}
-.item h2{font-size:16px;margin:12px 0 6px;color:var(--navy)}.item p{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
-.blue{color:var(--blue)}.green{color:var(--green)}.gold{color:var(--gold)}
-.note{background:#f5f8fd;border:1px solid #e4ebf5;border-radius:12px;padding:16px;font-size:13px;line-height:1.65;color:#4e5e73;margin-top:24px}
-@media(max-width:650px){.badge-list{grid-template-columns:1fr}.wrap{padding-top:32px}.preview{padding:18px}}
+:root{--navy:#06275b;--deep:#041a3d;--blue:#0878f9;--ink:#142238;--muted:#6d7b90;--line:#e7edf5;--soft:#f5f8fc;--green:#16a36a;--gold:#bd913b}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:Arial,Helvetica,sans-serif;background:#fff}a{text-decoration:none;color:inherit}
+.top{min-height:38px;background:var(--deep);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:7px 3%;font-size:12px;gap:12px}.header{min-height:94px;display:grid;grid-template-columns:290px minmax(180px,1fr) auto;align-items:center;gap:22px;padding:12px 3%;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px}.bag{width:48px;height:48px}.brand-name{font-size:29px;font-weight:900;letter-spacing:-1px;color:#102c55}.brand-name span{color:var(--blue)}.tagline{font-size:9px;letter-spacing:3px;font-weight:bold;color:#65758b}
+.search{height:50px;border:1px solid #dce4ef;border-radius:28px;background:#f5f7fa;display:flex;align-items:center;padding:0 18px;color:#718096;font-size:13px}.search b{margin-left:auto;color:var(--navy);font-size:20px}
+.actions{display:flex;gap:18px;font-size:12px;font-weight:bold}.actions a:hover,.nav a:hover{color:var(--blue)}
+.nav{min-height:58px;display:flex;align-items:center;gap:28px;padding:0 3%;border-bottom:1px solid var(--line);white-space:nowrap;overflow-x:auto}.nav a{font-size:13px;font-weight:bold}.nav .all{background:var(--blue);color:#fff;padding:13px 18px;border-radius:8px}
+.wrap{max-width:1450px;margin:auto;padding:22px 26px 55px}.crumb{font-size:12px;color:var(--muted);margin:2px 0 18px}.crumb a{color:var(--blue);font-weight:bold}
+.hero{border-radius:13px;padding:30px 36px;color:#fff;background:radial-gradient(ellipse at 85% 80%,#0878f9 0,transparent 36%),linear-gradient(115deg,#041a3d,#06275b 62%,#03132d);box-shadow:0 8px 28px #0d2b5018;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:320px;height:320px;border:1px solid #36a9ff55;border-radius:50%;right:8%;top:-190px;box-shadow:0 0 0 35px #169aff0b,0 0 0 75px #169aff08}.eyebrow{position:relative;z-index:1;font-size:11px;letter-spacing:2px;font-weight:900;color:#8fc5ff}.hero h1{position:relative;z-index:1;font-size:clamp(30px,4vw,46px);letter-spacing:-1.4px;margin:10px 0}.hero p{position:relative;z-index:1;max-width:680px;color:#d8e8fa;font-size:14px;line-height:1.65;margin:0}
+.profile-card{margin:20px 0 26px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:20px;box-shadow:0 5px 20px #102b5009}.section-label{font-size:11px;font-weight:900;letter-spacing:1.5px;color:var(--blue);margin-bottom:16px}.profile{display:flex;align-items:center;gap:13px}.avatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#eaf2ff;color:var(--navy);font-size:20px;font-weight:900}.name{font-size:19px;font-weight:850;display:flex;align-items:center;gap:7px}.handle{font-size:12px;color:var(--muted);margin-top:5px}
+.badge{width:22px;height:22px;display:inline-block;vertical-align:middle;flex:none}.badge-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.item{border:1px solid var(--line);border-radius:12px;padding:20px;background:#fff;box-shadow:0 5px 18px #102b5008}.item .badge{width:32px;height:32px}.item h2{font-size:16px;margin:13px 0 7px;color:var(--navy)}.item p{font-size:13px;line-height:1.65;color:var(--muted);margin:0}.blue{color:var(--blue)}.green{color:var(--green)}.gold{color:var(--gold)}
+.note{margin-top:20px;padding:15px 17px;border:1px solid #dce9fa;border-left:4px solid var(--blue);border-radius:9px;background:var(--soft);font-size:12px;line-height:1.7;color:#52637a}.footer{margin-top:28px;padding:20px;background:var(--soft);border:1px solid var(--line);border-radius:12px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.footer b{color:#16345d}.footer a{color:var(--blue);font-weight:bold}
+@media(max-width:900px){.header{grid-template-columns:1fr auto;gap:10px}.search{grid-column:1/-1;grid-row:2}.brand-name{font-size:25px}.badge-list{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.top{font-size:10px;padding:7px 12px}.top span:nth-child(2){display:none}.header{padding:10px 12px;min-height:0}.bag{width:39px;height:39px}.brand-name{font-size:23px}.tagline{font-size:8px}.actions{gap:10px;font-size:10px}.search{height:42px}.nav{min-height:48px;padding:0 12px;gap:17px}.nav a{font-size:11px}.wrap{padding:14px 12px 35px}.hero{padding:25px 21px}.hero h1{font-size:32px}.badge-list{grid-template-columns:1fr}.profile-card{padding:17px}.footer{font-size:10px;padding:16px}}
 </style>
 </head>
 <body>
-<header><a class="logo" href="/">LUXE <span>STORE</span></a><a href="/">← Back to store</a></header>
+<div class="top"><span>🚚 Free shipping on orders over $50</span><span>🛡 LUXE PROTECT · Shop with confidence</span><span>🎁 Earn rewards with LUXE REWARDS</span><span>English⌄ &nbsp; ◎ USD⌄</span></div>
+<header class="header">
+<a class="brand" href="/"><svg class="bag" viewBox="0 0 64 64" aria-label="LUXE STORE bag"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#168cff"/><stop offset="1" stop-color="#06275b"/></linearGradient></defs><path d="M13 21h38l4 37H9z" fill="url(#g)" stroke="#092b59" stroke-width="2"/><path d="M22 23v-7a10 10 0 0 1 20 0v7" fill="none" stroke="#092b59" stroke-width="5" stroke-linecap="round"/><path d="m22 38 10 9 10-9" fill="none" stroke="white" stroke-width="2.5"/></svg><div><div class="brand-name">LUXE <span>STORE</span></div><div class="tagline">SHOP · DISCOVER · ENJOY</div></div></a>
+<div class="search">Explore LUXE STORE <b>⌕</b></div>
+<div class="actions"><a href="/accounts.html">♙ Account</a><a href="/">Store Home</a></div>
+</header>
+<nav class="nav"><a class="all" href="/">☰ &nbsp; All Categories</a><a href="/">🔥 Hot Deals</a><a href="/">New Arrivals</a><a href="/">⭐ LUXE REWARDS</a><a href="/">▶ LUXE REELS</a><a href="/seller.html">Sellers</a><a href="/dama.html">Support</a></nav>
 <main class="wrap">
-<div class="eyebrow">IDENTITY & TRUST</div>
-<h1>The LUXE verification badge</h1>
-<p class="lead">One distinctive LUXE emblem, placed immediately after the display name. Its colour identifies the account's LUXE status.</p>
-<section class="preview">
-<div class="eyebrow">PROFILE PREVIEW</div>
-<div class="profile" style="margin-top:18px">
-<div class="avatar">Z</div><div><div class="name">ZVK <svg class="badge blue" viewBox="0 0 32 32" role="img" aria-label="Blue LUXE badge"><path d="M16 1.8 20.1 4l4.7-.1 2 4.2 3.7 2.8-1.1 4.6 1.1 4.6-3.7 2.8-2 4.2-4.7-.1-4.1 2.2-4.1-2.2-4.7.1-2-4.2-3.7-2.8 1.1-4.6-1.1-4.6 3.7-2.8 2-4.2 4.7.1z" fill="currentColor"/><path d="m9.6 16.2 4.1 4.1 8.8-9" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="handle">@official_LUXESTORE · Founder & CEO</div></div>
-</div>
-</section>
-<h2 style="font-size:20px;color:var(--navy)">Badge meanings</h2>
+<div class="crumb"><a href="/">Home</a> &nbsp;›&nbsp; Verification</div>
+<section class="hero"><div class="eyebrow">IDENTITY & TRUST</div><h1>The LUXE verification badge</h1><p>One distinctive LUXE emblem, placed immediately after the display name. Its colour identifies the account's LUXE status.</p></section>
+<section class="profile-card"><div class="section-label">PROFILE PREVIEW</div><div class="profile"><div class="avatar">Z</div><div><div class="name">ZVK <svg class="badge blue" viewBox="0 0 32 32" role="img" aria-label="Blue LUXE badge"><path d="M16 1.8 20.1 4l4.7-.1 2 4.2 3.7 2.8-1.1 4.6 1.1 4.6-3.7 2.8-2 4.2-4.7-.1-4.1 2.2-4.1-2.2-4.7.1-2-4.2-3.7-2.8 1.1-4.6-1.1-4.6 3.7-2.8 2-4.2 4.7.1z" fill="currentColor"/><path d="m9.6 16.2 4.1 4.1 8.8-9" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="handle">@official_LUXESTORE · Founder & CEO</div></div></div></section>
+<div class="section-label">BADGE MEANINGS</div>
 <div class="badge-list">
 <article class="item"><svg class="badge blue" viewBox="0 0 32 32" role="img" aria-label="Blue LUXE badge"><path d="M16 1.8 20.1 4l4.7-.1 2 4.2 3.7 2.8-1.1 4.6 1.1 4.6-3.7 2.8-2 4.2-4.7-.1-4.1 2.2-4.1-2.2-4.7.1-2-4.2-3.7-2.8 1.1-4.6-1.1-4.6 3.7-2.8 2-4.2 4.7.1z" fill="currentColor"/><path d="m9.6 16.2 4.1 4.1 8.8-9" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Blue — Founder / official</h2><p>Reserved for ZVK and the official DAMA account only.</p></article>
 <article class="item"><svg class="badge green" viewBox="0 0 32 32" role="img" aria-label="Green LUXE badge"><path d="M16 1.8 20.1 4l4.7-.1 2 4.2 3.7 2.8-1.1 4.6 1.1 4.6-3.7 2.8-2 4.2-4.7-.1-4.1 2.2-4.1-2.2-4.7.1-2-4.2-3.7-2.8 1.1-4.6-1.1-4.6 3.7-2.8 2-4.2 4.7.1z" fill="currentColor"/><path d="m9.6 16.2 4.1 4.1 8.8-9" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Green — Paid verified</h2><p>For members who complete LUXE's paid verification process.</p></article>
 <article class="item"><svg class="badge gold" viewBox="0 0 32 32" role="img" aria-label="Gold LUXE badge"><path d="M16 1.8 20.1 4l4.7-.1 2 4.2 3.7 2.8-1.1 4.6 1.1 4.6-3.7 2.8-2 4.2-4.7-.1-4.1 2.2-4.1-2.2-4.7.1-2-4.2-3.7-2.8 1.1-4.6-1.1-4.6 3.7-2.8 2-4.2 4.7.1z" fill="currentColor"/><path d="m9.6 16.2 4.1 4.1 8.8-9" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Gold — Free VIP</h2><p>For members ZVK manually grants free VIP status to.</p></article>
 </div>
 <div class="note"><b>Important:</b> This page explains the badge rules and shows a design preview. It does not award badges or verify accounts. Secure badge management still needs owner-authorized server-side commands, approval checks and audit logs. A displayed name or browser setting must never grant verification.</div>
+<footer class="footer"><div><b>LUXE STORE</b><br>Shop Smarter. Live Better.</div><div><a href="/">Store Home</a> · <a href="/dama.html">DAMA Support</a> · <a href="/seller.html">Become a Seller</a></div><div>© 2026 LUXE STORE. All rights reserved.</div></footer>
 </main>
-</body></html>
+</body>
+</html>
