@@ -33,7 +33,7 @@
 .messages{background:radial-gradient(ellipse at 90% 5%,#14365b55,transparent 38%),linear-gradient(145deg,#07172e,#0b1e38 65%,#08162b);background-attachment:local}
 .msg{background:linear-gradient(145deg,#142d4b,#10243d);border:1px solid #315276;color:#edf4ff;box-shadow:0 4px 14px #0003;border-bottom-left-radius:4px}
 .msg.user{position:relative;padding-bottom:25px;background:linear-gradient(120deg,#0757a8,#087ff0);border:1px solid #48a5ff;color:#fff;border-bottom-left-radius:13px;border-bottom-right-radius:4px;box-shadow:0 5px 18px #0878f944}
-.read-receipt{position:absolute;right:11px;bottom:5px;font-size:12px;letter-spacing:-2px;color:#f4cf65;text-shadow:0 0 8px #f4cf6580}.read-receipt.seen{color:#ffe18a}.composer{background:#081a33;border-top:1px solid #b88a2755}
+.read-receipt{position:absolute;right:11px;bottom:5px;font-size:12px;letter-spacing:-2px;color:#f4cf65;text-shadow:0 0 8px #f4cf6580}.read-receipt.received{color:#ffe18a}.composer{background:#081a33;border-top:1px solid #b88a2755}
 .composer input{background:#102844;border:1px solid #365474;color:#fff}
 .composer input::placeholder{color:#9aadc3}
 .composer input:focus{border-color:#d9ae46;box-shadow:0 0 0 3px #d9ae4622}
@@ -107,7 +107,7 @@
   color:#fff0b3;
   text-shadow:none;
 }
-.read-receipt.seen{color:#fff4c9}
+.read-receipt.received{color:#fff4c9}
 .composer{
   background:#ffffff;
   border-top:1px solid #e4ebf4;
@@ -131,15 +131,32 @@
 @media(prefers-reduced-motion:reduce){.dama-bolt{animation:none}}
 
 
-/* DAMA chat background update: warm soft yellow replaces white surfaces */
-.chat{background:#fff6d5;border-color:#ead48b}
-.dama-electric{background:linear-gradient(110deg,#fff0ad 0%,#fff6d5 58%,#ffedaa 100%);border-color:#e8cf7a}
-.chathead{background:#fff1b8;border-bottom-color:#eadb9f}
-.messages{background:linear-gradient(180deg,#fff9e7 0%,#fff1c2 100%)}
-.composer{background:#fff1b8;border-top-color:#eadb9f}
-.composer input{background:#fffaf0;border-color:#e5d7a8;color:#142238}
-.composer input::placeholder{color:#8b805f}
-.foot{color:#82754e}
+/* DAMA approved chat theme: midnight navy, electric blue and polished gold */
+.chat{position:relative;background:#06152e;border:1px solid #c69a38;box-shadow:0 12px 38px #06152e35,0 0 24px #d5a62c20}
+.chat:before{display:block;background:radial-gradient(ellipse at 85% 0%,#174b8a55,transparent 42%),radial-gradient(ellipse at 5% 100%,#b8862520,transparent 38%)}
+.dama-electric{background:linear-gradient(115deg,#07152d,#10294a 58%,#211b13);border:1px solid #bd922f;box-shadow:inset 0 0 22px #e5b63812,0 0 18px #d5a62c18}
+.dama-electric:before{display:block;inset:-100% -40%;background:conic-gradient(from 0deg,transparent 0 42%,#e9bd4d30 47%,#36a9ff38 51%,transparent 58%);opacity:.55}
+.dama-electric-line{color:#f5d77b;letter-spacing:1px}
+.dama-bolt{color:#101a2b;background:linear-gradient(145deg,#fff0a0,#e4ad30 58%,#a96e13);box-shadow:0 0 12px #ffdc67aa,0 0 25px #f4bf4c55;animation:dama-zap 1.8s ease-in-out infinite}
+.dama-spectrum{background:none;color:#f8d878;-webkit-text-fill-color:#f8d878;letter-spacing:1.2px;text-shadow:0 0 12px #e6b94b66;animation:none}
+.dama-electric small{color:#b8cbe2}
+.chathead{background:linear-gradient(100deg,#081a35,#102c50);border-bottom:1px solid #b88a2755}
+.chathead b{color:#fff;letter-spacing:.25px}
+.live{background:#142d49;color:#c8d7e8;border:1px solid #315478}
+.notice{background:#0b203d;color:#b7c8dc;border-bottom:1px solid #284361}
+.messages{background:radial-gradient(ellipse at 90% 5%,#14365b55,transparent 38%),linear-gradient(145deg,#07172e,#0b1e38 65%,#08162b);background-attachment:local}
+.msg{background:linear-gradient(145deg,#142d4b,#10243d);border:1px solid #315276;color:#edf4ff;box-shadow:0 4px 14px #0003}
+.msg.user{background:linear-gradient(120deg,#0757a8,#087ff0);border:1px solid #48a5ff;color:#fff;box-shadow:0 5px 18px #0878f944}
+.read-receipt{color:#f4cf65;text-shadow:0 0 8px #f4cf6580}
+.read-receipt.received{color:#ffe18a}
+.composer{background:#081a33;border-top:1px solid #b88a2755}
+.composer input{background:#102844;border:1px solid #365474;color:#fff}
+.composer input::placeholder{color:#9aadc3}
+.composer input:focus{border-color:#d9ae46;box-shadow:0 0 0 3px #d9ae4622}
+.composer button{background:linear-gradient(145deg,#ffe58a,#d5a32c 58%,#a96e12);color:#172238;box-shadow:0 3px 14px #d5a32c44}
+.composer button:disabled{opacity:.6}
+.foot{color:#8fa5bd}
+@media(prefers-reduced-motion:reduce){.dama-electric:before,.dama-bolt{animation:none}}
 </style><script>(function(){try{if(localStorage.getItem("luxe_profile_complete")!=="1"||!localStorage.getItem("luxe_display_username")){if(!location.pathname.endsWith("/accounts.html"))location.replace("/accounts.html");}}catch{location.replace("/accounts.html");}})();</script>
 </head><body>
 <div class="promo"><span>GLOBAL MARKETPLACE · SHOP SMARTER</span><span>Official LUXE STORE assistant</span></div>
@@ -155,5 +172,5 @@
 <section class="chat"><div class="dama-electric"><div class="dama-electric-line"><span class="dama-bolt" aria-hidden="true">⚡</span><span class="dama-spectrum">DAMA · ULTIMATE SPEED</span><span>✦ GOLD EDITION</span></div><small>Electric aura · lightning signature · fast streaming replies</small></div><div class="chathead"><b>DAMA · LUXE support</b><span class="live">AI connection status depends on setup</span></div><div class="notice">Official support assistant · Don't share sensitive personal or payment information.</div><div class="messages" id="messages"><div class="msg">Welcome to LUXE STORE. I'm DAMA, your official marketplace assistant. What can I help you with today?</div></div><form class="composer" id="form"><input id="prompt" placeholder="Message DAMA..." autocomplete="off" maxlength="500"><button type="submit">Send</button></form><div class="foot">DAMA can guide you, but cannot perform account or payment actions.</div></section>
 </div></main>
 <script>
-const messages=document.getElementById("messages"),history=[];let busy=false;function say(text,who){const div=document.createElement("div");div.className="msg"+(who==="user"?" user":"");div.textContent=text;if(who==="user"){const receipt=document.createElement("span");receipt.className="read-receipt";receipt.textContent="✓";receipt.setAttribute("aria-label","Sent");div.appendChild(receipt);div.receipt=receipt;}messages.appendChild(div);messages.scrollTop=messages.scrollHeight;return div}async function send(value){const q=(value||document.getElementById("prompt").value).trim();if(!q||busy)return;const userBubble=say(q,"user");history.push({role:"user",content:q});document.getElementById("prompt").value="";busy=true;const submit=document.querySelector(".composer button");submit.disabled=true;submit.textContent="…";const replyBubble=say("","bot");let reply="";try{const response=await fetch("/api/ai/dama",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:history.slice(-10)})});if(!response.ok){let error={};try{error=await response.json()}catch{}replyBubble.textContent=error.message||"DAMA's AI service is not connected yet. Please try again later.";}else{userBubble.receipt.textContent="✓✓";userBubble.receipt.classList.add("seen");userBubble.receipt.setAttribute("aria-label","Seen by DAMA");if(response.body&&response.body.getReader){const reader=response.body.getReader(),decoder=new TextDecoder();while(true){const chunk=await reader.read();if(chunk.done)break;reply+=decoder.decode(chunk.value,{stream:true});replyBubble.textContent=reply;messages.scrollTop=messages.scrollHeight;}reply+=decoder.decode();replyBubble.textContent=reply||"I couldn't generate a reply just now. Please try again.";if(reply)history.push({role:"assistant",content:reply});}else{reply=await response.text();replyBubble.textContent=reply;history.push({role:"assistant",content:reply});}}}catch{replyBubble.textContent="I couldn't connect to DAMA's AI service. Please check your connection and try again.";}finally{busy=false;submit.disabled=false;submit.textContent="Send";}}document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();send()});document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>send(b.dataset.prompt)));
+const messages=document.getElementById("messages"),history=[];let busy=false;function say(text,who){const div=document.createElement("div");div.className="msg"+(who==="user"?" user":"");div.textContent=text;if(who==="user"){const receipt=document.createElement("span");receipt.className="read-receipt";receipt.textContent="✓";receipt.setAttribute("aria-label","Sent");div.appendChild(receipt);div.receipt=receipt;}messages.appendChild(div);messages.scrollTop=messages.scrollHeight;return div}async function send(value){const q=(value||document.getElementById("prompt").value).trim();if(!q||busy)return;const userBubble=say(q,"user");history.push({role:"user",content:q});document.getElementById("prompt").value="";busy=true;const submit=document.querySelector(".composer button");submit.disabled=true;submit.textContent="…";const replyBubble=say("","bot");let reply="";try{const response=await fetch("/api/ai/dama",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:history.slice(-10)})});if(!response.ok){let error={};try{error=await response.json()}catch{}replyBubble.textContent=error.message||"DAMA's AI service is not connected yet. Please try again later.";}else{userBubble.receipt.textContent="✓✓";userBubble.receipt.classList.add("received");userBubble.receipt.setAttribute("aria-label","Received by DAMA");userBubble.receipt.title="Received by DAMA";if(response.body&&response.body.getReader){const reader=response.body.getReader(),decoder=new TextDecoder();while(true){const chunk=await reader.read();if(chunk.done)break;reply+=decoder.decode(chunk.value,{stream:true});replyBubble.textContent=reply;messages.scrollTop=messages.scrollHeight;}reply+=decoder.decode();replyBubble.textContent=reply||"I couldn't generate a reply just now. Please try again.";if(reply)history.push({role:"assistant",content:reply});}else{reply=await response.text();replyBubble.textContent=reply;history.push({role:"assistant",content:reply});}}}catch{replyBubble.textContent="I couldn't connect to DAMA's AI service. Please check your connection and try again.";}finally{busy=false;submit.disabled=false;submit.textContent="Send";}}document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();send()});document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>send(b.dataset.prompt)));
 </script></body></html>
