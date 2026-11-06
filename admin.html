@@ -26,7 +26,7 @@ button:disabled{opacity:.55;cursor:wait}.hint{font-size:12px;color:var(--muted);
 <main>
 <div class="eyebrow">FOUNDER & CEO · PRIVATE ACCESS</div><h1>Owner Command Console</h1>
 <p class="sub">Manage member verification badges. Every successful change is recorded in the LUXE STORE audit log.</p>
-<div id="gate" class="panel"><div class="locked" id="gateText">Checking owner access…</div><p class="hint"><a href="/accounts.html">Open account sign-in</a> if you are not signed in.</p></div>
+<div id="gate" class="panel"><div class="locked" id="gateText">Checking owner access…</div><p class="hint">Customer sign-in is not used on LUXE STORE. Private badge commands remain locked until a separate secure owner-only authorization method is configured.</p></div>
 <div id="console" hidden>
 <section class="panel"><h2 style="margin:0 0 7px;font-size:18px">Badge command</h2>
 <p class="sub" style="margin-top:0">Enter one command using the member's exact username.</p>
@@ -54,7 +54,7 @@ function renderAudit(items){
   const small=document.createElement("small");small.textContent=new Date(item.created_at).toLocaleString();card.append(strong,line,small);host.append(card)}
 }
 async function loadAudit(){try{const r=await fetch("/api/owner/vicky-tier?resource=badges",{credentials:"same-origin",cache:"no-store"});const d=await r.json();if(!r.ok)throw new Error(d.message||"Could not load audit history.");renderAudit(d.audit)}catch(e){document.getElementById("audit").textContent=e.message}}
-async function init(){try{const r=await fetch("/api/owner/vicky-tier?resource=badges",{credentials:"same-origin",cache:"no-store"});const d=await r.json();if(!r.ok){gateText.textContent=d.message||"Owner sign-in is required.";return}gate.hidden=true;consoleBox.hidden=false;renderAudit(d.audit)}catch{gateText.textContent="Could not check owner access. Refresh and try again."}}
+async function init(){try{const r=await fetch("/api/owner/vicky-tier?resource=badges",{credentials:"same-origin",cache:"no-store"});const d=await r.json();if(!r.ok){gateText.textContent=d.message||"Owner commands are currently locked. Public profile identity does not grant command access.";return}gate.hidden=true;consoleBox.hidden=false;renderAudit(d.audit)}catch{gateText.textContent="Could not check owner access. Refresh and try again."}}
 document.getElementById("commandForm").addEventListener("submit",async e=>{e.preventDefault();const command=document.getElementById("command").value.trim();if(/^removeV-/i.test(command)&&!confirm("Confirm badge revocation? This action will be recorded in the audit log."))return;const button=document.getElementById("submit");button.disabled=true;resultBox.className="status";try{const r=await fetch("/api/owner/vicky-tier?resource=badges",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({resource:"badges",command})});const d=await r.json();if(!r.ok)throw new Error(d.message||"Command failed.");showResult(d.message+" Account: @"+d.account.username+" · Badge: "+d.account.badge_type,true);document.getElementById("command").value="";await loadAudit()}catch(error){showResult(error.message,false)}finally{button.disabled=false}});
 init();
 </script></body></html>
