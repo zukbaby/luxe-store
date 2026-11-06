@@ -105,11 +105,23 @@ module.exports = async function handler(req, res) {
     });
 
     if (!response.ok) {
-      // Keep provider diagnostics private; never expose credentials or raw payloads.
+      // Expose only the provider HTTP status, never response bodies or credentials.
+      const providerStatus = response.status;
+      let message = "The AI provider is temporarily unavailable. Please try again shortly.";
+      if (providerStatus === 401 || providerStatus === 403) {
+        message = "The AI provider rejected its server credentials (HTTP " + providerStatus + "). The site owner needs to check the Cloudflare API token permissions.";
+      } else if (providerStatus === 404) {
+        message = "The AI provider endpoint or selected model was not found (HTTP 404). The site owner needs to check the model configuration.";
+      } else if (providerStatus === 429) {
+        message = "The AI provider is rate-limiting requests (HTTP 429). Please wait and try again.";
+      } else if (providerStatus >= 500) {
+        message = "The AI provider returned a server error (HTTP " + providerStatus + "). Please try again shortly.";
+      }
       return json(res, 502, {
         ok: false,
-        code: "AI_PROVIDER_ERROR",
-        message: "DAMA's AI provider returned an error. Please try again shortly."
+        code: "AI_PROVIDER_HTTP_" + providerStatus,
+        providerStatus,
+        message
       });
     }
 
