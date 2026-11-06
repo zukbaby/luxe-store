@@ -125,94 +125,59 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    if (!response.body) {
-      return json(res, 502, { ok: false, code: "EMPTY_AI_RESPONSE",
-        message: "DAMA received an empty response. Please try again." });
-    }
-
-    const contentType = response.headers.get("content-type") || "";
-    if (contentType.includes("application/json")) {
-      const payload = await response.json();
-      const answer =
-        (payload && payload.result && typeof payload.result.response === "string" && payload.result.response) ||
-        (payload && payload.choices && payload.choices[0] &&
-          payload.choices[0].message && payload.choices[0].message.content) ||
-        (payload && payload.response && typeof payload.response === "string" && payload.response) ||
-        "";
-      if (!answer.trim()) {
-        return json(res, 502, { ok: false, code: "EMPTY_AI_RESPONSE",
-          message: "DAMA received an empty response. Please try again." });
-      }
-      res.setHeader("Cache-Control", "no-store");
-      res.setHeader("Content-Type", "text/plain; charset=utf-8");
-      res.setHeader("X-Content-Type-Options", "nosniff");
-      return res.status(200).send(answer.trim());
-    }
-
-    res.statusCode = 200;
-    res.setHeader("Cache-Control", "no-cache, no-transform");
-    res.setHeader("Content-Type", "text/plain; charset=utf-8");
-    res.setHeader("X-Content-Type-Options", "nosniff");
-    res.setHeader("X-Accel-Buffering", "no");
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
+    const raw = await response.text();
     let answer = "";
-    let finished = false;
 
-    while (!finished) {
-      const chunk = await reader.read();
-      if (chunk.done) break;
-      buffer += decoder.decode(chunk.value, { stream: true });
-      const lines = buffer.split("\n");
-      buffer = lines.pop() || "";
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed.startsWith("data:")) continue;
-        const payload = trimmed.slice(5).trim();
-        if (payload === "[DONE]") {
-          finished = true;
-          break;
+    if (raw.trim()) {
+      try {
+        const payload = JSON.parse(raw);
+        const messageContent = payload && payload.choices && payload.choices[0] &&
+          payload.choices[0].message && payload.choices[0].message.content;
+        const resultResponse = payload && payload.result && payload.result.response;
+        const directResponse = payload && payload.response;
+        const outputText = payload && payload.output_text;
+        const candidate = resultResponse || messageContent || directResponse || outputText ||
+          (payload && payload.choices && payload.choices[0] && payload.choices[0].text) || "";
+        if (typeof candidate === "string") {
+          answer = candidate;
+        } else if (Array.isArray(candidate)) {
+          answer = candidate.map(part => part && typeof part.text === "string" ? part.text : "").join("");
         }
-        try {
-          const event = JSON.parse(payload);
-          const piece = event && event.choices && event.choices[0] &&
-            event.choices[0].delta && event.choices[0].delta.content;
-          if (typeof piece === "string" && piece) {
-            answer += piece;
-            res.write(piece);
+      } catch {
+        // A non-JSON response is treated as plain text, never shown if it is an SSE frame.
+        if (!raw.trimStart().startsWith("data:")) answer = raw;
+        else {
+          for (const line of raw.split("\\n")) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith("data:")) continue;
+            const data = trimmed.slice(5).trim();
+            if (!data || data === "[DONE]") continue;
+            try {
+              const event = JSON.parse(data);
+              const piece = event && event.choices && event.choices[0] &&
+                ((event.choices[0].message && event.choices[0].message.content) ||
+                 (event.choices[0].delta && event.choices[0].delta.content));
+              if (typeof piece === "string") answer += piece;
+            } catch {
+              // Ignore malformed keepalive or metadata events.
+            }
           }
-        } catch {
-          // Ignore non-JSON keepalive or metadata events.
-        }
-      }
-    }
-
-    const finalText = decoder.decode();
-    if (finalText) buffer += finalText;
-    if (buffer.trim().startsWith("data:")) {
-      const payload = buffer.trim().slice(5).trim();
-      if (payload && payload !== "[DONE]") {
-        try {
-          const event = JSON.parse(payload);
-          const piece = event && event.choices && event.choices[0] &&
-            event.choices[0].delta && event.choices[0].delta.content;
-          if (typeof piece === "string" && piece) {
-            answer += piece;
-            res.write(piece);
-          }
-        } catch {
-          // Ignore an incomplete final event.
         }
       }
     }
 
     if (!answer.trim()) {
-      res.write("I couldn't generate a reply just now. Please try again.");
+      return json(res, 502, {
+        ok: false,
+        code: "EMPTY_AI_RESPONSE",
+        message: "The AI provider returned no readable reply. Please try again shortly."
+      });
     }
-    return res.end();
+
+    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    return res.status(200).send(answer.trim());
   } catch {
     return json(res, 502, {
       ok: false,
