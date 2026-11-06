@@ -99,7 +99,7 @@ module.exports = async function handler(req, res) {
         messages: [system, ...messages],
         max_tokens: 300,
         temperature: 0.4,
-        stream: false
+        stream: true
       }),
       signal: AbortSignal.timeout(25_000)
     });
@@ -125,38 +125,113 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("text/event-stream") && response.body && response.body.getReader) {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let started = false;
+      let answerLength = 0;
+
+      function extractStreamText(event) {
+        const choice = event && event.choices && event.choices[0];
+        const candidate = (choice && choice.delta && choice.delta.content) ||
+          (choice && choice.message && choice.message.content) ||
+          (choice && choice.text) ||
+          (event && event.result && event.result.response) ||
+          (event && event.response) || "";
+        if (typeof candidate === "string") return candidate;
+        if (Array.isArray(candidate)) {
+          return candidate.map(part => part && typeof part.text === "string" ? part.text : "").join("");
+        }
+        return "";
+      }
+
+      function writeStreamText(piece) {
+        if (!piece) return;
+        if (!started) {
+          res.setHeader("Cache-Control", "no-store, no-transform");
+          res.setHeader("Content-Type", "text/plain; charset=utf-8");
+          res.setHeader("X-Content-Type-Options", "nosniff");
+          res.setHeader("X-Accel-Buffering", "no");
+          res.status(200);
+          if (typeof res.flushHeaders === "function") res.flushHeaders();
+          started = true;
+        }
+        answerLength += piece.length;
+        res.write(piece);
+      }
+
+      function processSseLine(line) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data:")) return;
+        const data = trimmed.slice(5).trim();
+        if (!data || data === "[DONE]") return;
+        try {
+          writeStreamText(extractStreamText(JSON.parse(data)));
+        } catch {
+          // Ignore malformed keepalive or metadata events.
+        }
+      }
+
+      try {
+        while (true) {
+          const part = await reader.read();
+          if (part.done) break;
+          buffer += decoder.decode(part.value, { stream: true });
+          let newline;
+          while ((newline = buffer.indexOf("\n")) >= 0) {
+            processSseLine(buffer.slice(0, newline).replace(/\r$/, ""));
+            buffer = buffer.slice(newline + 1);
+          }
+        }
+        buffer += decoder.decode();
+        if (buffer.trim()) processSseLine(buffer);
+      } catch (streamError) {
+        if (!started) throw streamError;
+        // Once text has reached the browser, end the partial reply cleanly.
+        return res.end();
+      }
+
+      if (!answerLength) {
+        return json(res, 502, {
+          ok: false,
+          code: "EMPTY_AI_RESPONSE",
+          message: "The AI provider returned no readable reply. Please try again shortly."
+        });
+      }
+      return res.end();
+    }
+
+    // Compatibility fallback for providers that return a complete JSON response.
     const raw = await response.text();
     let answer = "";
-
     if (raw.trim()) {
       try {
         const payload = JSON.parse(raw);
-        const messageContent = payload && payload.choices && payload.choices[0] &&
-          payload.choices[0].message && payload.choices[0].message.content;
-        const resultResponse = payload && payload.result && payload.result.response;
-        const directResponse = payload && payload.response;
-        const outputText = payload && payload.output_text;
-        const candidate = resultResponse || messageContent || directResponse || outputText ||
-          (payload && payload.choices && payload.choices[0] && payload.choices[0].text) || "";
-        if (typeof candidate === "string") {
-          answer = candidate;
-        } else if (Array.isArray(candidate)) {
+        const choice = payload && payload.choices && payload.choices[0];
+        const candidate = (choice && choice.message && choice.message.content) ||
+          (payload && payload.result && payload.result.response) ||
+          (payload && payload.response) ||
+          (payload && payload.output_text) ||
+          (choice && choice.text) || "";
+        if (typeof candidate === "string") answer = candidate;
+        else if (Array.isArray(candidate)) {
           answer = candidate.map(part => part && typeof part.text === "string" ? part.text : "").join("");
         }
       } catch {
-        // A non-JSON response is treated as plain text, never shown if it is an SSE frame.
         if (!raw.trimStart().startsWith("data:")) answer = raw;
         else {
-          for (const line of raw.split("\\n")) {
+          for (const line of raw.split(/\r?\n/)) {
             const trimmed = line.trim();
             if (!trimmed.startsWith("data:")) continue;
             const data = trimmed.slice(5).trim();
             if (!data || data === "[DONE]") continue;
             try {
               const event = JSON.parse(data);
-              const piece = event && event.choices && event.choices[0] &&
-                ((event.choices[0].message && event.choices[0].message.content) ||
-                 (event.choices[0].delta && event.choices[0].delta.content));
+              const choice = event && event.choices && event.choices[0];
+              const piece = (choice && choice.delta && choice.delta.content) ||
+                (choice && choice.message && choice.message.content) || "";
               if (typeof piece === "string") answer += piece;
             } catch {
               // Ignore malformed keepalive or metadata events.
