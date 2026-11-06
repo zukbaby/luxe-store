@@ -8,9 +8,9 @@ function fail(res, status, code, message) {
 function parseCommand(value) {
   if (typeof value !== "string" || value.length > 100) return null;
   const command = value.trim();
-  let match = command.match(/^verify-([a-z0-9_]{3,24})\\s+paid$/i);
+  let match = command.match(/^verify-([a-z0-9_]{3,24})\s+paid$/i);
   if (match) return { username: match[1].toLowerCase(), badge: "paid_verified", action: "badge.granted.paid_verified" };
-  match = command.match(/^verifyVIP-([a-z0-9_]{3,24})\\s+VIP$/i);
+  match = command.match(/^verifyVIP-([a-z0-9_]{3,24})\s+VIP$/i);
   if (match) return { username: match[1].toLowerCase(), badge: "vip", action: "badge.granted.vip" };
   match = command.match(/^removeV-([a-z0-9_]{3,24})$/i);
   if (match) return { username: match[1].toLowerCase(), badge: "none", action: "badge.revoked" };
