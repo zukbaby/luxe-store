@@ -99,7 +99,7 @@ module.exports = async function handler(req, res) {
         messages: [system, ...messages],
         max_tokens: 300,
         temperature: 0.4,
-        stream: true
+        stream: false
       }),
       signal: AbortSignal.timeout(25_000)
     });
