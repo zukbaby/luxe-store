@@ -157,7 +157,39 @@
 .composer button:disabled{opacity:.6}
 .foot{color:#8fa5bd}
 @media(prefers-reduced-motion:reduce){.dama-electric:before,.dama-bolt{animation:none}}
-</style><script>(function(){try{if(localStorage.getItem("luxe_profile_complete")!=="1"||!localStorage.getItem("luxe_display_username")){if(!location.pathname.endsWith("/accounts.html"))location.replace("/accounts.html");}}catch{location.replace("/accounts.html");}})();</script>
+
+/* Approved DAMA chat theme: calm, realistic soft-yellow and white mobile UI */
+body{background:#fffdf7}
+.chat{background:#fff;border:1px solid #eadfbe;box-shadow:0 8px 24px #72551a12}
+.chat:before{display:none}
+.dama-electric{background:#fffdf5;border:1px solid #efe2bd;box-shadow:none;margin:10px 12px 0;padding:10px 12px}
+.dama-electric:before{display:none}
+.dama-electric-line{color:#29415f;letter-spacing:.35px}
+.dama-bolt{width:23px;height:23px;background:#e7c66e;color:#fff;box-shadow:none;animation:none}
+.dama-spectrum{background:none;color:#173d6d;-webkit-text-fill-color:#173d6d;animation:none;letter-spacing:.35px}
+.dama-electric small{color:#89764c}
+.chathead{background:#fff;border-bottom:1px solid #eee5d1;padding:14px 18px}
+.chathead b{color:#102f59}
+.live{background:#f5f8fc;color:#58708c;border:1px solid #e2eaf3}
+.notice{background:#fff9e9;color:#79643a;border-bottom:1px solid #f0e5ca}
+.messages{background:#fffdf7}
+.msg{background:#fff8e8;border:1px solid #f0e4c8;color:#263b56;box-shadow:none;border-radius:14px}
+.msg.user{background:#eaf2ff;border:1px solid #d7e6fa;color:#12375f;box-shadow:none;border-radius:14px 14px 4px 14px}
+.read-receipt,.read-receipt.received{color:#b18a31;text-shadow:none}
+.composer{background:#fff;border-top:1px solid #eee5d1}
+.composer input{background:#fffdf8;border:1px solid #e9dfca;color:#142238}
+.composer input:focus{border-color:#c9a64e;box-shadow:0 0 0 3px #d6b65a20}
+.composer button{background:#123b70;color:#fff;box-shadow:none}
+.foot{color:#8b8067}
+.chat-tools{display:flex;align-items:center;gap:7px}
+.chat-tools button{border:1px solid #e7dcc1;background:#fffaf0;color:#765d26;border-radius:9px;padding:7px 9px;font-size:11px;font-weight:700;cursor:pointer}
+.chat-tools button:hover{background:#fff2cf}
+.composer .voice-button{background:#fff8e8;color:#72591e;border:1px solid #ead9ae;padding:0 12px}
+.bottom-nav{display:none}
+@media(max-width:820px){.bottom-nav{display:flex;justify-content:space-around;gap:6px;background:#fff;border-top:1px solid #eee5d1;padding:11px 8px}.bottom-nav a{font-size:10px;font-weight:700;color:#61728a}.bottom-nav a.active{color:#123b70}.chat{border-radius:14px}.chathead{padding:12px 14px}}
+@media(prefers-reduced-motion:reduce){.dama-bolt{animation:none}}
+
+</style>
 </head><body>
 <div class="promo"><span>GLOBAL MARKETPLACE · SHOP SMARTER</span><span>Official LUXE STORE assistant</span></div>
 <header class="header"><a class="brand" href="/">LUXE <span>STORE</span></a><nav class="nav"><a href="/">Marketplace</a><a href="/accounts.html">My account</a><a href="/seller.html">Become a seller</a><a href="/verification.html">Verification</a><a href="/reels.html">LUXE REELS</a><a href="/admin.html">Admin Panel</a></nav></header>
@@ -169,8 +201,12 @@
 <div class="quick"><button type="button" data-prompt="How do I shop on LUXE STORE?">Shopping help</button><button type="button" data-prompt="How can I become a seller?">Become a seller</button><button type="button" data-prompt="How does LUXE verification work?">Verification</button><button type="button" data-prompt="I need human support.">Human support</button></div>
 <p class="privacy">Never send passwords, payment details, identity documents or private verification codes. DAMA cannot access private accounts, orders or live inventory.</p>
 </aside>
-<section class="chat"><div class="dama-electric"><div class="dama-electric-line"><span class="dama-bolt" aria-hidden="true">⚡</span><span class="dama-spectrum">DAMA · ULTIMATE SPEED</span><span>✦ GOLD EDITION</span></div><small>Electric aura · lightning signature · fast streaming replies</small></div><div class="chathead"><b>DAMA · LUXE support</b><span class="live">AI connection status depends on setup</span></div><div class="notice">Official support assistant · Don't share sensitive personal or payment information.</div><div class="messages" id="messages"><div class="msg">Welcome to LUXE STORE. I'm DAMA, your official marketplace assistant. What can I help you with today?</div></div><form class="composer" id="form"><input id="prompt" placeholder="Message DAMA..." autocomplete="off" maxlength="500"><button type="submit">Send</button></form><div class="foot">DAMA can guide you, but cannot perform account or payment actions.</div></section>
+<section class="chat"><div class="dama-electric"><div class="dama-electric-line"><span class="dama-bolt" aria-hidden="true">⚡</span><span class="dama-spectrum">DAMA · ULTIMATE SPEED</span><span>✦ GOLD EDITION</span></div><small>Electric aura · lightning signature · fast streaming replies</small></div><div class="chathead"><b>DAMA · LUXE support</b><div class="chat-tools"><button type="button" id="voiceToggle" aria-label="Read latest reply aloud">▶ Voice</button><button type="button" id="settingsToggle" aria-expanded="false">Settings</button><span class="live">Online when connected</span></div></div><div class="notice">Official support assistant · Don't share sensitive personal or payment information.</div><div class="messages" id="messages"><div class="msg">Welcome to LUXE STORE. I'm DAMA, your official marketplace assistant. What can I help you with today?</div></div><form class="composer" id="form"><input id="prompt" placeholder="Message DAMA..." autocomplete="off" maxlength="500"><button class="voice-button" type="button" id="voiceInput" aria-label="Voice input">🎙</button><button type="submit">Send</button></form><nav class="bottom-nav" aria-label="Main navigation"><a href="/">Home</a><a href="/reels.html">REELS</a><a href="/seller.html">Sellers</a><a href="/verification.html">Verify</a></nav><div class="foot">DAMA can guide you, but cannot perform account or payment actions.</div></section>
 </div></main>
 <script>
 const messages=document.getElementById("messages"),history=[];let busy=false;function say(text,who){const div=document.createElement("div");div.className="msg"+(who==="user"?" user":"");div.textContent=text;if(who==="user"){const receipt=document.createElement("span");receipt.className="read-receipt";receipt.textContent="✓";receipt.setAttribute("aria-label","Sent");div.appendChild(receipt);div.receipt=receipt;}messages.appendChild(div);messages.scrollTop=messages.scrollHeight;return div}async function send(value){const q=(value||document.getElementById("prompt").value).trim();if(!q||busy)return;const userBubble=say(q,"user");history.push({role:"user",content:q});document.getElementById("prompt").value="";busy=true;const submit=document.querySelector(".composer button");submit.disabled=true;submit.textContent="…";const replyBubble=say("","bot");let reply="";try{const response=await fetch("/api/ai/dama",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:history.slice(-10)})});if(!response.ok){let error={};try{error=await response.json()}catch{}replyBubble.textContent=error.message||"DAMA's AI service is not connected yet. Please try again later.";}else{userBubble.receipt.textContent="✓✓";userBubble.receipt.classList.add("received");userBubble.receipt.setAttribute("aria-label","DAMA is responding");userBubble.receipt.title="DAMA is responding";if(response.body&&response.body.getReader){const reader=response.body.getReader(),decoder=new TextDecoder();while(true){const chunk=await reader.read();if(chunk.done)break;reply+=decoder.decode(chunk.value,{stream:true});replyBubble.textContent=reply;messages.scrollTop=messages.scrollHeight;}reply+=decoder.decode();replyBubble.textContent=reply||"I couldn't generate a reply just now. Please try again.";if(reply)history.push({role:"assistant",content:reply});}else{reply=await response.text();replyBubble.textContent=reply;history.push({role:"assistant",content:reply});}}}catch{replyBubble.textContent="I couldn't connect to DAMA's AI service. Please check your connection and try again.";}finally{busy=false;submit.disabled=false;submit.textContent="Send";}}document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();send()});document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>send(b.dataset.prompt)));
+
+document.getElementById("voiceToggle").addEventListener("click",()=>{const latest=[...messages.querySelectorAll(".msg:not(.user)")].pop();if(!latest||!latest.textContent.trim())return; if(!("speechSynthesis" in window)){alert("Voice playback is not supported in this browser.");return;} if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();document.getElementById("voiceToggle").textContent="▶ Voice";return;}const utterance=new SpeechSynthesisUtterance(latest.textContent);utterance.onend=()=>document.getElementById("voiceToggle").textContent="▶ Voice";document.getElementById("voiceToggle").textContent="Ⅱ Pause";window.speechSynthesis.speak(utterance);});
+document.getElementById("settingsToggle").addEventListener("click",()=>{const button=document.getElementById("settingsToggle"),notice=document.querySelector(".notice");const open=button.getAttribute("aria-expanded")==="true";button.setAttribute("aria-expanded",String(!open));notice.hidden=!open;button.textContent=open?"Settings":"Hide settings";});
+document.getElementById("voiceInput").addEventListener("click",()=>{const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SpeechRecognition){document.getElementById("prompt").placeholder="Voice input isn't supported here";return;}const recognition=new SpeechRecognition();recognition.lang=navigator.language||"en-US";recognition.onresult=e=>{document.getElementById("prompt").value=e.results[0][0].transcript;};recognition.start();});
 </script></body></html>
