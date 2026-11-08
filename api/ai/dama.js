@@ -206,6 +206,28 @@ module.exports = async function handler(req, res) {
     // Compatibility fallback for providers that return a complete JSON response.
     const raw = await response.text();
     let answer = "";
+    let shape = {};
+    try {
+      const inspected = JSON.parse(raw);
+      const firstChoice = Array.isArray(inspected && inspected.choices) ? inspected.choices[0] : null;
+      shape = {
+        topLevelKeys: Object.keys(inspected || {}),
+        resultKeys: Object.keys((inspected && inspected.result) || {}),
+        choicesCount: Array.isArray(inspected && inspected.choices) ? inspected.choices.length : 0,
+        firstChoiceKeys: Object.keys(firstChoice || {}),
+        messageContentType: typeof (firstChoice && firstChoice.message && firstChoice.message.content),
+        resultResponseType: typeof (inspected && inspected.result && inspected.result.response),
+        responseType: typeof (inspected && inspected.response),
+        outputTextType: typeof (inspected && inspected.output_text)
+      };
+    } catch {
+      shape = { parseableJson: false };
+    }
+    console.info("[luxe-ai] provider response shape", JSON.stringify({
+      contentType,
+      bodyLength: raw.length,
+      ...shape
+    }));
     if (raw.trim()) {
       try {
         const payload = JSON.parse(raw);
