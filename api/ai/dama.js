@@ -108,7 +108,8 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         messages: [system, ...messages],
         max_completion_tokens: 300,
-        temperature: 0.4
+        temperature: 0.4,
+        chat_template_kwargs: { enable_thinking: false }
       }),
       signal: AbortSignal.timeout(25_000)
     });
