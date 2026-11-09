@@ -67,7 +67,7 @@ module.exports = async function handler(req, res) {
     return json(res, 503, { ok: false, code: "PROVIDER_NOT_CONFIGURED" });
   }
   const nativeEndpoint = new URL(
-    "/client/v4/accounts/" + accountMatch[1] + "/ai/run/" + encodeURIComponent(model),
+    "/client/v4/accounts/" + accountMatch[1] + "/ai/run/" + model,
     target.origin
   );
 
@@ -107,7 +107,7 @@ module.exports = async function handler(req, res) {
       },
       body: JSON.stringify({
         messages: [system, ...messages],
-        max_tokens: 300,
+        max_completion_tokens: 300,
         temperature: 0.4
       }),
       signal: AbortSignal.timeout(25_000)
