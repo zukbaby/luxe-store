@@ -59,6 +59,17 @@ module.exports = async function handler(req, res) {
   if (target.protocol !== "https:" || target.hostname !== "api.cloudflare.com") {
     return json(res, 503, { ok: false, code: "PROVIDER_NOT_ALLOWED" });
   }
+  // Use Cloudflare's native Workers AI REST route. The configured URL is
+  // retained as the trusted source of the account ID, while the model remains
+  // restricted by the allowlist above.
+  const accountMatch = target.pathname.match(/^\/client\/v4\/accounts\/([a-f0-9]+)\/ai\/v1\/chat\/completions\/?$/i);
+  if (!accountMatch) {
+    return json(res, 503, { ok: false, code: "PROVIDER_NOT_CONFIGURED" });
+  }
+  const nativeEndpoint = new URL(
+    "/client/v4/accounts/" + accountMatch[1] + "/ai/run/" + encodeURIComponent(model),
+    target.origin
+  );
 
   const body = req.body && typeof req.body === "object" ? req.body : {};
   if (!Array.isArray(body.messages) || body.messages.length < 1 || body.messages.length > 10) {
@@ -88,18 +99,16 @@ module.exports = async function handler(req, res) {
   };
 
   try {
-    const response = await fetch(target.toString(), {
+    const response = await fetch(nativeEndpoint.toString(), {
       method: "POST",
       headers: {
         "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model,
         messages: [system, ...messages],
         max_tokens: 300,
-        temperature: 0.4,
-        stream: false
+        temperature: 0.4
       }),
       signal: AbortSignal.timeout(25_000)
     });
